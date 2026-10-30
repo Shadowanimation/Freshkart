@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">FreshKart - ताज़ा सब्ज़ियाँ, सीधे आपके घर</title>
+  <style>
+    :root {
+      --primary-color: #00B074;
+      --primary-dark: #008F5D;
+      --header-bg: #ffffff;
+      --bg-color: #F8F9FA;
+      --badge-bg: #FF6B6B;
+      --badge-text: #ffffff;
+      --circle-ring-color: #00B074;
+    }
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: #2D3748;
+    }
+    header {
+      background-color: var(--header-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .logo-container { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .logo-container img { height: 42px; width: auto; object-fit: contain; }
+    
+    .search-bar { flex: 1; max-width: 260px; position: relative; }
+    .search-bar input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid #CBD5E0; border-radius: 20px; font-size: 0.9rem; outline: none; box-sizing: border-box; }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #A0AEC0; font-size: 0.9rem; }
+    
+    .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .theme-picker-box { display: flex; gap: 4px; background: #EDF2F7; padding: 3px 8px; border-radius: 16px; align-items: center; font-size: 0.75rem; font-weight: 600; }
+    .theme-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid #ccc; }
+    .nav-btn { background: #EDF2F7; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #4A5568; }
+    .nav-btn.active { background: var(--primary-color); color: white; }
+
+    .top-action-btn { background: #EDF2F7; border: none; padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #2D3748; }
+    .top-cart-btn { position: relative; background: var(--primary-color); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .cart-badge { background: #E53E3E; color: white; font-size: 0.75rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+
+    /* Cart Drawer */
+    .cart-drawer { position: fixed; top: 0; right: -380px; width: 350px; height: 100%; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .cart-drawer.open { right: 0; }
+    .cart-header { background: #1A202C; color: white; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .cart-body { flex: 1; padding: 15px; overflow-y: auto; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDF2F7; padding: 10px 0; }
+    .cart-footer { padding: 16px; background: #F7FAFC; border-top: 1px solid #CBD5E0; }
+
+    /* Banner Carousel */
+    .banner-carousel { position: relative; width: 100%; max-width: 1100px; margin: 15px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); background: #000; }
+    .banner-slide { display: none; width: 100%; position: relative; }
+    .banner-slide.active { display: block; }
+    .banner-slide img { width: 100%; height: 380px; object-fit: cover; display: block; }
+    @media (max-width: 768px) { .banner-slide img { height: 200px; } }
+    .banner-overlay-btn { position: absolute; bottom: 35px; left: 30px; background: var(--primary-color); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .carousel-nav-btns { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 10px; box-sizing: border-box; pointer-events: none; }
+    .carousel-nav-btns button { pointer-events: auto; background: rgba(0,0,0,0.5); border: none; color: white; padding: 10px 14px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+    .carousel-dots { position: absolute; bottom: 12px; width: 100%; display: flex; justify-content: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
+    .dot.active { background: white; width: 22px; border-radius: 5px; }
+
+    /* Circular Categories */
+    .circle-cats-container { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px 0; scroll-behavior: smooth; }
+    .circle-cat-item { display: flex; flex-direction: column; align-items: center; min-width: 85px; cursor: pointer; }
+    .circle-cat-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--circle-ring-color); }
+    .circle-cat-name { font-size: 0.75rem; font-weight: 700; margin-top: 6px; text-align: center; color: #2D3748; }
+
+    /* 3 Promotional Banners Grid */
+    .promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0 25px 0; }
+    @media(max-width: 768px) { .promo-grid { grid-template-columns: 1fr; } }
+    .promo-card { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); height: 140px; }
+    .promo-card img { width: 100%; height: 100%; object-fit: cover; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 10px 40px 10px; }
+    .category-filters { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 15px 0; white-space: nowrap; }
+    .cat-pill { background: #E2E8F0; border: none; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: #4A5568; }
+    .cat-pill.active { background: var(--primary-color); color: white; }
+
+    .section-title { font-size: 1.15rem; font-weight: 700; margin: 15px 0 12px 0; color: #1A202C; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+    @media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+
+    .card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
+    .badge { position: absolute; top: 16px; left: 16px; background: var(--badge-bg); color: var(--badge-text); font-size: 0.65rem; padding: 3px 8px; border-radius: 20px; font-weight: 700; }
+    .fav-btn { position: absolute; top: 16px; right: 16px; background: white; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+    
+    .card-title { font-size: 0.95rem; font-weight: 700; margin: 8px 0 4px 0; color: #2D3748; }
+    .card-price { font-size: 1.1rem; font-weight: 800; color: #1A202C; margin: 4px 0; }
+    .weight-options { display: flex; gap: 3px; margin: 6px 0; }
+    .weight-btn { flex: 1; padding: 4px 1px; font-size: 0.65rem; border: 1px solid #E2E8F0; background: #F7FAFC; border-radius: 4px; cursor: pointer; font-weight: 600; color: #4A5568; text-align: center; }
+    .weight-btn.selected { border-color: var(--primary-color); background: #E6F8F2; color: var(--primary-dark); font-weight: 700; }
+    
+    .card-actions-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+    .qty-controls { flex: 1; display: flex; align-items: center; justify-content: space-between; background: #EDF2F7; border-radius: 6px; padding: 2px 6px; }
+    .qty-btn { background: var(--primary-color); color: white; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+    
+    .out-of-stock-badge { background: #CBD5E0; color: #4A5568; font-size: 0.75rem; padding: 6px 8px; border-radius: 6px; font-weight: 700; text-align: center; margin-top: 6px; }
+    .add-btn { width: 100%; background: var(--primary-color); color: white; border: none; padding: 8px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: 0.2s; }
+    .added-state { background-color: #319795 !important; }
+
+    .main-footer { background: #0F172A; color: #94A3B8; padding: 40px 20px 20px 20px; margin-top: 40px; }
+    .footer-content-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 30px; }
+    @media(max-width: 768px) { .footer-content-grid { grid-template-columns: 1fr; gap: 20px; } }
+    .footer-bottom { text-align: center; border-top: 1px solid #1E293B; margin-top: 30px; padding-top: 15px; font-size: 0.8rem; }
+
+    .admin-panel { background: white; padding: 20px; border-radius: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 4px; font-size: 0.85rem; color: #4A5568; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #CBD5E0; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem; }
+    .broadcast-box { background: #EDF2F7; padding: 12px; border-radius: 8px; font-size: 0.85rem; white-space: pre-wrap; margin-bottom: 10px; }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-box { background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="#" class="logo-container">
+      <img id="headerLogoImg" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300" alt="Logo" style="height:42px; border-radius:6px;">
+      <div style="font-size:1.4rem; font-weight:800; font-family:sans-serif; line-height:1; display:flex;">
+        <span id="headerTextFresh" style="color: #008F5D;">Fresh</span><span id="headerTextKart" style="color: #FF7A00;">kart</span>
+      </div>
+    </a>
+    
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="सब्जियाँ, फल खोजें..." oninput="filterProducts()">
+    </div>
+
+    <div class="header-right">
+      <div class="theme-picker-box">
+        <span>थीम:</span>
+        <div class="theme-dot" style="background:#00B074;" onclick="setTheme('#00B074')"></div>
+        <div class="theme-dot" style="background:#D97706;" onclick="setTheme('#D97706')"></div>
+        <div class="theme-dot" style="background:#2563EB;" onclick="setTheme('#2563EB')"></div>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="nav-btn active" id="tabStore" onclick="switchTab('store')">🛍️ दुकान</button>
+        <button class="nav-btn" id="tabTrack" onclick="switchTab('tracking')">🛵 ट्रैकिंग</button>
+        <button class="nav-btn" onclick="openCustomerAuthModal()" style="background:#319795; color:white;" id="accountBtnText">👤 अकाउंट</button>
+        <button class="nav-btn" onclick="openAdminLoginModal()" style="background:#2D3748; color:white;" title="Admin">⚙️ एडमिन</button>
+      </div>
+
+      <button class="top-action-btn" id="favNavBtn" onclick="alert('फेवरिट आइटम्स: ' + favorites.length)">❤️ <span id="favCount">0</span></button>
+      
+      <!-- Visible Shopping Cart Icon -->
+      <button class="top-cart-btn" onclick="toggleCartDrawer()">
+        🛒 <span id="cartBtnLabel">कार्ट</span> <span class="cart-badge" id="cartBadgeCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Customer Auth Modal -->
+  <div class="modal-overlay" id="customerAuthModal">
+    <div class="modal-box">
+      <h3 style="margin-top:0;" id="authModalTitle">👤 कस्टमर लॉगिन / रजिस्टर</h3>
+      <div id="authLoggedInView" style="display:none;">
+        <p id="welcomeUserText">स्वागत है, <b id="loggedInCustomerName"></b>!</p>
+        <button class="add-btn" style="background:#E53E3E; margin-top:10px;" id="logoutBtnText" onclick="customerLogout()">लॉगआउट</button>
+      </div>
+      <div id="authFormView">
+        <div class="form-group"><label id="labelName">नाम:</label><input type="text" id="custRegName" placeholder="पूरा नाम"></div>
+        <div class="form-group"><label id="labelMobile">मोबाइल/ईमेल:</label><input type="text" id="custRegEmail" placeholder="मोबाइल"></div>
+        <div style="display:flex; gap:10px; margin-top:15px;">
+          <button class="add-btn" style="background:#718096;" id="cancelBtnText" onclick="closeCustomerAuthModal()">रद्द</button>
+          <button class="add-btn" id="loginBtnText" onclick="registerOrLoginCustomer()">लॉगिन 🚀</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-box">
+      <h3 style="margin-top:0;" id="adminModalTitle">🔐 एडमिन पोर्टल लॉगिन</h3>
+      <div class="form-group"><label id="labelEmail">ईमेल:</label><input type="email" id="loginEmailInput" value="admin@freshkart.com"></div>
+      <div class="form-group"><label id="labelPass">पासवर्ड:</label><input type="password" id="loginPasswordInput" value="1234"></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-size:0.8rem; color:#E53E3E; cursor:pointer;" id="forgotPassText" onclick="forgotPasswordAdmin()">पासवर्ड भूल गए?</span>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="add-btn" style="background:#718096;" id="adminCancelText" onclick="closeAdminLoginModal()">रद्द</button>
+        <button class="add-btn" id="adminLoginText" onclick="verifyAdminLogin()">लॉगिन 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 style="margin:0;" id="cartDrawerTitle">🛍️ आपकी कार्ट</h3>
+      <button onclick="toggleCartDrawer()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✖</button>
+    </div>
+    <div class="cart-body" id="cartDrawerBody"><p style="text-align:center; color:#A0AEC0;" id="emptyCartText">कार्ट खाली है!</p></div>
+    <div class="cart-footer">
+      <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.1rem; margin-bottom:12px;">
+        <span id="totalBillText">कुल बिल:</span><span id="drawerCartTotal">₹0</span>
+      </div>
+      <button class="add-btn" style="background:#25D366; padding:12px;" id="whatsappOrderBtnText" onclick="sendWhatsAppOrder()">WhatsApp पर ऑर्डर भेजें 📲</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="storeTab">
+      <!-- 5 Swipable Banners with Add to Cart -->
+      <div class="banner-carousel" id="carouselBox">
+        <div class="banner-slide active"><img id="bImg-0" src=""><button class="banner-overlay-btn" id="bBtnText-0" onclick="addBannerToCart(0)">Shop Now</button></div>
+        <div class="banner-slide"><img id="bImg-1" src=""><button class="banner-overlay-btn" id="bBtnText-1" onclick="addBannerToCart(1)">Order Now</button></div>
+        <div class="banner-slide"><img id="bImg-2" src=""><button class="banner-overlay-btn" id="bBtnText-2" onclick="addBannerToCart(2)">Buy Salad</button></div>
+        <div class="banner-slide"><img id="bImg-3" src=""><button class="banner-overlay-btn" id="bBtnText-3" onclick="addBannerToCart(3)">Grab Pack</button></div>
+        <div class="banner-slide"><img id="bImg-4" src=""><button class="banner-overlay-btn" id="bBtnText-4" onclick="addBannerToCart(4)">Get Combo</button></div>
+        <div class="carousel-nav-btns"><button onclick="changeSlide(-1)">❮</button><button onclick="changeSlide(1)">❯</button></div>
+        <div class="carousel-dots" id="carouselDots">
+          <span class="dot active" onclick="currentSlideIndex(0)"></span>
+          <span class="dot" onclick="currentSlideIndex(1)"></span>
+          <span class="dot" onclick="currentSlideIndex(2)"></span>
+          <span class="dot" onclick="currentSlideIndex(3)"></span>
+          <span class="dot" onclick="currentSlideIndex(4)"></span>
+        </div>
+      </div>
+
+      <!-- Circular Categories Container -->
+      <div class="circle-cats-container" id="circleCatsView"></div>
+
+      <!-- 3 Small Promo Banners -->
+      <div class="promo-grid">
+        <div class="promo-card"><img id="promoImg1" src=""></div>
+        <div class="promo-card"><img id="promoImg2" src=""></div>
+        <div class="promo-card"><img id="promoImg3" src=""></div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-filters">
+        <button class="cat-pill active" id="pillAll" onclick="filterCategory('All', this)">सभी आइटम</button>
+        <button class="cat-pill" id="pillVeg" onclick="filterCategory('Vegetables', this)">🥕 सब्ज़ियाँ</button>
+        <button class="cat-pill" id="pillFruit" onclick="filterCategory('Fruits', this)">🍎 फल</button>
+        <button class="cat-pill" id="pillDairy" onclick="filterCategory('DairyOil', this)">🥛 डेयरी और तेल</button>
+        <button class="cat-pill" id="pillGro" onclick="filterCategory('Groceries', this)">🍞 ग्रोसरी</button>
+      </div>
+
+      <div class="section-title">📅 <span id="todayComboHeading">आज का खास कॉम्बो</span></div>
+      <div id="dayComboContainer" class="grid"></div>
+
+      <div class="section-title" id="mandiProductsTitle">🛒 ताजा मंडी प्रोडक्ट्स & ग्रोसरी</div>
+      <div id="productGrid" class="grid"></div>
+    </div>
+
+    <!-- Live Tracking Tab -->
+    <div id="trackingTab" style="display:none;">
+      <h2 id="trackTitleDisplay">🛵 Live Order Delivery Simulator</h2>
+      <div class="card" style="padding: 20px; text-align: center;">
+        <h3 id="trackOrderIdDisplay">ऑर्डर नंबर: #FK-8902</h3>
+        <p><strong>डिलीवरी पार्टनर:</strong> <span id="trackPartnerName">राहुल कुमार</span> (🛵) - <span id="trackPartnerPhone">9876543210</span></p>
+      </div>
+    </div>
+
+    <!-- Admin Panel Tab -->
+    <div id="adminTab" style="display:none;" class="admin-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2 style="margin:0;">⚙️ एडमिन कंट्रोल पैनल</h2>
+        <div>
+          <button onclick="switchTab('store')" style="background:#718096; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; margin-right:8px;">⬅️ दुकान</button>
+          <button onclick="adminLogout()" style="background:#E53E3E; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">🔒 लॉगआउट</button>
+        </div>
+      </div>
+
+      <h3>📊 लाइव वेबसाइट विजिटर एनालिटिक्स</h3>
+      <div style="background:#EDF2F7; padding:15px; border-radius:8px; margin-bottom:20px; display:flex; gap:20px;">
+        <div><p style="margin:0; font-size:0.8rem; color:#718096;">कुल विजिट:</p><h2 id="adminTotalVisitsDisplay" style="margin:4px 0 0 0; color:#00B074;">0</h2></div>
+        <div><p style="margin:0; font-size:0.8rem; color:#718096;">आज के विजिट:</p><h2 id="adminTodayVisitsDisplay" style="margin:4px 0 0 0; color:#319795;">0</h2></div>
+      </div>
+
+      <h3>🌐 भाषा सेटिंग्स (Language Setup - Fully Front-End Applied)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>डिफ़ॉल्ट भाषा चुनें:</label>
+          <select id="adminLangSelect" onchange="changeLanguage(this.value)">
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="en">इंग्लिश (English)</option>
+            <option value="bn">बंगाली (Bengali)</option>
+          </select>
+        </div>
+      </div>
+
+      <h3>🖼️ ब्रांड लोगो और हेडर कस्टमाइज़ेशन</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>लोगो URL:</label><input type="text" id="adminLogoImgUrl" onchange="updateHeaderBrand()"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:2;"><label>पहला शब्द:</label><input type="text" id="adminFreshText" value="Fresh" onchange="updateHeaderBrand()"></div>
+          <div class="form-group" style="flex:1;"><label>रंग:</label><input type="color" id="adminFreshColor" value="#008F5D" onchange="updateHeaderBrand()" style="height:38px; width:100%;"></div>
+          <div class="form-group" style="flex:2;"><label>दूसरा शब्द:</label><input type="text" id="adminKartText" value="kart" onchange="updateHeaderBrand()"></div>
+          <div class="form-group" style="flex:1;"><label>रंग:</label><input type="color" id="adminKartColor" value="#FF7A00" onchange="updateHeaderBrand()" style="height:38px; width:100%;"></div>
+        </div>
+      </div>
+
+      <h3>🖼️ 5 स्वाइपेबल बैनर्स कस्टमाइज़ेशन (Image, Name, Price & Add to Cart)</h3>
+      <div id="adminBannerList"></div>
+
+      <h3>🖼️ 3 छोटे प्रोमोशनल बैनर्स</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>बैनर 1 URL:</label><input type="text" id="adminPromo1" onchange="updatePromoBanners()"></div>
+        <div class="form-group"><label>बैनर 2 URL:</label><input type="text" id="adminPromo2" onchange="updatePromoBanners()"></div>
+        <div class="form-group"><label>बैनर 3 URL:</label><input type="text" id="adminPromo3" onchange="updatePromoBanners()"></div>
+      </div>
+
+      <h3>🔵 सर्कुलर कैटेगरीज कस्टमाइज़ेशन (Name, Image & Ring Color)</h3>
+      <div class="form-group"><label>सर्कल रिंग का रंग:</label><input type="color" id="adminCircleRingColor" value="#00B074" onchange="updateCircleRingColor()" style="height:38px; width:100px;"></div>
+      <div id="adminCircleCatsList"></div>
+
+      <h3>🏷️ 'मंडी ताज़ा' बैज कस्टमाइज़ेशन</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px; display:flex; gap:10px;">
+        <div class="form-group" style="flex:2;"><label>टेक्स्ट:</label><input type="text" id="adminBadgeText" value="मंडी ताज़ा" onchange="updateBadgeStyle()"></div>
+        <div class="form-group" style="flex:1;"><label>बैकग्राउंड:</label><input type="color" id="adminBadgeBg" value="#FF6B6B" onchange="updateBadgeStyle()" style="height:38px; width:100%;"></div>
+      </div>
+
+      <h3>📅 दिन-वार स्पेशल कॉम्बो कस्टमाइज़ेशन (Day-wise Combos)</h3>
+      <div id="adminDayCombosList"></div>
+
+      <h3>🛒 एड न्यू आइटम (सब्जी, फल, तेल [लीटर/ML], ग्रोसरी)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>आइटम नाम:</label><input type="text" id="newProdName"></div>
+        <div class="form-group"><label>श्रेणी:</label>
+          <select id="newProdCat">
+            <option value="Vegetables">सब्ज़ी</option>
+            <option value="Fruits">फल</option>
+            <option value="DairyOil">डेयरी और तेल (Liquid)</option>
+            <option value="Groceries">ग्रोसरी</option>
+          </select>
+        </div>
+        <div class="form-group"><label>यूनिट प्रकार:</label>
+          <select id="newProdUnitType">
+            <option value="kg">वजन (kg / g)</option>
+            <option value="litre">लिक्विड (Litre / ml)</option>
+            <option value="pcs">पीस (Pcs)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>आधार दाम (1 kg / 1 L का दाम ₹):</label><input type="number" id="newProdPrice"></div>
+        <div class="form-group"><label>फोटो URL:</label><input type="text" id="newProdImg" placeholder="https://..."></div>
+        <button class="add-btn" onclick="addNewProduct()">+ नया आइटम जोड़ें</button>
+      </div>
+
+      <h3>🥦 प्रोडक्ट्स मैनेजर (Stock & Delete Options)</h3>
+      <div id="adminProductManagerList"></div>
+
+      <h3>📝 फुटर, कांटेक्ट सपोर्ट और लोकेशन कस्टमाइज़ेशन</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>सपोर्ट ईमेल:</label><input type="text" id="adminContactEmail" value="sales@freshkartindia.com" onchange="updateFooterData()"></div>
+        <div class="form-group"><label>फोन नंबर:</label><input type="text" id="adminContactPhone" value="+919619195100" onchange="updateFooterData()"></div>
+        <div class="form-group"><label>लोकेशन / पता:</label><textarea id="adminContactAddress" onchange="updateFooterData()">Sal World Lane, Mhada Colony, Kharghar, Panvel, 410210, Maharashtra, India</textarea></div>
+      </div>
+
+      <h3>📱 WhatsApp & Minimum Order</h3>
+      <div class="form-group"><label>WhatsApp नंबर:</label><input type="text" id="adminWhatsAppNum" value="919876543210"></div>
+      <div class="form-group"><label>न्यूनतम ऑर्डर वैल्यू (₹):</label><input type="number" id="adminMovInput" value="100" onchange="updateMov(this.value)"></div>
+
+      <h3>📢 WhatsApp ब्रॉडकास्ट रेट जनरेटर</h3>
+      <div class="broadcast-box" id="broadcastTextPreview">रेट लिस्ट...</div>
+      <button class="add-btn" style="background:#25D366; margin-bottom:15px;" onclick="copyBroadcastRates()">📋 कॉपी करें</button>
+
+      <h3>🔑 एडमिन क्रेडेंशियल्स और सिक्योरिटी</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>एडमिन ईमेल:</label><input type="email" id="adminEmailSetting" value="admin@freshkart.com"></div>
+        <div class="form-group"><label>नया पासवर्ड:</label><input type="text" id="adminPasswordSetting" value="1234"></div>
+        <button class="add-btn" style="background:#D97706;" onclick="updateAdminCredentials()">💾 अपडेट करें</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="footer-content-grid">
+      <div>
+        <h4 id="footerBrandTitle">FreshKart</h4>
+        <p style="font-size:0.85rem;" id="footerAboutText">Farm fresh vegetables & groceries delivered directly to your doorstep with quality assurance.</p>
+      </div>
+      <div>
+        <h4 id="footerSupportTitle">Support</h4>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerAboutUsText">About Us</p>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerContactUsText">Contact Us</p>
+      </div>
+      <div>
+        <h4 id="footerLegalTitle">Legal</h4>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerPrivacyText">Privacy Policy</p>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerTermsText">Terms & Conditions</p>
+      </div>
+      <div>
+        <h4 id="footerContactTitle">Contact</h4>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayAddress">Sal World Lane, Mhada Colony, Kharghar, Panvel, 410210, Maharashtra, India</p>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayEmail">sales@freshkartindia.com</p>
+        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayPhone">+919619195100</p>
+      </div>
+    </div>
+    <div class="footer-bottom" id="footerCopyText">2026 © FreshKart India | सभी अधिकार सुरक्षित</div>
+  </footer>
+
+  <script>
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let adminAuth = { email: "admin@freshkart.com", pass: "1234" };
+
+    // Real visitor analytics (Session-based increment)
+    let totalVisits = Number(localStorage.getItem('fk_total_visits') || 120);
+    let todayVisits = Number(localStorage.getItem('fk_today_visits') || 24);
+    if (!sessionStorage.getItem('visited_session')) {
+      totalVisits += 1;
+      todayVisits += 1;
+      sessionStorage.setItem('visited_session', 'true');
+      localStorage.setItem('fk_total_visits', totalVisits);
+      localStorage.setItem('fk_today_visits', todayVisits);
+    }
+
+    let minimumOrderValue = 100;
+    let badgeTextContent = "मंडी ताज़ा";
+
+    let banners = [
+      { title: "Saturday Khichdi Fresh Combo", price: 129, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200", btnText: "Shop Now" },
+      { title: "Free Home Delivery Banner", price: 149, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=1200", btnText: "Order Now" },
+      { title: "Fresh Cut Salad Combo", price: 99, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200", btnText: "Buy Salad" },
+      { title: "Sunday Mega Party Pack", price: 199, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200", btnText: "Grab Pack" },
+      { title: "Satvik Kitchen Combo", price: 119, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=1200", btnText: "Get Combo" }
+    ];
+
+    let promoBanners = [
+      "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400",
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"
+    ];
+
+    let circleCategories = [
+      { name: "Fresh Fruits", img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200", cat: "Fruits" },
+      { name: "Fresh Veggies", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200", cat: "Vegetables" },
+      { name: "Sprouts", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200", cat: "Groceries" }
+    ];
+
+    let dayCombos = {
+      "Sunday": { title: "रविवार स्पेशल पार्टी कॉम्बो", price: 150, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400", desc: "ताज़ी मिक्स सब्जियाँ" },
+      "Monday": { title: "सोमवार फ्रेश ग्रीन कॉम्बो", price: 110, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400", desc: "पालक, मेथी" },
+      "Tuesday": { title: "मंगलवार सात्विक कॉम्बो", price: 130, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400", desc: "केला, आलू" },
+      "Wednesday": { title: "बुधवार मिनी किचन पैक", price: 100, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400", desc: "आलू, प्याज" },
+      "Thursday": { title: "गुरुवार स्पेशल कॉम्बो", price: 120, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400", desc: "कद्दू, लौकी" },
+      "Friday": { title: "शुक्रवार हेल्दी सैलेड कॉम्बो", price: 125, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400", desc: "खीरा, गाजर" },
+      "Saturday": { title: "शनिवार स्पेशल खिचड़ी कॉम्बो", price: 140, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=400", desc: "साग, पटल" }
+    };
+
+    let products = [
+      { id: 1, name: "Fresh Potatoes", category: "Vegetables", unitType: "kg", basePrice: 30, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" },
+      { id: 2, name: "Onion", category: "Vegetables", unitType: "kg", basePrice: 40, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8ce?w=400" },
+      { id: 3, name: "Desi Tomatoes", category: "Vegetables", unitType: "kg", basePrice: 50, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" },
+      { id: 4, name: "Green Chillies", category: "Vegetables", unitType: "kg", basePrice: 80, selectedUnit: "250g", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=400" },
+      { id: 5, name: "mustard oil", category: "DairyOil", unitType: "litre", basePrice: 220, selectedUnit: "1 L", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" }
+    ];
+
+    let cart = [];
+    let favorites = [];
+    let currentDayKey = "";
+    let currentSlide = 0;
+    let activeCategory = "All";
+
+    // Comprehensive Language Dictionary for fully dynamic multi-language support
+    const langDict = {
+      hi: {
+        title: "FreshKart - ताज़ा सब्ज़ियाँ, सीधे आपके घर",
+        cart: "कार्ट", search: "सब्जियाँ, फल खोजें...", all: "सभी आइटम", veggies: "🥕 सब्ज़ियाँ", fruits: "🍎 फल", dairy: "🥛 डेयरी और तेल", grocery: "🍞 ग्रोसरी",
+        special: "आज का खास कॉम्बो", add: "+ ADD", added: "✓ ADDED",
+        tabStore: "🛍️ दुकान", tabTrack: "🛵 ट्रैकिंग", account: "👤 अकाउंट", admin: "⚙️ एडमिन",
+        authTitle: "👤 कस्टमर लॉगिन / रजिस्टर", nameLbl: "नाम:", mobLbl: "मोबाइल/ईमेल:", cancel: "रद्द", login: "लॉगिन 🚀", logout: "लॉगआउट",
+        adminTitle: "🔐 एडमिन पोर्टल लॉगिन", emailLbl: "ईमेल:", passLbl: "पासवर्ड:", forgot: "पासवर्ड भूल गए?",
+        drawerTitle: "🛍️ आपकी कार्ट", emptyCart: "कार्ट खाली है!", totalBill: "कुल बिल:", waBtn: "WhatsApp पर ऑर्डर भेजें 📲",
+        mandiTitle: "🛒 ताजा मंडी प्रोडक्ट्स & ग्रोसरी",
+        footerSupport: "Support", footerLegal: "Legal", footerContact: "Contact", footerCopy: "2026 © FreshKart India | सभी अधिकार सुरक्षित"
+      },
+      en: {
+        title: "FreshKart - Fresh Vegetables, Direct to Your Home",
+        cart: "Cart", search: "Search vegetables, fruits...", all: "All Items", veggies: "🥕 Veggies", fruits: "🍎 Fruits", dairy: "🥛 Dairy & Oil", grocery: "🍞 Groceries",
+        special: "Today's Special Combo", add: "+ ADD", added: "✓ ADDED",
+        tabStore: "🛍️ Store", tabTrack: "🛵 Tracking", account: "👤 Account", admin: "⚙️ Admin",
+        authTitle: "👤 Customer Login / Register", nameLbl: "Name:", mobLbl: "Mobile/Email:", cancel: "Cancel", login: "Login 🚀", logout: "Logout",
+        adminTitle: "🔐 Admin Portal Login", emailLbl: "Email:", passLbl: "Password:", forgot: "Forgot Password?",
+        drawerTitle: "🛍️ Your Cart", emptyCart: "Cart is empty!", totalBill: "Total Bill:", waBtn: "Send Order on WhatsApp 📲",
+        mandiTitle: "🛒 Fresh Mandi Products & Groceries",
+        footerSupport: "Support", footerLegal: "Legal", footerContact: "Contact", footerCopy: "2026 © FreshKart India | All Rights Reserved"
+      },
+      bn: {
+        title: "FreshKart - তাজা শাকসবজি, আপনার ঠিকানায়",
+        cart: "কার্ট", search: "শাকসবজি, ফল খুঁজুন...", all: "সব আইটেম", veggies: "🥕 শাকসবজি", fruits: "🍎 ফল", dairy: "🥛 দুধ ও তেল", grocery: "🍞 মুদি",
+        special: "আজকের বিশেষ কম্বো", add: "+ ADD", added: "✓ ADDED",
+        tabStore: "🛍️ দোকান", tabTrack: "🛵 ট্র্যাকিং", account: "👤 অ্যাকাউন্ট", admin: "⚙️ অ্যাডমিন",
+        authTitle: "👤 গ্রাহক লগইন / রেজিস্টার", nameLbl: "নাম:", mobLbl: "মোবাইল/ইমেল:", cancel: "বাতিল", login: "লগইন 🚀", logout: "লগআউট",
+        adminTitle: "🔐 অ্যাডমিন পোর্টাল লগইন", emailLbl: "ইমেল:", passLbl: "পাসওয়ার্ড:", forgot: "পাসওয়ার্ড ভুলে গেছেন?",
+        drawerTitle: "🛍️ আপনার কার্ট", emptyCart: "কার্ট খালি আছে!", totalBill: "মোট বিল:", waBtn: "WhatsApp-এ অর্ডার পাঠান 📲",
+        mandiTitle: "🛒 তাজা মান্ডি পণ্য ও মুদি",
+        footerSupport: "সহায়তা", footerLegal: "আইনি", footerContact: "যোগাযোগ", footerCopy: "2026 © FreshKart India | সর্বস্বত্ব সংরক্ষিত"
+      }
+    };
+    let currentLang = 'hi';
+
+    function init() {
+      const today = new Date();
+      currentDayKey = dayNames[today.getDay()];
+      renderBanners();
+      renderCircleCategories();
+      renderPromoBanners();
+      renderCombo();
+      renderProducts();
+      renderAdminBanners();
+      renderAdminCircleCats();
+      renderAdminDayCombos();
+      renderAdminProductsManager();
+      loadAnalytics();
+      updateBroadcastPreview();
+    }
+
+    function renderBanners() {
+      banners.forEach((b, i) => {
+        const imgEl = document.getElementById(`bImg-${i}`);
+        const btnEl = document.getElementById(`bBtnText-${i}`);
+        if(imgEl) imgEl.src = b.img;
+        if(btnEl) btnEl.innerText = `${b.btnText || 'Shop Now'} (₹${b.price})`;
+      });
+    }
+
+    function renderCircleCategories() {
+      const container = document.getElementById('circleCatsView');
+      container.innerHTML = circleCategories.map(c => `
+        <div class="circle-cat-item" onclick="filterCategory('${c.cat}')">
+          <img class="circle-cat-img" src="${c.img}">
+          <span class="circle-cat-name">${c.name}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderPromoBanners() {
+      document.getElementById('promoImg1').src = promoBanners[0];
+      document.getElementById('promoImg2').src = promoBanners[1];
+      document.getElementById('promoImg3').src = promoBanners[2];
+      document.getElementById('adminPromo1').value = promoBanners[0];
+      document.getElementById('adminPromo2').value = promoBanners[1];
+      document.getElementById('adminPromo3').value = promoBanners[2];
+    }
+
+    function updatePromoBanners() {
+      promoBanners[0] = document.getElementById('adminPromo1').value;
+      promoBanners[1] = document.getElementById('adminPromo2').value;
+      promoBanners[2] = document.getElementById('adminPromo3').value;
+      renderPromoBanners();
+    }
+
+    function changeSlide(dir) {
+      const slides = document.querySelectorAll('.banner-slide');
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + dir + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+
+    function currentSlideIndex(idx) {
+      const slides = document.querySelectorAll('.banner-slide');
+      slides[currentSlide].classList.remove('active');
+      currentSlide = idx;
+      slides[currentSlide].classList.add('active');
+    }
+
+    function addBannerToCart(i) {
+      const b = banners[i];
+      cart.push({ name: b.title, price: Number(b.price) });
+      updateCartDrawer();
+      alert(`"${b.title}" कार्ट में जुड़ गया!`);
+    }
+
+    function renderCombo() {
+      const combo = dayCombos[currentDayKey] || dayCombos["Thursday"];
+      document.getElementById('todayComboHeading').innerText = `${currentDayKey} Special: ${combo.title}`;
+      document.getElementById('dayComboContainer').innerHTML = `
+        <div class="card" style="grid-column: 1 / -1; display:flex; flex-direction:row; gap:14px; align-items:center;">
+          <img src="${combo.img}" style="width:120px; height:100px; border-radius:8px; object-fit:cover;">
+          <div style="flex:1;">
+            <span class="badge" style="position:static; display:inline-block; margin-bottom:4px;">Special Combo</span>
+            <div class="card-title" style="font-size:1rem;">${combo.title}</div>
+            <p style="font-size:0.8rem; color:#718096; margin:2px 0 6px 0;">${combo.desc}</p>
+            <div class="card-price">₹${combo.price}</div>
+            <button class="add-btn" style="width:auto; padding:6px 16px;" onclick="addToCart('${combo.title}', ${Number(combo.price)})">+ Add Combo</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterCategory(cat, btn) {
+      activeCategory = cat;
+      if(btn) {
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      let filtered = products.filter(p => {
+        let matchesCat = (activeCategory === 'All' || p.category === activeCategory);
+        let matchesSearch = p.name.toLowerCase().includes(query);
+        return matchesCat && matchesSearch;
+      });
+
+      const container = document.getElementById('productGrid');
+      container.innerHTML = filtered.map(p => {
+        let mult = 1;
+        if (p.selectedUnit === "500g" || p.selectedUnit === "500 ml") mult = 0.5;
+        if (p.selectedUnit === "250g" || p.selectedUnit === "250 ml") mult = 0.25;
+        if (p.selectedUnit === "100g" || p.selectedUnit === "100 ml") mult = 0.1;
+        let finalPrice = Math.round(p.basePrice * mult * p.qty);
+
+        let unitBtns = '';
+        if (p.unitType === 'litre') {
+          unitBtns = `<button class="weight-btn ${p.selectedUnit==='250 ml'?'selected':''}" onclick="setUnit(${p.id},'250 ml')">250 ml</button>
+                      <button class="weight-btn ${p.selectedUnit==='500 ml'?'selected':''}" onclick="setUnit(${p.id},'500 ml')">500 ml</button>
+                      <button class="weight-btn ${p.selectedUnit==='1 L'?'selected':''}" onclick="setUnit(${p.id},'1 L')">1 L</button>`;
+        } else if (p.unitType === 'pcs') {
+          unitBtns = `<button class="weight-btn selected">1 Pc</button>`;
+        } else {
+          unitBtns = `<button class="weight-btn ${p.selectedUnit==='100g'?'selected':''}" onclick="setUnit(${p.id},'100g')">100g</button>
+                      <button class="weight-btn ${p.selectedUnit==='250g'?'selected':''}" onclick="setUnit(${p.id},'250g')">250g</button>
+                      <button class="weight-btn ${p.selectedUnit==='500g'?'selected':''}" onclick="setUnit(${p.id},'500g')">500g</button>
+                      <button class="weight-btn ${p.selectedUnit==='1 kg'?'selected':''}" onclick="setUnit(${p.id},'1 kg')">1 kg</button>`;
+        }
+
+        let isFav = favorites.includes(p.id);
+        let favIcon = isFav ? "❤️" : "🤍";
+
+        let actionContent = '';
+        if(p.inStock) {
+          actionContent = `
+            <div class="card-actions-row">
+              <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
+                <span style="font-weight:700;">${p.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+              </div>
+            </div>
+            <button class="add-btn" id="addBtn-${p.id}" onclick="addSelectedProduct(${p.id})">${langDict[currentLang].add}</button>
+          `;
+        } else {
+          actionContent = `<div class="out-of-stock-badge">Out of Stock</div>`;
+        }
+
+        return `
+          <div class="card">
+            <span class="badge" style="background:${document.getElementById('adminBadgeBg')?.value || '#FF6B6B'}">${badgeTextContent}</span>
+            <button class="fav-btn" onclick="toggleFavorite(${p.id})">${favIcon}</button>
+            <img src="${p.img}">
+            <div class="card-title">${p.name}</div>
+            <div class="card-price">₹${finalPrice} <span style="font-size:0.75rem; color:#718096;">(${p.selectedUnit})</span></div>
+            <div class="weight-options">${unitBtns}</div>
+            ${actionContent}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFavorite(id) {
+      if(favorites.includes(id)) {
+        favorites = favorites.filter(i => i !== id);
+      } else {
+        favorites.push(id);
+      }
+      document.getElementById('favCount').innerText = favorites.length;
+      renderProducts();
+    }
+
+    function setUnit(id, unit) { const p = products.find(prod => prod.id === id); if(p) { p.selectedUnit = unit; renderProducts(); } }
+    function changeQty(id, delta) { const p = products.find(prod => prod.id === id); if(p) { p.qty += delta; if(p.qty < 1) p.qty = 1; renderProducts(); } }
+
+    function addSelectedProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if(p && p.inStock) {
+        let mult = 1;
+        if (p.selectedUnit === "500g" || p.selectedUnit === "500 ml") mult = 0.5;
+        if (p.selectedUnit === "250g" || p.selectedUnit === "250 ml") mult = 0.25;
+        if (p.selectedUnit === "100g" || p.selectedUnit === "100 ml") mult = 0.1;
+        let price = Math.round(p.basePrice * mult * p.qty);
+        cart.push({ name: `${p.name} (${p.selectedUnit} x ${p.qty})`, price });
+        updateCartDrawer();
+
+        const btn = document.getElementById(`addBtn-${id}`);
+        if(btn) {
+          btn.innerText = langDict[currentLang].added;
+          btn.classList.add('added-state');
+          setTimeout(() => {
+            btn.innerText = langDict[currentLang].add;
+            btn.classList.remove('added-state');
+          }, 1000);
+        }
+      }
+    }
+
+    function addToCart(name, price) { cart.push({ name, price }); updateCartDrawer(); alert(`"${name}" कार्ट में जुड़ गया!`); }
+    function toggleCartDrawer() { document.getElementById('cartDrawer').classList.toggle('open'); }
+    function removeCartItem(idx) { cart.splice(idx, 1); updateCartDrawer(); }
+
+    function updateCartDrawer() {
+      document.getElementById('cartBadgeCount').innerText = cart.length;
+      let total = cart.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('drawerCartTotal').innerText = `₹${total}`;
+      const body = document.getElementById('cartDrawerBody');
+      body.innerHTML = cart.length === 0 ? `<p style="text-align:center; color:#A0AEC0;">${langDict[currentLang].emptyCart}</p>` :
+        cart.map((i, idx) => `<div class="cart-item"><div><b>${i.name}</b><br>₹${i.price}</div><button onclick="removeCartItem(${idx})" style="background:#FED7D7; color:#E53E3E; border:none; padding:4px; border-radius:4px;">❌</button></div>`).join('');
+    }
+
+    function renderAdminProductsManager() {
+      const container = document.getElementById('adminProductManagerList');
+      container.innerHTML = products.map((p) => `
+        <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div style="flex:2;"><label>नाम:</label><input type="text" value="${p.name}" onchange="updateProdField(${p.id}, 'name', this.value)"></div>
+            <div style="flex:1;"><label>दाम (₹):</label><input type="number" value="${p.basePrice}" onchange="updateProdField(${p.id}, 'basePrice', Number(this.value))"></div>
+            <div style="flex:2;"><label>फोटो URL:</label><input type="text" value="${p.img}" onchange="updateProdField(${p.id}, 'img', this.value)"></div>
+            <div style="flex:1;"><label>स्टॉक:</label>
+              <select onchange="updateProdField(${p.id}, 'inStock', this.value === 'true')">
+                <option value="true" ${p.inStock?'selected':''}>In Stock</option>
+                <option value="false" ${!p.inStock?'selected':''}>Out of Stock</option>
+              </select>
+            </div>
+            <div style="display:flex; align-items:flex-end;"><button onclick="deleteProduct(${p.id})" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">डिलिट</button></div>
+          </div>
+        </div>
+      `).join('');
+      updateBroadcastPreview();
+    }
+
+    function updateProdField(id, field, val) {
+      const p = products.find(prod => prod.id === id);
+      if(p) { p[field] = val; renderProducts(); updateBroadcastPreview(); }
+    }
+
+    function addNewProduct() {
+      const name = document.getElementById('newProdName').value.trim();
+      const cat = document.getElementById('newProdCat').value;
+      const unitType = document.getElementById('newProdUnitType').value;
+      const price = Number(document.getElementById('newProdPrice').value);
+      const img = document.getElementById('newProdImg').value.trim() || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
+      if(!name || !price) return alert('नाम और दाम भरें!');
+      let defaultUnit = unitType === 'litre' ? '1 L' : (unitType === 'pcs' ? '1 Pc' : '1 kg');
+      products.push({ id: products.length + 1, name, category: cat, unitType, basePrice: price, selectedUnit: defaultUnit, qty: 1, inStock: true, img });
+      document.getElementById('newProdName').value = ""; document.getElementById('newProdPrice').value = ""; document.getElementById('newProdImg').value = "";
+      renderProducts(); renderAdminProductsManager(); alert('आइटम जुड़ गया!');
+    }
+
+    function deleteProduct(id) { products = products.filter(p => p.id !== id); renderProducts(); renderAdminProductsManager(); }
+
+    function renderAdminBanners() {
+      const container = document.getElementById('adminBannerList');
+      container.innerHTML = banners.map((b, i) => `
+        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px;">
+          <label>बैनर ${i+1} नाम:</label><input type="text" value="${b.title}" oninput="banners[${i}].title=this.value; renderBanners();">
+          <label>दाम (₹):</label><input type="number" value="${b.price}" oninput="banners[${i}].price=Number(this.value); renderBanners();">
+          <label>इमेज URL:</label><input type="text" value="${b.img}" oninput="banners[${i}].img=this.value; renderBanners();">
+        </div>
+      `).join('');
+    }
+
+    function renderAdminCircleCats() {
+      const container = document.getElementById('adminCircleCatsList');
+      container.innerHTML = circleCategories.map((c, i) => `
+        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; gap:10px;">
+          <div style="flex:1;"><label>नाम:</label><input type="text" value="${c.name}" oninput="circleCategories[${i}].name=this.value; renderCircleCategories();"></div>
+          <div style="flex:2;"><label>इमेज URL:</label><input type="text" value="${c.img}" oninput="circleCategories[${i}].img=this.value; renderCircleCategories();"></div>
+        </div>
+      `).join('');
+    }
+
+    function updateCircleRingColor() {
+      let col = document.getElementById('adminCircleRingColor').value;
+      document.documentElement.style.setProperty('--circle-ring-color', col);
+    }
+
+    function renderAdminDayCombos() {
+      const container = document.getElementById('adminDayCombosList');
+      container.innerHTML = Object.keys(dayCombos).map(day => `
+        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px;">
+          <b>${day} Combo:</b>
+          <div style="display:flex; gap:10px; margin-top:5px;">
+            <input type="text" value="${dayCombos[day].title}" oninput="dayCombos['${day}'].title=this.value; renderCombo();" style="flex:2;">
+            <input type="number" value="${dayCombos[day].price}" oninput="dayCombos['${day}'].price=Number(this.value); renderCombo();" style="flex:1;">
+            <input type="text" value="${dayCombos[day].img}" oninput="dayCombos['${day}'].img=this.value; renderCombo();" style="flex:2;">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadAnalytics() {
+      document.getElementById('adminTotalVisitsDisplay').innerText = totalVisits;
+      document.getElementById('adminTodayVisitsDisplay').innerText = todayVisits;
+    }
+
+    function updateHeaderBrand() {
+      document.getElementById('headerLogoImg').src = document.getElementById('adminLogoImgUrl').value;
+      let f = document.getElementById('adminFreshText').value;
+      let k = document.getElementById('adminKartText').value;
+      let fc = document.getElementById('adminFreshColor').value;
+      let kc = document.getElementById('adminKartColor').value;
+      document.getElementById('headerTextFresh').innerText = f;
+      document.getElementById('headerTextFresh').style.color = fc;
+      document.getElementById('headerTextKart').innerText = k;
+      document.getElementById('headerTextKart').style.color = kc;
+    }
+
+    function updateBadgeStyle() {
+      badgeTextContent = document.getElementById('adminBadgeText').value;
+      renderProducts();
+    }
+
+    function updateFooterData() {
+      document.getElementById('footerDisplayEmail').innerText = document.getElementById('adminContactEmail').value;
+      document.getElementById('footerDisplayPhone').innerText = document.getElementById('adminContactPhone').value;
+      document.getElementById('footerDisplayAddress').innerText = document.getElementById('adminContactAddress').value;
+    }
+
+    function updateMov(val) { minimumOrderValue = Number(val); }
+
+    function updateAdminCredentials() {
+      adminAuth.email = document.getElementById('adminEmailSetting').value;
+      adminAuth.pass = document.getElementById('adminPasswordSetting').value;
+      alert('क्रेडेंशियल्स अपडेट हो गए!');
+    }
+
+    function forgotPasswordAdmin() {
+      let em = prompt("रजिस्टर्ड एडमिन ईमेल दर्ज करें:");
+      if(em === adminAuth.email) {
+        let np = prompt("नया पासवर्ड दर्ज करें:");
+        if(np) { adminAuth.pass = np; alert("पासवर्ड बदल गया है!"); }
+      } else if(em) { alert("गलत ईमेल!"); }
+    }
+
+    function updateBroadcastPreview() {
+      let text = `🌿 *FreshKart - मंडी भाव* 🌿\n`;
+      products.forEach(p => { text += `▪️ ${p.name}: ₹${p.basePrice}\n`; });
+      document.getElementById('broadcastTextPreview').innerText = text;
+    }
+
+    function copyBroadcastRates() {
+      navigator.clipboard.writeText(document.getElementById('broadcastTextPreview').innerText);
+      alert('रेट लिस्ट कॉपी हो गई!');
+    }
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      const t = langDict[lang];
+
+      document.getElementById('pageTitle').innerText = t.title;
+      document.getElementById('cartBtnLabel').innerText = t.cart;
+      document.getElementById('searchInput').placeholder = t.search;
+      document.getElementById('pillAll').innerText = t.all;
+      document.getElementById('pillVeg').innerText = t.veggies;
+      document.getElementById('pillFruit').innerText = t.fruits;
+      document.getElementById('pillDairy').innerText = t.dairy;
+      document.getElementById('pillGro').innerText = t.grocery;
+      
+      document.getElementById('tabStore').innerText = t.tabStore;
+      document.getElementById('tabTrack').innerText = t.tabTrack;
+      document.getElementById('accountBtnText').innerText = t.account;
+      
+      document.getElementById('authModalTitle').innerText = t.authTitle;
+      document.getElementById('labelName').innerText = t.nameLbl;
+      document.getElementById('labelMobile').innerText = t.mobLbl;
+      document.getElementById('cancelBtnText').innerText = t.cancel;
+      document.getElementById('loginBtnText').innerText = t.login;
+      
+      document.getElementById('adminModalTitle').innerText = t.adminTitle;
+      document.getElementById('labelEmail').innerText = t.emailLbl;
+      document.getElementById('labelPass').innerText = t.passLbl;
+      document.getElementById('forgotPassText').innerText = t.forgot;
+      document.getElementById('adminCancelText').innerText = t.cancel;
+      document.getElementById('adminLoginText').innerText = t.login;
+
+      document.getElementById('cartDrawerTitle').innerText = t.drawerTitle;
+      document.getElementById('totalBillText').innerText = t.totalBill;
+      document.getElementById('whatsappOrderBtnText').innerText = t.waBtn;
+      document.getElementById('mandiProductsTitle').innerText = t.mandiTitle;
+
+      document.getElementById('footerSupportTitle').innerText = t.footerSupport;
+      document.getElementById('footerLegalTitle').innerText = t.footerLegal;
+      document.getElementById('footerContactTitle').innerText = t.footerContact;
+      document.getElementById('footerCopyText').innerText = t.footerCopy;
+
+      renderProducts();
+    }
+
+    function openAdminLoginModal() {
+      if(localStorage.getItem("fk_admin_logged") === "true") {
+        switchTab('admin');
+      } else {
+        document.getElementById('adminLoginModal').style.display = 'flex';
+      }
+    }
+    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
+    
+    function verifyAdminLogin() {
+      if(document.getElementById('loginEmailInput').value === adminAuth.email && document.getElementById('loginPasswordInput').value === adminAuth.pass) {
+        localStorage.setItem("fk_admin_logged", "true");
+        closeAdminLoginModal(); switchTab('admin');
+      } else { alert('गलत डिटेल्स!'); }
+    }
+    
+    function adminLogout() {
+      localStorage.removeItem("fk_admin_logged");
+      switchTab('store');
+      alert('लॉगआउट हो गए।');
+    }
+
+    function openCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'flex'; }
+    function closeCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'none'; }
+    function registerOrLoginCustomer() {
+      const name = document.getElementById('custRegName').value.trim();
+      if(!name) return alert('नाम दर्ज करें!');
+      document.getElementById('accountBtnText').innerText = `👤 ${name}`;
+      closeCustomerAuthModal(); alert(`स्वागत है, ${name}!`);
+    }
+    function customerLogout() { document.getElementById('accountBtnText').innerText = "👤 अकाउंट"; closeCustomerAuthModal(); }
+
+    function switchTab(tab) {
+      document.getElementById('storeTab').style.display = tab === 'store' ? 'block' : 'none';
+      document.getElementById('trackingTab').style.display = tab === 'tracking' ? 'block' : 'none';
+      document.getElementById('adminTab').style.display = tab === 'admin' ? 'block' : 'none';
+    }
+
+    function setTheme(color) { document.documentElement.style.setProperty('--primary-color', color); }
+
+    function sendWhatsAppOrder() {
+      if(cart.length === 0) return alert('कार्ट खाली है!');
+      let total = cart.reduce((s, i) => s + i.price, 0);
+      if(total < minimumOrderValue) return alert(`न्यूनतम ऑर्डर ₹${minimumOrderValue} है!`);
+      let items = cart.map(i => `${i.name} (₹${i.price})`).join('%0A');
+      let num = document.getElementById('adminWhatsAppNum').value;
+      window.open(`https://wa.me/${num}?text=Order:%0A${items}%0ATotal: ₹${total}`, '_blank');
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
