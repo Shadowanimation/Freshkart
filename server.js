@@ -78,7 +78,7 @@ app.post('/api/visitor/hit', async (req, res) => {
         if (!visitorDoc) visitorDoc = new Visitor({ dateKey: todayStr, count: 1 });
         else visitorDoc.count += 1;
         await visitorDoc.save();
-        
+       
         const allVisitors = await Visitor.find();
         const total = allVisitors.reduce((sum, v) => sum + v.count, 0);
         res.json({ success: true, todayCount: visitorDoc.count, totalCount: total });
@@ -93,8 +93,23 @@ app.post('/api/logs', async (req, res) => {
     try { await new ActivityLog(req.body).save(); res.json({ success: true }); } catch (err) { res.status(500).json({ success: false }); }
 });
 
+// [अपडेटेड सर्च और कैटेगरी API]: अब यह MongoDB से सीधा सर्च और कैटेगरी के आधार पर डेटा फ़िल्टर करेगा
 app.get('/api/products', async (req, res) => {
-    try { res.json(await Product.find().sort({ sortOrder: 1 })); } catch (err) { res.status(500).json({ error: err.message }); }
+    try {
+        const { search, category } = req.query;
+        let query = {};
+
+        if (category && category !== 'All') {
+            query.category = category;
+        }
+
+        if (search) {
+            query.name = { $regex: search, $options: 'i' };
+        }
+
+        const products = await Product.find(query).sort({ sortOrder: 1 });
+        res.json(products);
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.put('/api/products/:id', async (req, res) => {
