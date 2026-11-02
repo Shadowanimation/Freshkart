@@ -19,7 +19,7 @@
     .search-bar input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid #CBD5E0; border-radius: 20px; font-size: 0.9rem; outline: none; }
     .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #A0AEC0; }
     .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    
+   
     .nav-btn { background: #EDF2F7; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #4A5568; }
     .nav-btn.active { background: var(--primary-color); color: white; }
     .top-action-btn, .top-cart-btn { background: var(--primary-color); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
@@ -68,7 +68,7 @@
     .card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
     .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
     .card-title { font-size: 0.95rem; font-weight: 700; margin: 8px 0 2px 0; }
-    
+   
     .price-box { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
     .card-price { font-size: 1.1rem; font-weight: 800; color: #1A202C; }
     .old-price { font-size: 0.85rem; text-decoration: line-through; color: #A0AEC0; font-weight: 600; }
@@ -76,7 +76,7 @@
     .card-unit-select { width: 100%; padding: 4px; border: 1px solid #CBD5E0; border-radius: 6px; font-size: 0.8rem; margin: 4px 0 8px 0; outline: none; }
     .qty-box { display: flex; align-items: center; justify-content: space-between; background: #EDF2F7; border-radius: 8px; padding: 4px 8px; margin-bottom: 6px; }
     .qty-btn { background: white; border: 1px solid #CBD5E0; width: 26px; height: 26px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    
+   
     .add-btn { width: 100%; background: var(--primary-color); color: white; border: 2px solid transparent; padding: 8px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .add-btn.added { background: #15803D !important; color: #ffffff !important; border: 2px solid #FEF08A !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(21, 128, 61, 0.4); }
 
@@ -105,10 +105,11 @@
         <span id="headerTextFresh" style="color: #008F5D;">Fresh</span><span id="headerTextKart" style="color: #FF7A00;">kart</span>
       </div>
     </a>
-    
+   
+    <!-- [अपडेटेड सर्च बार]: अब टाइप करने पर यह सीधे डेटाबेस से कनेक्ट होकर प्रोडक्ट्स लाएगा -->
     <div class="search-bar">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="सब्जियाँ खोजें..." oninput="filterProducts()">
+      <input type="text" id="searchInput" placeholder="सब्जियाँ खोजें..." oninput="loadProductsFromDb()">
     </div>
 
     <div class="header-right">
@@ -369,7 +370,7 @@
         </div>
         <div class="form-group"><label>बेस प्राइस (₹):</label><input type="number" id="newProdBasePrice"></div>
         <div class="form-group"><label>सेल प्राइस (₹):</label><input type="number" id="newProdSalePrice"></div>
-        
+       
         <div class="form-group">
           <label>फोटो (URL पेस्ट करें या कंप्यूटर/फोन से JPG/PNG चुनें):</label>
           <div style="display:flex; gap:8px; align-items:center;">
@@ -536,7 +537,7 @@
         const footerData = await footerRes.json();
         if(footerData) {
           document.getElementById('footerLogoImg').src = footerData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100";
-          
+         
           let fFreshColor = footerData.freshColor || "#008F5D";
           let fKartColor = footerData.kartColor || "#FF7A00";
           let fBgColor = footerData.bgColor || "#0F172A";
@@ -544,7 +545,7 @@
           document.getElementById('footerTextFresh').style.setProperty('color', fFreshColor, 'important');
           document.getElementById('footerTextKart').style.setProperty('color', fKartColor, 'important');
           document.getElementById('mainFooterElement').style.backgroundColor = fBgColor;
-          
+         
           document.getElementById('adminFooterLogoUrl').value = footerData.logoUrl || "";
           document.getElementById('adminFooterFreshColor').value = fFreshColor;
           document.getElementById('adminFooterKartColor').value = fKartColor;
@@ -568,13 +569,7 @@
         renderCircleCategories();
         renderAdminCircleCategories();
 
-        const prodRes = await fetch('/api/products');
-        const dbProducts = await prodRes.json();
-        products = dbProducts.map((p, index) => ({
-          id: index + 1, dbId: p._id, name: p.name, category: p.category || 'Vegetables',
-          basePrice: p.basePrice || p.salePrice + 10, salePrice: p.salePrice,
-          unit: p.unit || '1 kg', inStock: p.inStock, img: p.img || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: p.sortOrder !== undefined ? p.sortOrder : (index + 1)
-        }));
+        await loadProductsFromDb();
 
         const langRes = await fetch('/api/settings/language_config');
         const langData = await langRes.json();
@@ -622,11 +617,29 @@
         renderBanners(); renderAdminBanners();
         startAutoSlide();
 
-        renderProducts();
-        renderAdminProductsManager();
         loadCustomerOrderHistory();
         updateCartDrawer();
       } catch (err) { console.error('Error loading data:', err); }
+    }
+
+    // [अपडेटेड सर्च और कैटेगरी लोडर फंक्शन]: यह सीधे MongoDB से सर्च और कैटेगरी के आधार पर डेटा मंगवाता है
+    async function loadProductsFromDb() {
+      const searchQuery = document.getElementById('searchInput').value.trim();
+      let url = `/api/products?`;
+      if(searchQuery) url += `search=${encodeURIComponent(searchQuery)}&`;
+      if(activeCategory && activeCategory !== 'All') url += `category=${encodeURIComponent(activeCategory)}`;
+
+      try {
+        const prodRes = await fetch(url);
+        const dbProducts = await prodRes.json();
+        products = dbProducts.map((p, index) => ({
+          id: index + 1, dbId: p._id, name: p.name, category: p.category || 'Vegetables',
+          basePrice: p.basePrice || p.salePrice + 10, salePrice: p.salePrice,
+          unit: p.unit || '1 kg', inStock: p.inStock, img: p.img || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: p.sortOrder !== undefined ? p.sortOrder : (index + 1)
+        }));
+        renderProducts();
+        renderAdminProductsManager();
+      } catch(err) { console.error("Error loading products:", err); }
     }
 
     async function saveSettingToDb(key, value) {
@@ -646,7 +659,7 @@
       const kartColor = document.getElementById('adminKartColorInput').value;
 
       await saveSettingToDb('logo_config', { logoUrl, freshColor, kartColor });
-      
+     
       document.getElementById('headerLogoImg').src = logoUrl;
       document.getElementById('headerTextFresh').style.color = freshColor;
       document.getElementById('headerTextKart').style.color = kartColor;
@@ -955,19 +968,16 @@
         document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
       }
-      renderProducts();
+      loadProductsFromDb();
     }
 
     function renderProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      let filtered = products.filter(p => (activeCategory === 'All' || p.category === activeCategory) && p.name.toLowerCase().includes(query));
-
       const unitOptions = ['100g', '250g', '500g', '1 kg', '1 Piece', '2 Pieces', '5 Pieces', '1/2 Dozen', '1 Dozen', '1 Liter', '500 ml'];
 
-      document.getElementById('productGrid').innerHTML = filtered.map(p => {
+      document.getElementById('productGrid').innerHTML = products.map(p => {
         if(!quantities[p.id]) quantities[p.id] = 1;
         if(!selectedUnits[p.id]) selectedUnits[p.id] = p.unit || '1 kg';
-        
+       
         let currentQty = quantities[p.id];
         let currentUnit = selectedUnits[p.id];
         let calculatedPrice = calculateDynamicPrice(p.salePrice, currentUnit, currentQty);
@@ -976,7 +986,7 @@
           <div class="card">
             <img src="${p.img}">
             <div class="card-title">${p.name}</div>
-            
+           
             <select class="card-unit-select" id="unit-sel-${p.id}" onchange="onUnitChange(${p.id}, this.value)">
               ${unitOptions.map(u => `<option value="${u}" ${u === currentUnit ? 'selected' : ''}>${u}</option>`).join('')}
             </select>
@@ -1001,7 +1011,7 @@
 
     function calculateDynamicPrice(baseSalePrice, unit, qty) {
       let multiplier = 1;
-      
+     
       if (unit.includes('Piece')) {
         let pieceCount = 1;
         if (unit.startsWith('2')) pieceCount = 2;
@@ -1018,7 +1028,7 @@
       else if(unit === '1 Dozen') multiplier = 1;
       else if(unit === '1 Liter') multiplier = 1;
       else if(unit === '500 ml') multiplier = 0.5;
-      
+     
       return Math.round(baseSalePrice * multiplier * qty);
     }
 
@@ -1034,7 +1044,7 @@
       if(!quantities[id]) quantities[id] = 1;
       quantities[id] += delta;
       if(quantities[id] < 1) quantities[id] = 1;
-      
+     
       document.getElementById(`qty-${id}`).innerText = quantities[id];
       let unit = selectedUnits[id] || '1 kg';
       let newPrice = calculateDynamicPrice(baseSalePrice, unit, quantities[id]);
@@ -1046,7 +1056,7 @@
       let qty = quantities[id] || 1;
       let unit = selectedUnits[id] || p.unit;
       let finalPrice = calculateDynamicPrice(p.salePrice, unit, qty);
-      
+     
       addToCart(`${p.name} (${qty} ${unit})`, finalPrice, document.getElementById(`add-btn-${id}`));
     }
 
@@ -1142,7 +1152,7 @@
       const basePrice = Number(document.getElementById('newProdBasePrice').value) || 50;
       const salePrice = Number(document.getElementById('newProdSalePrice').value);
       const img = document.getElementById('newProdImg').value || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
-      
+     
       if(!name || !salePrice) return alert('नाम और सेल प्राइस भरें!');
 
       const res = await fetch('/api/products', {
@@ -1160,12 +1170,12 @@
     }
 
     function toggleCartDrawer() { document.getElementById('cartDrawer').classList.toggle('open'); }
-    
+   
     function updateCartDrawer() {
       document.getElementById('cartBadgeCount').innerText = cart.length;
       let total = cart.reduce((sum, item) => sum + item.price, 0);
       document.getElementById('drawerCartTotal').innerText = `₹${total}`;
-      
+     
       const bodyEl = document.getElementById('cartDrawerBody');
       if(cart.length === 0) {
         bodyEl.innerHTML = `<p style="text-align:center; color:#A0AEC0;">कार्ट खाली है!</p>`;
@@ -1190,9 +1200,9 @@
       if(total < minOrderValue) {
         return alert(`न्यूनतम ऑर्डर मूल्य (MOV) ₹${minOrderValue} है! कृपया कुछ और आइटम जोड़ें।`);
       }
-      
+     
       let customer = JSON.parse(localStorage.getItem('fk_logged_customer') || '{"name":"Guest", "phone":"N/A"}');
-      
+     
       let msg = `*FreshKart New Order*%0A`;
       msg += `👤 नाम: ${customer.name}%0A`;
       msg += `📞 फोन: ${customer.phone}%0A%0A`;
@@ -1221,7 +1231,7 @@
       alert('WhatsApp ब्रॉडकास्ट रेट लिस्ट कॉपी हो गई है!');
     }
 
-    function openCustomerAuthModal() { 
+    function openCustomerAuthModal() {
       document.getElementById('customerAuthModal').style.display = 'flex';
       let logged = localStorage.getItem('fk_logged_customer');
       if(logged) {
@@ -1233,16 +1243,16 @@
         document.getElementById('logoutSection').style.display = 'none';
       }
     }
-    
+   
     function closeCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'none'; }
-    
+   
     async function loginCustomer() {
       let name = document.getElementById('custRegName').value;
       let phone = document.getElementById('custRegPhone').value;
       if(!name || !phone) return alert('नाम और फोन नंबर भरें!');
-      
+     
       localStorage.setItem('fk_logged_customer', JSON.stringify({ name, phone }));
-      
+     
       await fetch('/api/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1304,12 +1314,12 @@
     function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
     function verifyAdminLogin() {
       if(document.getElementById('loginEmailInput').value === adminAuth.email && document.getElementById('loginPasswordInput').value === adminAuth.pass) {
-        closeAdminLoginModal(); 
+        closeAdminLoginModal();
         switchTab('admin');
       } else { alert('गलत डिटेल्स!'); }
     }
     function adminLogout() { switchTab('store'); alert('एडमिन लॉगआउट!'); }
-    
+   
     function switchTab(tab) {
       document.getElementById('storeTab').style.display = tab === 'store' ? 'block' : 'none';
       document.getElementById('trackingTab').style.display = tab === 'tracking' ? 'block' : 'none';
@@ -1322,6 +1332,3 @@
   </script>
 </body>
 </html>
-
-
-
