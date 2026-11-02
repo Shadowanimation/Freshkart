@@ -1,54 +1,29 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="hi" id="htmlRoot">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">FreshKart - ताज़ा सब्ज़ियाँ, सीधे आपके घर</title>
+  <title id="pageTitle">FreshKart - ताज़ा सब्ज़ियाँ और ग्रोसरी</title>
   <style>
     :root {
       --primary-color: #00B074;
-      --primary-dark: #008F5D;
       --header-bg: #ffffff;
       --bg-color: #F8F9FA;
-      --badge-bg: #FF6B6B;
-      --badge-text: #ffffff;
-      --circle-ring-color: #00B074;
+      --footer-bg: #0F172A;
     }
-    body {
-      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg-color);
-      color: #2D3748;
-    }
-    header {
-      background-color: var(--header-bg);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 8px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: #2D3748; }
+    header { background-color: var(--header-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
     .logo-container { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .logo-container img { height: 42px; width: auto; object-fit: contain; }
-    
-    .search-bar { flex: 1; max-width: 260px; position: relative; }
-    .search-bar input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid #CBD5E0; border-radius: 20px; font-size: 0.9rem; outline: none; box-sizing: border-box; }
-    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #A0AEC0; font-size: 0.9rem; }
-    
+    .logo-container img { height: 42px; width: auto; border-radius: 6px; }
+    .search-bar { flex: 1; max-width: 240px; position: relative; }
+    .search-bar input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid #CBD5E0; border-radius: 20px; font-size: 0.9rem; outline: none; }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #A0AEC0; }
     .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .theme-picker-box { display: flex; gap: 4px; background: #EDF2F7; padding: 3px 8px; border-radius: 16px; align-items: center; font-size: 0.75rem; font-weight: 600; }
-    .theme-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid #ccc; }
+    
     .nav-btn { background: #EDF2F7; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #4A5568; }
     .nav-btn.active { background: var(--primary-color); color: white; }
-
-    .top-action-btn { background: #EDF2F7; border: none; padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #2D3748; }
-    .top-cart-btn { position: relative; background: var(--primary-color); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .top-action-btn, .top-cart-btn { background: var(--primary-color); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .top-action-btn { background: #EDF2F7; color: #2D3748; }
     .cart-badge { background: #E53E3E; color: white; font-size: 0.75rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
 
     /* Cart Drawer */
@@ -56,32 +31,29 @@
     .cart-drawer.open { right: 0; }
     .cart-header { background: #1A202C; color: white; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
     .cart-body { flex: 1; padding: 15px; overflow-y: auto; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDF2F7; padding: 10px 0; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDF2F7; padding: 10px 0; font-size: 0.9rem; }
     .cart-footer { padding: 16px; background: #F7FAFC; border-top: 1px solid #CBD5E0; }
 
     /* Banner Carousel */
     .banner-carousel { position: relative; width: 100%; max-width: 1100px; margin: 15px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); background: #000; }
     .banner-slide { display: none; width: 100%; position: relative; }
     .banner-slide.active { display: block; }
-    .banner-slide img { width: 100%; height: 380px; object-fit: cover; display: block; }
+    .banner-slide img { width: 100%; height: 360px; object-fit: cover; display: block; }
     @media (max-width: 768px) { .banner-slide img { height: 200px; } }
-    .banner-overlay-btn { position: absolute; bottom: 35px; left: 30px; background: var(--primary-color); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .carousel-nav-btns { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 10px; box-sizing: border-box; pointer-events: none; }
-    .carousel-nav-btns button { pointer-events: auto; background: rgba(0,0,0,0.5); border: none; color: white; padding: 10px 14px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-    .carousel-dots { position: absolute; bottom: 12px; width: 100%; display: flex; justify-content: center; gap: 6px; }
+    .banner-overlay-btn { position: absolute; bottom: 30px; left: 25px; background: var(--primary-color); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .carousel-dots { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 6px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
     .dot.active { background: white; width: 22px; border-radius: 5px; }
 
     /* Circular Categories */
-    .circle-cats-container { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 20px 0; scroll-behavior: smooth; }
+    .circle-cats-container { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 15px 0; }
     .circle-cat-item { display: flex; flex-direction: column; align-items: center; min-width: 85px; cursor: pointer; }
-    .circle-cat-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--circle-ring-color); }
-    .circle-cat-name { font-size: 0.75rem; font-weight: 700; margin-top: 6px; text-align: center; color: #2D3748; }
+    .circle-cat-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); }
+    .circle-cat-name { font-size: 0.75rem; font-weight: 700; margin-top: 6px; text-align: center; }
 
-    /* 3 Promotional Banners Grid */
-    .promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0 25px 0; }
+    .promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0 20px 0; }
     @media(max-width: 768px) { .promo-grid { grid-template-columns: 1fr; } }
-    .promo-card { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); height: 140px; }
+    .promo-card { border-radius: 12px; overflow: hidden; height: 130px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
     .promo-card img { width: 100%; height: 100%; object-fit: cover; }
 
     .container { max-width: 1100px; margin: 0 auto; padding: 0 10px 40px 10px; }
@@ -89,42 +61,38 @@
     .cat-pill { background: #E2E8F0; border: none; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: #4A5568; }
     .cat-pill.active { background: var(--primary-color); color: white; }
 
-    .section-title { font-size: 1.15rem; font-weight: 700; margin: 15px 0 12px 0; color: #1A202C; }
+    .section-title { font-size: 1.15rem; font-weight: 700; margin: 15px 0 12px 0; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
     @media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
 
     .card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
     .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-    .badge { position: absolute; top: 16px; left: 16px; background: var(--badge-bg); color: var(--badge-text); font-size: 0.65rem; padding: 3px 8px; border-radius: 20px; font-weight: 700; }
-    .fav-btn { position: absolute; top: 16px; right: 16px; background: white; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin: 8px 0 2px 0; }
     
-    .card-title { font-size: 0.95rem; font-weight: 700; margin: 8px 0 4px 0; color: #2D3748; }
-    .card-price { font-size: 1.1rem; font-weight: 800; color: #1A202C; margin: 4px 0; }
-    .weight-options { display: flex; gap: 3px; margin: 6px 0; }
-    .weight-btn { flex: 1; padding: 4px 1px; font-size: 0.65rem; border: 1px solid #E2E8F0; background: #F7FAFC; border-radius: 4px; cursor: pointer; font-weight: 600; color: #4A5568; text-align: center; }
-    .weight-btn.selected { border-color: var(--primary-color); background: #E6F8F2; color: var(--primary-dark); font-weight: 700; }
-    
-    .card-actions-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
-    .qty-controls { flex: 1; display: flex; align-items: center; justify-content: space-between; background: #EDF2F7; border-radius: 6px; padding: 2px 6px; }
-    .qty-btn { background: var(--primary-color); color: white; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-    
-    .out-of-stock-badge { background: #CBD5E0; color: #4A5568; font-size: 0.75rem; padding: 6px 8px; border-radius: 6px; font-weight: 700; text-align: center; margin-top: 6px; }
-    .add-btn { width: 100%; background: var(--primary-color); color: white; border: none; padding: 8px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: 0.2s; }
-    .added-state { background-color: #319795 !important; }
+    .price-box { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    .card-price { font-size: 1.1rem; font-weight: 800; color: #1A202C; }
+    .old-price { font-size: 0.85rem; text-decoration: line-through; color: #A0AEC0; font-weight: 600; }
 
-    .main-footer { background: #0F172A; color: #94A3B8; padding: 40px 20px 20px 20px; margin-top: 40px; }
-    .footer-content-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 30px; }
-    @media(max-width: 768px) { .footer-content-grid { grid-template-columns: 1fr; gap: 20px; } }
-    .footer-bottom { text-align: center; border-top: 1px solid #1E293B; margin-top: 30px; padding-top: 15px; font-size: 0.8rem; }
+    .card-unit-select { width: 100%; padding: 4px; border: 1px solid #CBD5E0; border-radius: 6px; font-size: 0.8rem; margin: 4px 0 8px 0; outline: none; }
+    .qty-box { display: flex; align-items: center; justify-content: space-between; background: #EDF2F7; border-radius: 8px; padding: 4px 8px; margin-bottom: 6px; }
+    .qty-btn { background: white; border: 1px solid #CBD5E0; width: 26px; height: 26px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    
+    .add-btn { width: 100%; background: var(--primary-color); color: white; border: 2px solid transparent; padding: 8px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .add-btn.added { background: #15803D !important; color: #ffffff !important; border: 2px solid #FEF08A !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(21, 128, 61, 0.4); }
+
+    .main-footer { background-color: var(--footer-bg); color: #94A3B8; padding: 30px 20px; margin-top: 40px; text-align: left; font-size: 0.85rem; }
+    .footer-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .footer-container h4 { color: white; margin-bottom: 10px; font-size: 0.95rem; }
+    .footer-container ul { list-style: none; padding: 0; margin: 0; }
+    .footer-container ul li { margin-bottom: 6px; cursor: pointer; color: #94A3B8; }
+    .footer-container ul li:hover { color: white; text-decoration: underline; }
 
     .admin-panel { background: white; padding: 20px; border-radius: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-weight: 700; margin-bottom: 4px; font-size: 0.85rem; color: #4A5568; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #CBD5E0; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem; }
-    .broadcast-box { background: #EDF2F7; padding: 12px; border-radius: 8px; font-size: 0.85rem; white-space: pre-wrap; margin-bottom: 10px; }
-
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .modal-box { background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .modal-box { background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; max-height: 85vh; overflow-y: auto; }
   </style>
 </head>
 <body>
@@ -132,56 +100,44 @@
   <!-- Header -->
   <header>
     <a href="#" class="logo-container">
-      <img id="headerLogoImg" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300" alt="Logo" style="height:42px; border-radius:6px;">
-      <div style="font-size:1.4rem; font-weight:800; font-family:sans-serif; line-height:1; display:flex;">
+      <img id="headerLogoImg" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300" alt="Logo">
+      <div style="font-size:1.4rem; font-weight:800; display:flex;">
         <span id="headerTextFresh" style="color: #008F5D;">Fresh</span><span id="headerTextKart" style="color: #FF7A00;">kart</span>
       </div>
     </a>
     
     <div class="search-bar">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="सब्जियाँ, फल खोजें..." oninput="filterProducts()">
+      <input type="text" id="searchInput" placeholder="सब्जियाँ खोजें..." oninput="filterProducts()">
     </div>
 
     <div class="header-right">
-      <div class="theme-picker-box">
-        <span>थीम:</span>
-        <div class="theme-dot" style="background:#00B074;" onclick="setTheme('#00B074')"></div>
-        <div class="theme-dot" style="background:#D97706;" onclick="setTheme('#D97706')"></div>
-        <div class="theme-dot" style="background:#2563EB;" onclick="setTheme('#2563EB')"></div>
-      </div>
-
       <div class="nav-tabs">
         <button class="nav-btn active" id="tabStore" onclick="switchTab('store')">🛍️ दुकान</button>
         <button class="nav-btn" id="tabTrack" onclick="switchTab('tracking')">🛵 ट्रैकिंग</button>
-        <button class="nav-btn" onclick="openCustomerAuthModal()" style="background:#319795; color:white;" id="accountBtnText">👤 अकाउंट</button>
-        <button class="nav-btn" onclick="openAdminLoginModal()" style="background:#2D3748; color:white;" title="Admin">⚙️ एडमिन</button>
+        <button class="nav-btn" onclick="openCustomerAuthModal()" style="background:#319795; color:white;" id="accountNavBtn">👤 अकाउंट</button>
       </div>
 
-      <button class="top-action-btn" id="favNavBtn" onclick="alert('फेवरिट आइटम्स: ' + favorites.length)">❤️ <span id="favCount">0</span></button>
-      
-      <!-- Visible Shopping Cart Icon -->
+      <button class="top-action-btn" onclick="alert('फेवरिट आइटम्स: ' + favorites.length)">❤️ <span id="favCount">0</span></button>
       <button class="top-cart-btn" onclick="toggleCartDrawer()">
-        🛒 <span id="cartBtnLabel">कार्ट</span> <span class="cart-badge" id="cartBadgeCount">0</span>
+        🛒 <span class="cart-badge" id="cartBadgeCount">0</span>
       </button>
+      <button class="nav-btn" onclick="openAdminLoginModal()" style="background:#2D3748; color:white;" id="adminNavOpenBtn">⚙️ एडमिन</button>
     </div>
   </header>
 
   <!-- Customer Auth Modal -->
   <div class="modal-overlay" id="customerAuthModal">
     <div class="modal-box">
-      <h3 style="margin-top:0;" id="authModalTitle">👤 कस्टमर लॉगिन / रजिस्टर</h3>
-      <div id="authLoggedInView" style="display:none;">
-        <p id="welcomeUserText">स्वागत है, <b id="loggedInCustomerName"></b>!</p>
-        <button class="add-btn" style="background:#E53E3E; margin-top:10px;" id="logoutBtnText" onclick="customerLogout()">लॉगआउट</button>
+      <h3 style="margin-top:0;">👤 कस्टमर लॉगिन / रजिस्टर</h3>
+      <div class="form-group"><label>नाम:</label><input type="text" id="custRegName" placeholder="पूरा नाम"></div>
+      <div class="form-group"><label>मोबाइल:</label><input type="text" id="custRegPhone" placeholder="मोबाइल नंबर"></div>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button class="add-btn" style="background:#718096;" onclick="closeCustomerAuthModal()">रद्द</button>
+        <button class="add-btn" onclick="loginCustomer()">लॉगिन 🚀</button>
       </div>
-      <div id="authFormView">
-        <div class="form-group"><label id="labelName">नाम:</label><input type="text" id="custRegName" placeholder="पूरा नाम"></div>
-        <div class="form-group"><label id="labelMobile">मोबाइल/ईमेल:</label><input type="text" id="custRegEmail" placeholder="मोबाइल"></div>
-        <div style="display:flex; gap:10px; margin-top:15px;">
-          <button class="add-btn" style="background:#718096;" id="cancelBtnText" onclick="closeCustomerAuthModal()">रद्द</button>
-          <button class="add-btn" id="loginBtnText" onclick="registerOrLoginCustomer()">लॉगिन 🚀</button>
-        </div>
+      <div id="logoutSection" style="margin-top:15px; display:none;">
+        <button class="add-btn" style="background:#E53E3E;" onclick="logoutCustomer()">लॉगआउट करें 🔒</button>
       </div>
     </div>
   </div>
@@ -189,44 +145,49 @@
   <!-- Admin Login Modal -->
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-box">
-      <h3 style="margin-top:0;" id="adminModalTitle">🔐 एडमिन पोर्टल लॉगिन</h3>
-      <div class="form-group"><label id="labelEmail">ईमेल:</label><input type="email" id="loginEmailInput" value="admin@freshkart.com"></div>
-      <div class="form-group"><label id="labelPass">पासवर्ड:</label><input type="password" id="loginPasswordInput" value="1234"></div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-        <span style="font-size:0.8rem; color:#E53E3E; cursor:pointer;" id="forgotPassText" onclick="forgotPasswordAdmin()">पासवर्ड भूल गए?</span>
-      </div>
+      <h3 style="margin-top:0;">🔐 एडमिन पोर्टल लॉगिन</h3>
+      <div class="form-group"><label>ईमेल:</label><input type="email" id="loginEmailInput" value="admin@freshkart.com"></div>
+      <div class="form-group"><label>पासवर्ड:</label><input type="password" id="loginPasswordInput" value="1234"></div>
       <div style="display:flex; gap:10px;">
-        <button class="add-btn" style="background:#718096;" id="adminCancelText" onclick="closeAdminLoginModal()">रद्द</button>
-        <button class="add-btn" id="adminLoginText" onclick="verifyAdminLogin()">लॉगिन 🚀</button>
+        <button class="add-btn" style="background:#718096;" onclick="closeAdminLoginModal()">रद्द</button>
+        <button class="add-btn" onclick="verifyAdminLogin()">लॉगिन 🚀</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Generic Info / Legal Page Modal -->
+  <div class="modal-overlay" id="legalPageModal">
+    <div class="modal-box">
+      <h3 id="modalPageTitle" style="margin-top:0; color:#1A202C;"></h3>
+      <div id="modalPageBody" style="font-size:0.9rem; color:#4A5568; line-height:1.6; white-space:pre-line; max-height:50vh; overflow-y:auto; margin-bottom:15px;"></div>
+      <button class="add-btn" onclick="closeLegalModal()">बंद करें ✖</button>
     </div>
   </div>
 
   <!-- Cart Drawer -->
   <div class="cart-drawer" id="cartDrawer">
     <div class="cart-header">
-      <h3 style="margin:0;" id="cartDrawerTitle">🛍️ आपकी कार्ट</h3>
+      <h3 style="margin:0;">🛍️ आपकी कार्ट</h3>
       <button onclick="toggleCartDrawer()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✖</button>
     </div>
-    <div class="cart-body" id="cartDrawerBody"><p style="text-align:center; color:#A0AEC0;" id="emptyCartText">कार्ट खाली है!</p></div>
+    <div class="cart-body" id="cartDrawerBody"><p style="text-align:center; color:#A0AEC0;">कार्ट खाली है!</p></div>
     <div class="cart-footer">
       <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.1rem; margin-bottom:12px;">
-        <span id="totalBillText">कुल बिल:</span><span id="drawerCartTotal">₹0</span>
+        <span>कुल बिल:</span><span id="drawerCartTotal">₹0</span>
       </div>
-      <button class="add-btn" style="background:#25D366; padding:12px;" id="whatsappOrderBtnText" onclick="sendWhatsAppOrder()">WhatsApp पर ऑर्डर भेजें 📲</button>
+      <button class="add-btn" style="background:#25D366; padding:12px;" onclick="sendWhatsAppOrder()">WhatsApp पर ऑर्डर भेजें 📲</button>
     </div>
   </div>
 
   <div class="container">
     <div id="storeTab">
-      <!-- 5 Swipable Banners with Add to Cart -->
+      <!-- 5 Auto-Swiping Banners -->
       <div class="banner-carousel" id="carouselBox">
         <div class="banner-slide active"><img id="bImg-0" src=""><button class="banner-overlay-btn" id="bBtnText-0" onclick="addBannerToCart(0)">Shop Now</button></div>
         <div class="banner-slide"><img id="bImg-1" src=""><button class="banner-overlay-btn" id="bBtnText-1" onclick="addBannerToCart(1)">Order Now</button></div>
         <div class="banner-slide"><img id="bImg-2" src=""><button class="banner-overlay-btn" id="bBtnText-2" onclick="addBannerToCart(2)">Buy Salad</button></div>
         <div class="banner-slide"><img id="bImg-3" src=""><button class="banner-overlay-btn" id="bBtnText-3" onclick="addBannerToCart(3)">Grab Pack</button></div>
         <div class="banner-slide"><img id="bImg-4" src=""><button class="banner-overlay-btn" id="bBtnText-4" onclick="addBannerToCart(4)">Get Combo</button></div>
-        <div class="carousel-nav-btns"><button onclick="changeSlide(-1)">❮</button><button onclick="changeSlide(1)">❯</button></div>
         <div class="carousel-dots" id="carouselDots">
           <span class="dot active" onclick="currentSlideIndex(0)"></span>
           <span class="dot" onclick="currentSlideIndex(1)"></span>
@@ -236,292 +197,680 @@
         </div>
       </div>
 
-      <!-- Circular Categories Container -->
+      <!-- Circular Categories -->
       <div class="circle-cats-container" id="circleCatsView"></div>
+
+      <!-- Day-Wise Special Combo Section (Front-End) -->
+      <div class="section-title" id="specialComboTitleHeading">🌟 आज का स्पेशल डे कॉम्बो (Day-Wise Combo)</div>
+      <div id="todaySpecialComboContainer" style="margin-bottom: 25px;"></div>
 
       <!-- 3 Small Promo Banners -->
       <div class="promo-grid">
-        <div class="promo-card"><img id="promoImg1" src=""></div>
-        <div class="promo-card"><img id="promoImg2" src=""></div>
-        <div class="promo-card"><img id="promoImg3" src=""></div>
+        <div class="promo-card"><img id="promoImg1" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400"></div>
+        <div class="promo-card"><img id="promoImg2" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"></div>
+        <div class="promo-card"><img id="promoImg3" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"></div>
       </div>
 
-      <!-- Category Filter Pills -->
       <div class="category-filters">
-        <button class="cat-pill active" id="pillAll" onclick="filterCategory('All', this)">सभी आइटम</button>
-        <button class="cat-pill" id="pillVeg" onclick="filterCategory('Vegetables', this)">🥕 सब्ज़ियाँ</button>
-        <button class="cat-pill" id="pillFruit" onclick="filterCategory('Fruits', this)">🍎 फल</button>
-        <button class="cat-pill" id="pillDairy" onclick="filterCategory('DairyOil', this)">🥛 डेयरी और तेल</button>
-        <button class="cat-pill" id="pillGro" onclick="filterCategory('Groceries', this)">🍞 ग्रोसरी</button>
+        <button class="cat-pill active" onclick="filterCategory('All', this)">सभी आइटम</button>
+        <button class="cat-pill" onclick="filterCategory('Vegetables', this)">🥕 सब्ज़ियाँ</button>
+        <button class="cat-pill" onclick="filterCategory('Fruits', this)">🍎 फल</button>
+        <button class="cat-pill" onclick="filterCategory('Groceries', this)">🍞 ग्रोसरी</button>
       </div>
 
-      <div class="section-title">📅 <span id="todayComboHeading">आज का खास कॉम्बो</span></div>
-      <div id="dayComboContainer" class="grid"></div>
-
-      <div class="section-title" id="mandiProductsTitle">🛒 ताजा मंडी प्रोडक्ट्स & ग्रोसरी</div>
+      <div class="section-title">🛒 ताजा मंडी प्रोडक्ट्स</div>
       <div id="productGrid" class="grid"></div>
     </div>
 
     <!-- Live Tracking Tab -->
     <div id="trackingTab" style="display:none;">
-      <h2 id="trackTitleDisplay">🛵 Live Order Delivery Simulator</h2>
+      <h2>🛵 Live Order Delivery Simulator</h2>
       <div class="card" style="padding: 20px; text-align: center;">
-        <h3 id="trackOrderIdDisplay">ऑर्डर नंबर: #FK-8902</h3>
-        <p><strong>डिलीवरी पार्टनर:</strong> <span id="trackPartnerName">राहुल कुमार</span> (🛵) - <span id="trackPartnerPhone">9876543210</span></p>
+        <h3 id="trackStatusMsg">डिलीवरी की स्थिति: एडमिन द्वारा शुरू होने का इंतज़ार...</h3>
+        <p><strong>डिलीवरी पार्टनर:</strong> <span id="trackPartnerNameDisplay">राहुल कुमार</span> - <span id="trackPartnerPhoneDisplay">9876543210</span></p>
+        <div id="deliveryAnimationBox" style="font-size: 2rem; margin: 20px 0; display:none;">🏠 🛵 💨 ─── 🛒</div>
       </div>
     </div>
 
     <!-- Admin Panel Tab -->
     <div id="adminTab" style="display:none;" class="admin-panel">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h2 style="margin:0;">⚙️ एडमिन कंट्रोल पैनल</h2>
-        <div>
-          <button onclick="switchTab('store')" style="background:#718096; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; margin-right:8px;">⬅️ दुकान</button>
-          <button onclick="adminLogout()" style="background:#E53E3E; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">🔒 लॉगआउट</button>
-        </div>
+        <h2 style="margin:0;">⚙️ एडमिन कंट्रोल पैनल (MongoDB कनेक्टेड)</h2>
+        <button onclick="adminLogout()" style="background:#E53E3E; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">🔒 लॉगआउट</button>
       </div>
 
-      <h3>📊 लाइव वेबसाइट विजिटर एनालिटिक्स</h3>
-      <div style="background:#EDF2F7; padding:15px; border-radius:8px; margin-bottom:20px; display:flex; gap:20px;">
-        <div><p style="margin:0; font-size:0.8rem; color:#718096;">कुल विजिट:</p><h2 id="adminTotalVisitsDisplay" style="margin:4px 0 0 0; color:#00B074;">0</h2></div>
-        <div><p style="margin:0; font-size:0.8rem; color:#718096;">आज के विजिट:</p><h2 id="adminTodayVisitsDisplay" style="margin:4px 0 0 0; color:#319795;">0</h2></div>
-      </div>
-
-      <h3>🌐 भाषा सेटिंग्स (Language Setup - Fully Front-End Applied)</h3>
+      <!-- Brand Logo & Name Customizer (Admin) -->
+      <h3>🖼️ ब्रांड लोगो और नाम कस्टमाइज़ेशन मैनेजर</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>डिफ़ॉल्ट भाषा चुनें:</label>
-          <select id="adminLangSelect" onchange="changeLanguage(this.value)">
-            <option value="hi">हिंदी (Hindi)</option>
-            <option value="en">इंग्लिश (English)</option>
-            <option value="bn">बंगाली (Bengali)</option>
-          </select>
+        <div class="form-group">
+          <label>लोगो इमेज (URL या डिवाइस से चुनें):</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="adminLogoUrlInput" placeholder="https://..." style="flex:2;">
+            <input type="file" id="adminLogoFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminLogoUrlInput')">
+            <button type="button" onclick="clearImageInput('adminLogoUrlInput', 'adminLogoFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
         </div>
-      </div>
-
-      <h3>🖼️ ब्रांड लोगो और हेडर कस्टमाइज़ेशन</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>लोगो URL:</label><input type="text" id="adminLogoImgUrl" onchange="updateHeaderBrand()"></div>
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:2;"><label>पहला शब्द:</label><input type="text" id="adminFreshText" value="Fresh" onchange="updateHeaderBrand()"></div>
-          <div class="form-group" style="flex:1;"><label>रंग:</label><input type="color" id="adminFreshColor" value="#008F5D" onchange="updateHeaderBrand()" style="height:38px; width:100%;"></div>
-          <div class="form-group" style="flex:2;"><label>दूसरा शब्द:</label><input type="text" id="adminKartText" value="kart" onchange="updateHeaderBrand()"></div>
-          <div class="form-group" style="flex:1;"><label>रंग:</label><input type="color" id="adminKartColor" value="#FF7A00" onchange="updateHeaderBrand()" style="height:38px; width:100%;"></div>
+          <div class="form-group" style="flex:1;"><label>'Fresh' रंग:</label><input type="color" id="adminFreshColorInput" value="#008F5D" style="height:40px; width:100%;"></div>
+          <div class="form-group" style="flex:1;"><label>'kart' रंग:</label><input type="color" id="adminKartColorInput" value="#FF7A00" style="height:40px; width:100%;"></div>
         </div>
+        <button class="add-btn" onclick="saveLogoConfigToDb()">💾 लोगो और नाम कलर्स MongoDB में सेव करें</button>
       </div>
 
-      <h3>🖼️ 5 स्वाइपेबल बैनर्स कस्टमाइज़ेशन (Image, Name, Price & Add to Cart)</h3>
+      <!-- Footer Customization Manager -->
+      <h3>🔻 फुटर कस्टमाइज़ेशन (पौधा लोगो URL/फाइल, फ्रेश/कार्ट रंग और बैकग्राउंड कलर व्हील)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group">
+          <label>फुटर पौधा लोगो (URL या डिवाइस से चुनें):</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="adminFooterLogoUrl" placeholder="https://..." style="flex:2;">
+            <input type="file" id="adminFooterLogoFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminFooterLogoUrl')">
+            <button type="button" onclick="clearImageInput('adminFooterLogoUrl', 'adminFooterLogoFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर 'Fresh' रंग:</label><input type="color" id="adminFooterFreshColor" value="#008F5D" style="height:40px; width:100%;"></div>
+          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर 'Kart' रंग:</label><input type="color" id="adminFooterKartColor" value="#FF7A00" style="height:40px; width:100%;"></div>
+          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर बैकग्राउंड कलर:</label><input type="color" id="adminFooterBgColor" value="#0F172A" style="height:40px; width:100%;"></div>
+        </div>
+        <button class="add-btn" onclick="saveFooterConfigToDb()">💾 फुटर सेटिंग्स MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Day-Wise Special Combo Manager (Admin with Choose File & Trash) -->
+      <h3>📅 दिन-वार स्पेशल कॉम्बो मैनेजर (Choose File & Trash के साथ)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div id="adminDayCombosList"></div>
+        <button class="add-btn" onclick="saveDayCombosToDb()">💾 सभी दिन-वार कॉम्बो MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Website Legal & Info Pages Content Manager -->
+      <h3>📄 वेबसाइट लीगल और इंफॉर्मेटिव पेजेस मैनेजर (About, Terms, Privacy आदि)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div id="adminLegalPagesList"></div>
+        <button class="add-btn" onclick="saveLegalPagesToDb()">💾 सभी लीगल पेजेस MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Language Settings -->
+      <h3>🌐 भाषा सेटिंग्स (Language Settings)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>वेबसाइट की डिफ़ॉल्ट भाषा:</label>
+          <select id="adminLanguageSelect" style="width:100%; padding:8px; border-radius:6px;">
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="en">English (अंग्रेजी)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+          </select>
+        </div>
+        <button class="add-btn" onclick="saveLanguageSetting()">💾 भाषा MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Visitor Analytics & Logs -->
+      <h3>📊 लाइव वेबसाइट विजिटर एनालिटिक्स & यूजर लॉग</h3>
+      <div style="background:#EDF2F7; padding:15px; border-radius:8px; margin-bottom:20px;">
+        <div style="display:flex; gap:20px; margin-bottom:10px;">
+          <div><p style="margin:0; font-size:0.8rem; color:#718096;">कुल विजिट:</p><h2 id="adminTotalVisitsDisplay" style="margin:4px 0 0 0; color:#00B074;">0</h2></div>
+          <div><p style="margin:0; font-size:0.8rem; color:#718096;">आज के विजिट:</p><h2 id="adminTodayVisitsDisplay" style="margin:4px 0 0 0; color:#319795;">0</h2></div>
+        </div>
+        <div id="adminUserLogsDisplay" style="font-size:0.85rem; color:#4A5568; max-height:120px; overflow-y:auto; background:white; padding:8px; border-radius:4px;">लॉगिन रिकॉर्ड लोड हो रहा है...</div>
+      </div>
+
+      <!-- Circular Categories with Direct File Upload & Trash Button -->
+      <h3>⭕ सर्कुलर कैटेगरीज़ (कस्टमाइज़ेशन & डायरेक्ट फाइल अपलोड)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div id="adminCircleCatsList"></div>
+        <button class="add-btn" onclick="saveCircleCategoriesToDb()">💾 सर्कुलर कैटेगरीज़ MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Theme Color Wheel -->
+      <h3>🎨 थीम कलर व्हील परमानेंट सेविंग</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <label>कलर चुनें (Color Wheel):</label>
+        <input type="color" id="adminColorWheelPicker" value="#00B074" style="height:40px; width:100px; display:block; margin:8px 0;" onchange="previewTheme(this.value)">
+        <button class="add-btn" onclick="saveSettingToDb('theme_config', {color: document.getElementById('adminColorWheelPicker').value})">💾 थीम कलर MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Delivery Partner & Tracking -->
+      <h3>🛵 कंट्रोल्ड लाइव ट्रैकिंग और डमी डिलीवरी पार्टनर</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div class="form-group"><label>पार्टनर नाम:</label><input type="text" id="adminPartnerName" value="राहुल कुमार"></div>
+        <div class="form-group"><label>फोन नंबर:</label><input type="text" id="adminPartnerPhone" value="9876543210"></div>
+        <div class="form-group"><label>डिलीवरी शुरू करें (टॉगल):</label>
+          <select id="adminDeliveryToggle">
+            <option value="false">बंद (Off)</option>
+            <option value="true">चालू करें (Start Delivery)</option>
+          </select>
+        </div>
+        <button class="add-btn" onclick="saveSettingToDb('partner_config', getPartnerObj())">💾 डिलीवरी पार्टनर MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Banners with Direct File Upload & Trash Button -->
+      <h3>🖼️ 5 ऑटो-स्वाइपेबल बैनर्स कस्टमाइज़ेशन (डायरेक्ट फाइल अपलोड के साथ)</h3>
       <div id="adminBannerList"></div>
+      <button class="add-btn" onclick="saveSettingToDb('banners_config', banners)">💾 सभी बैनर्स MongoDB में सेव करें</button>
 
-      <h3>🖼️ 3 छोटे प्रोमोशनल बैनर्स</h3>
+      <!-- Products Manager with Direct File Upload & Trash Delete Button -->
+      <h3>🛒 नया आइटम जोड़ें (यूआरएल या डायरेक्ट कंप्यूटर से JPG/PNG फाइल अपलोड)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>बैनर 1 URL:</label><input type="text" id="adminPromo1" onchange="updatePromoBanners()"></div>
-        <div class="form-group"><label>बैनर 2 URL:</label><input type="text" id="adminPromo2" onchange="updatePromoBanners()"></div>
-        <div class="form-group"><label>बैनर 3 URL:</label><input type="text" id="adminPromo3" onchange="updatePromoBanners()"></div>
-      </div>
-
-      <h3>🔵 सर्कुलर कैटेगरीज कस्टमाइज़ेशन (Name, Image & Ring Color)</h3>
-      <div class="form-group"><label>सर्कल रिंग का रंग:</label><input type="color" id="adminCircleRingColor" value="#00B074" onchange="updateCircleRingColor()" style="height:38px; width:100px;"></div>
-      <div id="adminCircleCatsList"></div>
-
-      <h3>🏷️ 'मंडी ताज़ा' बैज कस्टमाइज़ेशन</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px; display:flex; gap:10px;">
-        <div class="form-group" style="flex:2;"><label>टेक्स्ट:</label><input type="text" id="adminBadgeText" value="मंडी ताज़ा" onchange="updateBadgeStyle()"></div>
-        <div class="form-group" style="flex:1;"><label>बैकग्राउंड:</label><input type="color" id="adminBadgeBg" value="#FF6B6B" onchange="updateBadgeStyle()" style="height:38px; width:100%;"></div>
-      </div>
-
-      <h3>📅 दिन-वार स्पेशल कॉम्बो कस्टमाइज़ेशन (Day-wise Combos)</h3>
-      <div id="adminDayCombosList"></div>
-
-      <h3>🛒 एड न्यू आइटम (सब्जी, फल, तेल [लीटर/ML], ग्रोसरी)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>आइटम नाम:</label><input type="text" id="newProdName"></div>
-        <div class="form-group"><label>श्रेणी:</label>
-          <select id="newProdCat">
-            <option value="Vegetables">सब्ज़ी</option>
-            <option value="Fruits">फल</option>
-            <option value="DairyOil">डेयरी और तेल (Liquid)</option>
-            <option value="Groceries">ग्रोसरी</option>
+        <div class="form-group"><label>नाम:</label><input type="text" id="newProdName"></div>
+        <div class="form-group"><label>कैटेगरी:</label>
+          <select id="newProdCategory">
+            <option value="Vegetables">🥕 Vegetables</option>
+            <option value="Fruits">🍎 Fruits</option>
+            <option value="Groceries">🍞 Groceries</option>
           </select>
         </div>
-        <div class="form-group"><label>यूनिट प्रकार:</label>
-          <select id="newProdUnitType">
-            <option value="kg">वजन (kg / g)</option>
-            <option value="litre">लिक्विड (Litre / ml)</option>
-            <option value="pcs">पीस (Pcs)</option>
+        <div class="form-group"><label>डिफ़ॉल्ट यूनिट:</label>
+          <select id="newProdUnit">
+            <option value="100g">100g</option><option value="250g">250g</option><option value="500g">500g</option>
+            <option value="1 kg" selected>1 kg</option><option value="1 Piece">1 Piece</option>
+            <option value="2 Pieces">2 Pieces</option><option value="5 Pieces">5 Pieces</option>
+            <option value="1/2 Dozen">1/2 Dozen</option><option value="1 Dozen">1 Dozen</option>
+            <option value="1 Liter">1 Liter</option><option value="500 ml">500 ml</option>
           </select>
         </div>
-        <div class="form-group"><label>आधार दाम (1 kg / 1 L का दाम ₹):</label><input type="number" id="newProdPrice"></div>
-        <div class="form-group"><label>फोटो URL:</label><input type="text" id="newProdImg" placeholder="https://..."></div>
-        <button class="add-btn" onclick="addNewProduct()">+ नया आइटम जोड़ें</button>
+        <div class="form-group"><label>बेस प्राइस (₹):</label><input type="number" id="newProdBasePrice"></div>
+        <div class="form-group"><label>सेल प्राइस (₹):</label><input type="number" id="newProdSalePrice"></div>
+        
+        <div class="form-group">
+          <label>फोटो (URL पेस्ट करें या कंप्यूटर/फोन से JPG/PNG चुनें):</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="newProdImg" placeholder="https://..." style="flex:2;">
+            <input type="file" id="newProdFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'newProdImg')">
+            <button type="button" onclick="clearImageInput('newProdImg', 'newProdFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
+        </div>
+        <button class="add-btn" onclick="addNewProduct()">+ नया आइटम MongoDB में जोड़ें</button>
       </div>
-
-      <h3>🥦 प्रोडक्ट्स मैनेजर (Stock & Delete Options)</h3>
       <div id="adminProductManagerList"></div>
 
-      <h3>📝 फुटर, कांटेक्ट सपोर्ट और लोकेशन कस्टमाइज़ेशन</h3>
+      <!-- WhatsApp & MOV -->
+      <h3>📱 WhatsApp आर्डर, ब्रॉडकास्ट कॉपी और न्यूनतम ऑर्डर वैल्यू (MOV)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>सपोर्ट ईमेल:</label><input type="text" id="adminContactEmail" value="sales@freshkartindia.com" onchange="updateFooterData()"></div>
-        <div class="form-group"><label>फोन नंबर:</label><input type="text" id="adminContactPhone" value="+919619195100" onchange="updateFooterData()"></div>
-        <div class="form-group"><label>लोकेशन / पता:</label><textarea id="adminContactAddress" onchange="updateFooterData()">Sal World Lane, Mhada Colony, Kharghar, Panvel, 410210, Maharashtra, India</textarea></div>
+        <div class="form-group"><label>WhatsApp आर्डर नंबर:</label><input type="text" id="adminWaNumber" value="919876543210"></div>
+        <div class="form-group"><label>न्यूनतम आर्डर वैल्यू (MOV ₹):</label><input type="number" id="adminMovValue" value="100"></div>
+        <button class="add-btn" onclick="saveSettingToDb('whatsapp_mov_config', getWaMovObj())" style="margin-bottom:10px;">💾 WhatsApp & MOV MongoDB में सेव करें</button>
+        <button class="add-btn" style="background:#25D366;" onclick="copyWhatsAppBroadcastList()">📋 WhatsApp ब्रॉडकास्ट रेट लिस्ट कॉपी करें</button>
       </div>
 
-      <h3>📱 WhatsApp & Minimum Order</h3>
-      <div class="form-group"><label>WhatsApp नंबर:</label><input type="text" id="adminWhatsAppNum" value="919876543210"></div>
-      <div class="form-group"><label>न्यूनतम ऑर्डर वैल्यू (₹):</label><input type="number" id="adminMovInput" value="100" onchange="updateMov(this.value)"></div>
+      <!-- Customer Order History -->
+      <h3>👥 A-Z अल्फाबेटिकल रिपीट कस्टमर ऑर्डर हिस्ट्री (MongoDB)</h3>
+      <div id="adminCustomerOrderHistoryBox" style="background:#F7FAFC; padding:12px; border-radius:8px; max-height:220px; overflow-y:auto;">
+        कस्टमर ऑर्डर हिस्ट्री लोड हो रही है...
+      </div>
 
-      <h3>📢 WhatsApp ब्रॉडकास्ट रेट जनरेटर</h3>
-      <div class="broadcast-box" id="broadcastTextPreview">रेट लिस्ट...</div>
-      <button class="add-btn" style="background:#25D366; margin-bottom:15px;" onclick="copyBroadcastRates()">📋 कॉपी करें</button>
-
-      <h3>🔑 एडमिन क्रेडेंशियल्स और सिक्योरिटी</h3>
+      <!-- Admin Credentials -->
+      <h3>🔑 एडमिन क्रेडेंशियल्स (ईमेल और पासवर्ड बदलें)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group"><label>एडमिन ईमेल:</label><input type="email" id="adminEmailSetting" value="admin@freshkart.com"></div>
         <div class="form-group"><label>नया पासवर्ड:</label><input type="text" id="adminPasswordSetting" value="1234"></div>
-        <button class="add-btn" style="background:#D97706;" onclick="updateAdminCredentials()">💾 अपडेट करें</button>
+        <button class="add-btn" style="background:#D97706;" onclick="saveAdminCredentials()">💾 एडमिन क्रेडेंशियल्स MongoDB में सेव करें</button>
       </div>
     </div>
   </div>
 
-  <footer class="main-footer">
-    <div class="footer-content-grid">
+  <!-- Professional Footer with Permanent Glitch Fix (Explicit Inline Styles) -->
+  <footer class="main-footer" id="mainFooterElement" style="background-color: #0F172A;">
+    <div class="footer-container">
       <div>
-        <h4 id="footerBrandTitle">FreshKart</h4>
-        <p style="font-size:0.85rem;" id="footerAboutText">Farm fresh vegetables & groceries delivered directly to your doorstep with quality assurance.</p>
+        <h4 style="display:flex; align-items:center; gap:8px;">
+          <img id="footerLogoImg" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100" style="height:22px; width:auto; border-radius:4px; display:inline-block;">
+          <span>
+            <span id="footerTextFresh" style="color: #008F5D !important;">Fresh</span><span id="footerTextKart" style="color: #FF7A00 !important;">kart</span>
+          </span>
+        </h4>
+        <p>ताज़ा सब्ज़ियाँ, फल और ग्रोसरी सीधे आपके दरवाजे पर। गुणवत्ता और भरोसे का प्रतीक।</p>
       </div>
       <div>
-        <h4 id="footerSupportTitle">Support</h4>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerAboutUsText">About Us</p>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerContactUsText">Contact Us</p>
+        <h4>कंपनी</h4>
+        <ul>
+          <li onclick="openLegalModal('about')">हमारे बारे में (About Us)</li>
+          <li onclick="openLegalModal('contact')">संपर्क करें (Contact Us)</li>
+        </ul>
       </div>
       <div>
-        <h4 id="footerLegalTitle">Legal</h4>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerPrivacyText">Privacy Policy</p>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerTermsText">Terms & Conditions</p>
+        <h4>नीति एवं शर्तें</h4>
+        <ul>
+          <li onclick="openLegalModal('terms')">नियम और शर्तें (Terms & Conditions)</li>
+          <li onclick="openLegalModal('privacy')">गोपनीयता नीति (Privacy Policy)</li>
+          <li onclick="openLegalModal('shipping')">शिपिंग नीति (Shipping Policy)</li>
+          <li onclick="openLegalModal('refund')">रिटर्न और रिफंड नीति (Refund Policy)</li>
+        </ul>
       </div>
       <div>
-        <h4 id="footerContactTitle">Contact</h4>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayAddress">Sal World Lane, Mhada Colony, Kharghar, Panvel, 410210, Maharashtra, India</p>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayEmail">sales@freshkartindia.com</p>
-        <p style="font-size:0.85rem; margin:4px 0;" id="footerDisplayPhone">+919619195100</p>
+        <h4>सहायता</h4>
+        <ul>
+          <li onclick="openLegalModal('faq')">अक्सर पूछे जाने वाले सवाल (FAQs)</li>
+        </ul>
       </div>
     </div>
-    <div class="footer-bottom" id="footerCopyText">2026 © FreshKart India | सभी अधिकार सुरक्षित</div>
+    <div style="text-align:center; border-top:1px solid rgba(255,255,255,0.1); margin-top:20px; padding-top:15px; color:#94A3B8;">
+      2026 © FreshKart | All Rights Reserved
+    </div>
   </footer>
 
   <script>
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     let adminAuth = { email: "admin@freshkart.com", pass: "1234" };
+    let waNumber = "919876543210";
+    let minOrderValue = 100;
 
-    // Real visitor analytics (Session-based increment)
-    let totalVisits = Number(localStorage.getItem('fk_total_visits') || 120);
-    let todayVisits = Number(localStorage.getItem('fk_today_visits') || 24);
-    if (!sessionStorage.getItem('visited_session')) {
-      totalVisits += 1;
-      todayVisits += 1;
-      sessionStorage.setItem('visited_session', 'true');
-      localStorage.setItem('fk_total_visits', totalVisits);
-      localStorage.setItem('fk_today_visits', todayVisits);
-    }
-
-    let minimumOrderValue = 100;
-    let badgeTextContent = "मंडी ताज़ा";
-
-    let banners = [
-      { title: "Saturday Khichdi Fresh Combo", price: 129, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200", btnText: "Shop Now" },
-      { title: "Free Home Delivery Banner", price: 149, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=1200", btnText: "Order Now" },
-      { title: "Fresh Cut Salad Combo", price: 99, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200", btnText: "Buy Salad" },
-      { title: "Sunday Mega Party Pack", price: 199, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200", btnText: "Grab Pack" },
-      { title: "Satvik Kitchen Combo", price: 119, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=1200", btnText: "Get Combo" }
-    ];
-
-    let promoBanners = [
-      "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400",
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"
-    ];
-
-    let circleCategories = [
-      { name: "Fresh Fruits", img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200", cat: "Fruits" },
-      { name: "Fresh Veggies", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200", cat: "Vegetables" },
-      { name: "Sprouts", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200", cat: "Groceries" }
-    ];
+    let legalPages = {
+      about: { title: "हमारे बारे में (About Us)", content: "FreshKart आपका अपना लोकल ऑनलाइन स्टोर है, जो जमशेदपुर और आसपास के इलाकों में बिल्कुल ताज़ा सब्ज़ियाँ, फल और दैनिक उपयोग की ग्रोसरी सीधे किसानों और मंडियों से लाकर आपके दरवाजे तक पहुँचाता है। हमारी प्राथमिकता शुद्धता, बेहतरीन गुणवत्ता और समय पर डिलीवरी है।" },
+      contact: { title: "संपर्क करें (Contact Us)", content: "पता: जोन नं. 1बी, झंडा चौक के पास, बिरसानगर, जमशेदपुर, झारखंड - 831019\nWhatsApp / हेल्पलाइन: +91 98765 43210\nईमेल: support@freshkart.com" },
+      terms: { title: "नियम और शर्तें (Terms & Conditions)", content: "1. वेबसाइट पर दिए गए सभी रेट्स आर्डर के समय के अनुसार मान्य हैं।\n2. आर्डर कन्फर्म होने के बाद यदि आप रद्द करना चाहें तो डिलीवरी से पहले WhatsApp पर सूचित करें।\n3. FreshKart बिना किसी पूर्व सूचना के नियमों में बदलाव करने का अधिकार सुरक्षित रखता है।" },
+      privacy: { title: "गोपनीयता नीति (Privacy Policy)", content: "हम आपके नाम, फोन नंबर और डिलीवरी पते को पूरी तरह सुरक्षित रखते हैं। आपकी किसी भी व्यक्तिगत जानकारी का उपयोग कभी भी किसी तीसरे पक्ष (Third Party) के साथ शेयर या बेचा नहीं जाता है।" },
+      shipping: { title: "शिपिंग और डिलीवरी नीति (Shipping Policy)", content: "हम आपके द्वारा दिए गए पते पर तय समय सीमा के भीतर सुरक्षित डिलीवरी प्रदान करते हैं। न्यूनतम आर्डर वैल्यू पूरी होने पर डिलीवरी सेवा उपलब्ध कराई जाती है।" },
+      refund: { title: "रिफंड और रिटर्न नीति (Refund & Return Policy)", content: "यदि डिलीवरी के समय कोई सब्जी या फल खराब या कम गुणवत्ता का निकलता है, तो आप उसी समय डिलीवरी पार्टनर को लौटा सकते हैं या फोटो भेजकर रिफंड/रिप्लेसमेंट प्राप्त कर सकते हैं।" },
+      faq: { title: "अक्सर पूछे जाने वाले सवाल (FAQs)", content: "Q1: न्यूनतम आर्डर वैल्यू (MOV) क्या है?\nAns: न्यूनतम आर्डर मूल्य ₹100 है।\n\nQ2: पेमेंट कैसे कर सकते हैं?\nAns: आप WhatsApp आर्डर के जरिए या डिलीवरी के समय भुगतान कर सकते हैं।" }
+    };
 
     let dayCombos = {
-      "Sunday": { title: "रविवार स्पेशल पार्टी कॉम्बो", price: 150, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400", desc: "ताज़ी मिक्स सब्जियाँ" },
-      "Monday": { title: "सोमवार फ्रेश ग्रीन कॉम्बो", price: 110, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400", desc: "पालक, मेथी" },
-      "Tuesday": { title: "मंगलवार सात्विक कॉम्बो", price: 130, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400", desc: "केला, आलू" },
-      "Wednesday": { title: "बुधवार मिनी किचन पैक", price: 100, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400", desc: "आलू, प्याज" },
-      "Thursday": { title: "गुरुवार स्पेशल कॉम्बो", price: 120, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400", desc: "कद्दू, लौकी" },
-      "Friday": { title: "शुक्रवार हेल्दी सैलेड कॉम्बो", price: 125, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400", desc: "खीरा, गाजर" },
-      "Saturday": { title: "शनिवार स्पेशल खिचड़ी कॉम्बो", price: 140, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=400", desc: "साग, पटल" }
+      "Sunday": { name: "रविवार स्पेशल मिक्स वेज कॉम्बो", price: 99, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600", desc: "ताज़ा आलू, टमाटर, गोभी और हरी मटर का पैक" },
+      "Monday": { name: "सोमवार ग्रीन डाइट कॉम्बो", price: 89, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600", desc: "पत्तागोभी, शिमला मिर्च और खीरा" },
+      "Tuesday": { name: "मंगलवार रूट वेजीज़ कॉम्बो", price: 79, img: "https://images.unsplash.com/photo-1618512495648-f074b9319e9c?w=600", desc: "गाजर, मूली और चुकंदर" },
+      "Wednesday": { name: "बुधवार ताज़ा सलाद कॉम्बो", price: 90, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600", desc: "सलाद स्पेशल फ्रेश सब्जियां" },
+      "Thursday": { name: "गुरुवार हेल्दी किचन पैक", price: 110, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=600", desc: "दैनिक उपयोग की सभी सब्जियां" },
+      "Friday": { name: "शुक्रवार फ्रेश फ्रूट्स कॉम्बो", price: 149, img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600", desc: "केला, सेब और पपीता कॉम्बो" },
+      "Saturday": { name: "शनिवार खिचड़ी स्पेशल कॉम्बो (पुईसाक, कुमड़ा, पटल)", price: 120, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600", desc: "पुईसाक, कुमड़ा, पटल, आलू और गाजर स्पेशल पैक" }
     };
 
-    let products = [
-      { id: 1, name: "Fresh Potatoes", category: "Vegetables", unitType: "kg", basePrice: 30, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" },
-      { id: 2, name: "Onion", category: "Vegetables", unitType: "kg", basePrice: 40, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8ce?w=400" },
-      { id: 3, name: "Desi Tomatoes", category: "Vegetables", unitType: "kg", basePrice: 50, selectedUnit: "1 kg", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400" },
-      { id: 4, name: "Green Chillies", category: "Vegetables", unitType: "kg", basePrice: 80, selectedUnit: "250g", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=400" },
-      { id: 5, name: "mustard oil", category: "DairyOil", unitType: "litre", basePrice: 220, selectedUnit: "1 L", qty: 1, inStock: true, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" }
+    let circleCategories = [
+      { name: "Fresh Veggies", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200", cat: "Vegetables" },
+      { name: "Fresh Fruits", img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200", cat: "Fruits" },
+      { name: "Sprouts/Grocery", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200", cat: "Groceries" }
     ];
 
-    let cart = [];
+    let banners = [
+      { title: "Fresh Tomato Special", price: 40, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200", btnText: "Shop Now" },
+      { title: "Organic Onion Pack", price: 35, img: "https://images.unsplash.com/photo-1618512495648-f074b9319e9c?w=1200", btnText: "Grab Now" },
+      { title: "Fresh Banana Bunch", price: 50, img: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=1200", btnText: "Buy Now" },
+      { title: "Green Salad Combo", price: 99, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200", btnText: "Grab It" },
+      { title: "Mega Kitchen Pack", price: 149, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200", btnText: "Offer Deal" }
+    ];
+
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('fk_cart') || '[]');
     let favorites = [];
-    let currentDayKey = "";
-    let currentSlide = 0;
     let activeCategory = "All";
+    let slideIndex = 0;
+    let slideInterval;
 
-    // Comprehensive Language Dictionary for fully dynamic multi-language support
-    const langDict = {
-      hi: {
-        title: "FreshKart - ताज़ा सब्ज़ियाँ, सीधे आपके घर",
-        cart: "कार्ट", search: "सब्जियाँ, फल खोजें...", all: "सभी आइटम", veggies: "🥕 सब्ज़ियाँ", fruits: "🍎 फल", dairy: "🥛 डेयरी और तेल", grocery: "🍞 ग्रोसरी",
-        special: "आज का खास कॉम्बो", add: "+ ADD", added: "✓ ADDED",
-        tabStore: "🛍️ दुकान", tabTrack: "🛵 ट्रैकिंग", account: "👤 अकाउंट", admin: "⚙️ एडमिन",
-        authTitle: "👤 कस्टमर लॉगिन / रजिस्टर", nameLbl: "नाम:", mobLbl: "मोबाइल/ईमेल:", cancel: "रद्द", login: "लॉगिन 🚀", logout: "लॉगआउट",
-        adminTitle: "🔐 एडमिन पोर्टल लॉगिन", emailLbl: "ईमेल:", passLbl: "पासवर्ड:", forgot: "पासवर्ड भूल गए?",
-        drawerTitle: "🛍️ आपकी कार्ट", emptyCart: "कार्ट खाली है!", totalBill: "कुल बिल:", waBtn: "WhatsApp पर ऑर्डर भेजें 📲",
-        mandiTitle: "🛒 ताजा मंडी प्रोडक्ट्स & ग्रोसरी",
-        footerSupport: "Support", footerLegal: "Legal", footerContact: "Contact", footerCopy: "2026 © FreshKart India | सभी अधिकार सुरक्षित"
-      },
-      en: {
-        title: "FreshKart - Fresh Vegetables, Direct to Your Home",
-        cart: "Cart", search: "Search vegetables, fruits...", all: "All Items", veggies: "🥕 Veggies", fruits: "🍎 Fruits", dairy: "🥛 Dairy & Oil", grocery: "🍞 Groceries",
-        special: "Today's Special Combo", add: "+ ADD", added: "✓ ADDED",
-        tabStore: "🛍️ Store", tabTrack: "🛵 Tracking", account: "👤 Account", admin: "⚙️ Admin",
-        authTitle: "👤 Customer Login / Register", nameLbl: "Name:", mobLbl: "Mobile/Email:", cancel: "Cancel", login: "Login 🚀", logout: "Logout",
-        adminTitle: "🔐 Admin Portal Login", emailLbl: "Email:", passLbl: "Password:", forgot: "Forgot Password?",
-        drawerTitle: "🛍️ Your Cart", emptyCart: "Cart is empty!", totalBill: "Total Bill:", waBtn: "Send Order on WhatsApp 📲",
-        mandiTitle: "🛒 Fresh Mandi Products & Groceries",
-        footerSupport: "Support", footerLegal: "Legal", footerContact: "Contact", footerCopy: "2026 © FreshKart India | All Rights Reserved"
-      },
-      bn: {
-        title: "FreshKart - তাজা শাকসবজি, আপনার ঠিকানায়",
-        cart: "কার্ট", search: "শাকসবজি, ফল খুঁজুন...", all: "সব আইটেম", veggies: "🥕 শাকসবজি", fruits: "🍎 ফল", dairy: "🥛 দুধ ও তেল", grocery: "🍞 মুদি",
-        special: "আজকের বিশেষ কম্বো", add: "+ ADD", added: "✓ ADDED",
-        tabStore: "🛍️ দোকান", tabTrack: "🛵 ট্র্যাকিং", account: "👤 অ্যাকাউন্ট", admin: "⚙️ অ্যাডমিন",
-        authTitle: "👤 গ্রাহক লগইন / রেজিস্টার", nameLbl: "নাম:", mobLbl: "মোবাইল/ইমেল:", cancel: "বাতিল", login: "লগইন 🚀", logout: "লগআউট",
-        adminTitle: "🔐 অ্যাডমিন পোর্টাল লগইন", emailLbl: "ইমেল:", passLbl: "পাসওয়ার্ড:", forgot: "পাসওয়ার্ড ভুলে গেছেন?",
-        drawerTitle: "🛍️ আপনার কার্ট", emptyCart: "কার্ট খালি আছে!", totalBill: "মোট বিল:", waBtn: "WhatsApp-এ অর্ডার পাঠান 📲",
-        mandiTitle: "🛒 তাজা মান্ডি পণ্য ও মুদি",
-        footerSupport: "সহায়তা", footerLegal: "আইনি", footerContact: "যোগাযোগ", footerCopy: "2026 © FreshKart India | সর্বস্বত্ব সংরক্ষিত"
+    // डायरेक्ट फाइल अपलोड (JPG/PNG से Base64 कन्वर्टर) फंक्शन
+    function handleImageUpload(event, inputId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(uploadEvent) {
+        document.getElementById(inputId).value = uploadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // सिर्फ फोटो/इमेज क्लियर करने के लिए छोटा डस्टबिन बटन फंक्शन
+    function clearImageInput(inputId, fileInputId) {
+      document.getElementById(inputId).value = '';
+      if(fileInputId && document.getElementById(fileInputId)) {
+        document.getElementById(fileInputId).value = '';
       }
-    };
-    let currentLang = 'hi';
+    }
 
-    function init() {
-      const today = new Date();
-      currentDayKey = dayNames[today.getDay()];
-      renderBanners();
+    async function loadAllDataFromDatabase() {
+      try {
+        const hitRes = await fetch('/api/visitor/hit', { method: 'POST' });
+        const hitData = await hitRes.json();
+        document.getElementById('adminTotalVisitsDisplay').innerText = hitData.totalCount;
+        document.getElementById('adminTodayVisitsDisplay').innerText = hitData.todayCount;
+
+        loadUserLogs();
+
+        const logoRes = await fetch('/api/settings/logo_config');
+        const logoData = await logoRes.json();
+        if(logoData) {
+          document.getElementById('headerLogoImg').src = logoData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300";
+          document.getElementById('headerTextFresh').style.color = logoData.freshColor || "#008F5D";
+          document.getElementById('headerTextKart').style.color = logoData.kartColor || "#FF7A00";
+          document.getElementById('adminLogoUrlInput').value = logoData.logoUrl || "";
+          document.getElementById('adminFreshColorInput').value = logoData.freshColor || "#008F5D";
+          document.getElementById('adminKartColorInput').value = logoData.kartColor || "#FF7A00";
+        }
+
+        const footerRes = await fetch('/api/settings/footer_config');
+        const footerData = await footerRes.json();
+        if(footerData) {
+          document.getElementById('footerLogoImg').src = footerData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100";
+          
+          let fFreshColor = footerData.freshColor || "#008F5D";
+          let fKartColor = footerData.kartColor || "#FF7A00";
+          let fBgColor = footerData.bgColor || "#0F172A";
+
+          document.getElementById('footerTextFresh').style.setProperty('color', fFreshColor, 'important');
+          document.getElementById('footerTextKart').style.setProperty('color', fKartColor, 'important');
+          document.getElementById('mainFooterElement').style.backgroundColor = fBgColor;
+          
+          document.getElementById('adminFooterLogoUrl').value = footerData.logoUrl || "";
+          document.getElementById('adminFooterFreshColor').value = fFreshColor;
+          document.getElementById('adminFooterKartColor').value = fKartColor;
+          document.getElementById('adminFooterBgColor').value = fBgColor;
+        }
+
+        const legalRes = await fetch('/api/settings/legal_pages_config');
+        const legalData = await legalRes.json();
+        if(legalData) legalPages = legalData;
+        renderAdminLegalPages();
+
+        const comboRes = await fetch('/api/settings/day_combos_config');
+        const comboData = await comboRes.json();
+        if(comboData) dayCombos = comboData;
+        renderTodaySpecialCombo();
+        renderAdminDayCombos();
+
+        const catRes = await fetch('/api/settings/circle_cats_config');
+        const catData = await catRes.json();
+        if(catData) circleCategories = catData;
+        renderCircleCategories();
+        renderAdminCircleCategories();
+
+        const prodRes = await fetch('/api/products');
+        const dbProducts = await prodRes.json();
+        products = dbProducts.map((p, index) => ({
+          id: index + 1, dbId: p._id, name: p.name, category: p.category || 'Vegetables',
+          basePrice: p.basePrice || p.salePrice + 10, salePrice: p.salePrice,
+          unit: p.unit || '1 kg', inStock: p.inStock, img: p.img || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: p.sortOrder !== undefined ? p.sortOrder : (index + 1)
+        }));
+
+        const langRes = await fetch('/api/settings/language_config');
+        const langData = await langRes.json();
+        if(langData && langData.lang) {
+          document.getElementById('adminLanguageSelect').value = langData.lang;
+          document.getElementById('htmlRoot').lang = langData.lang;
+        }
+
+        const themeRes = await fetch('/api/settings/theme_config');
+        const themeData = await themeRes.json();
+        if(themeData && themeData.color) {
+          previewTheme(themeData.color);
+          document.getElementById('adminColorWheelPicker').value = themeData.color;
+        }
+
+        const credRes = await fetch('/api/settings/admin_credentials');
+        const credData = await credRes.json();
+        if(credData) {
+          adminAuth = credData;
+          document.getElementById('adminEmailSetting').value = adminAuth.email;
+          document.getElementById('adminPasswordSetting').value = adminAuth.pass;
+        }
+
+        const partnerRes = await fetch('/api/settings/partner_config');
+        const partnerData = await partnerRes.json();
+        if(partnerData) {
+          document.getElementById('adminPartnerName').value = partnerData.name || '';
+          document.getElementById('adminPartnerPhone').value = partnerData.phone || '';
+          document.getElementById('adminDeliveryToggle').value = partnerData.active ? 'true' : 'false';
+          applyPartnerConfig(partnerData);
+        }
+
+        const waMovRes = await fetch('/api/settings/whatsapp_mov_config');
+        const waMovData = await waMovRes.json();
+        if(waMovData) {
+          waNumber = waMovData.waNumber || "919876543210";
+          minOrderValue = waMovData.mov || 100;
+          document.getElementById('adminWaNumber').value = waNumber;
+          document.getElementById('adminMovValue').value = minOrderValue;
+        }
+
+        const bannerRes = await fetch('/api/settings/banners_config');
+        const bannerData = await bannerRes.json();
+        if(bannerData) banners = bannerData;
+        renderBanners(); renderAdminBanners();
+        startAutoSlide();
+
+        renderProducts();
+        renderAdminProductsManager();
+        loadCustomerOrderHistory();
+        updateCartDrawer();
+      } catch (err) { console.error('Error loading data:', err); }
+    }
+
+    async function saveSettingToDb(key, value) {
+      try {
+        const res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key, value })
+        });
+        if(res.ok) alert('सफलतापूर्वक MongoDB में सेव हो गया!');
+      } catch (err) { alert('सेव करने में विफल!'); }
+    }
+
+    async function saveLogoConfigToDb() {
+      const logoUrl = document.getElementById('adminLogoUrlInput').value;
+      const freshColor = document.getElementById('adminFreshColorInput').value;
+      const kartColor = document.getElementById('adminKartColorInput').value;
+
+      await saveSettingToDb('logo_config', { logoUrl, freshColor, kartColor });
+      
+      document.getElementById('headerLogoImg').src = logoUrl;
+      document.getElementById('headerTextFresh').style.color = freshColor;
+      document.getElementById('headerTextKart').style.color = kartColor;
+    }
+
+    async function saveFooterConfigToDb() {
+      const logoUrl = document.getElementById('adminFooterLogoUrl').value;
+      const freshColor = document.getElementById('adminFooterFreshColor').value;
+      const kartColor = document.getElementById('adminFooterKartColor').value;
+      const bgColor = document.getElementById('adminFooterBgColor').value;
+
+      await saveSettingToDb('footer_config', { logoUrl, freshColor, kartColor, bgColor });
+
+      document.getElementById('footerLogoImg').src = logoUrl;
+      document.getElementById('footerTextFresh').style.setProperty('color', freshColor, 'important');
+      document.getElementById('footerTextKart').style.setProperty('color', kartColor, 'important');
+      document.getElementById('mainFooterElement').style.backgroundColor = bgColor;
+      alert('फुटर सेटिंग्स सफलतापूर्वक MongoDB में सेव हो गई!');
+    }
+
+    async function saveAdminCredentials() {
+      adminAuth.email = document.getElementById('adminEmailSetting').value;
+      adminAuth.pass = document.getElementById('adminPasswordSetting').value;
+      await saveSettingToDb('admin_credentials', adminAuth);
+    }
+
+    async function saveLanguageSetting() {
+      let lang = document.getElementById('adminLanguageSelect').value;
+      await saveSettingToDb('language_config', { lang });
+      document.getElementById('htmlRoot').lang = lang;
+    }
+
+    function previewTheme(color) {
+      document.documentElement.style.setProperty('--primary-color', color);
+    }
+
+    function getPartnerObj() {
+      return {
+        name: document.getElementById('adminPartnerName').value,
+        phone: document.getElementById('adminPartnerPhone').value,
+        active: document.getElementById('adminDeliveryToggle').value === 'true'
+      };
+    }
+
+    function applyPartnerConfig(p) {
+      document.getElementById('trackPartnerNameDisplay').innerText = p.name;
+      document.getElementById('trackPartnerPhoneDisplay').innerText = p.phone;
+      if(p.active) {
+        document.getElementById('trackStatusMsg').innerText = "डिलीवरी पार्टनर रास्ते में है!";
+        document.getElementById('deliveryAnimationBox').style.display = 'block';
+      } else {
+        document.getElementById('trackStatusMsg').innerText = "डिलीवरी की स्थिति: एडमिन द्वारा शुरू होने का इंतज़ार...";
+        document.getElementById('deliveryAnimationBox').style.display = 'none';
+      }
+    }
+
+    function getWaMovObj() {
+      return {
+        waNumber: document.getElementById('adminWaNumber').value,
+        mov: Number(document.getElementById('adminMovValue').value)
+      };
+    }
+
+    function openLegalModal(key) {
+      let page = legalPages[key];
+      if(!page) return;
+      document.getElementById('modalPageTitle').innerText = page.title;
+      document.getElementById('modalPageBody').innerText = page.content;
+      document.getElementById('legalPageModal').style.display = 'flex';
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legalPageModal').style.display = 'none';
+    }
+
+    function renderAdminLegalPages() {
+      const keys = Object.keys(legalPages);
+      document.getElementById('adminLegalPagesList').innerHTML = keys.map(k => `
+        <div style="background:white; padding:12px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
+          <div class="form-group"><label>शीर्षक (${k}):</label><input type="text" id="lpTitle-${k}" value="${legalPages[k].title}"></div>
+          <div class="form-group"><label>कंटेंट (विवरण):</label><textarea id="lpContent-${k}" rows="3">${legalPages[k].content}</textarea></div>
+          <button onclick="deleteLegalPage('${k}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.75rem;">🗑️ यह पेज डिलीट करें</button>
+        </div>
+      `).join('');
+    }
+
+    async function saveLegalPagesToDb() {
+      const keys = Object.keys(legalPages);
+      keys.forEach(k => {
+        let tEl = document.getElementById(`lpTitle-${k}`);
+        let cEl = document.getElementById(`lpContent-${k}`);
+        if(tEl && cEl) {
+          legalPages[k].title = tEl.value;
+          legalPages[k].content = cEl.value;
+        }
+      });
+      await saveSettingToDb('legal_pages_config', legalPages);
+      renderAdminLegalPages();
+    }
+
+    function deleteLegalPage(k) {
+      if(!confirm('क्या आप वाकई इस पेज को हटाना चाहते हैं?')) return;
+      delete legalPages[k];
+      renderAdminLegalPages();
+      saveSettingToDb('legal_pages_config', legalPages);
+    }
+
+    function renderTodaySpecialCombo() {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const todayName = days[new Date().getDay()];
+      const combo = dayCombos[todayName] || dayCombos["Saturday"];
+
+      document.getElementById('specialComboTitleHeading').innerText = `🌟 आज (${todayName}) का स्पेशल कॉम्बो`;
+      document.getElementById('todaySpecialComboContainer').innerHTML = `
+        <div class="card" style="flex-direction:row; gap:15px; align-items:center; max-width:100%; padding:15px;">
+          <img src="${combo.img}" style="width:140px; height:100px; border-radius:8px; object-fit:cover;">
+          <div style="flex:1;">
+            <h3 style="margin:0 0 4px 0; font-size:1.1rem;">${combo.name}</h3>
+            <p style="margin:0 0 8px 0; font-size:0.85rem; color:#718096;">${combo.desc}</p>
+            <div class="price-box">
+              <span class="card-price">₹${combo.price}</span>
+            </div>
+          </div>
+          <div style="width:140px;">
+            <button class="add-btn" onclick="addComboToCart('${combo.name}', ${combo.price}, event.target)">+ ADD COMBO</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminDayCombos() {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('adminDayCombosList').innerHTML = days.map(d => {
+        let c = dayCombos[d] || { name: '', price: 0, img: '', desc: '' };
+        return `
+          <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
+            <strong style="color:var(--primary-color);">${d}</strong>
+            <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; margin-bottom:6px;">
+              <input type="text" value="${c.name}" id="dcName-${d}" placeholder="कॉम्बो नाम" style="flex:2;">
+              <input type="number" value="${c.price}" id="dcPrice-${d}" placeholder="रेट (₹)" style="flex:1;">
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:6px;">
+              <input type="text" value="${c.desc}" id="dcDesc-${d}" placeholder="विवरण (उदा. पुईसाक, कुमड़ा...)" style="width:100%;">
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" value="${c.img}" id="dcImg-${d}" placeholder="फोटो URL या फाइल चुनें" style="flex:2;" oninput="dayCombos['${d}'].img=this.value">
+              <input type="file" id="dcFile-${d}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleDayComboImageUpload(event, '${d}')">
+              <button type="button" onclick="clearDayComboImage('${d}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleDayComboImageUpload(event, day) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(uploadEvent) {
+        dayCombos[day].img = uploadEvent.target.result;
+        document.getElementById(`dcImg-${day}`).value = uploadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearDayComboImage(day) {
+      dayCombos[day].img = '';
+      document.getElementById(`dcImg-${day}`).value = '';
+      if(document.getElementById(`dcFile-${day}`)) {
+        document.getElementById(`dcFile-${day}`).value = '';
+      }
+    }
+
+    async function saveDayCombosToDb() {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      days.forEach(d => {
+        dayCombos[d] = {
+          name: document.getElementById(`dcName-${d}`).value,
+          price: Number(document.getElementById(`dcPrice-${d}`).value),
+          img: document.getElementById(`dcImg-${d}`).value,
+          desc: document.getElementById(`dcDesc-${d}`).value
+        };
+      });
+      await saveSettingToDb('day_combos_config', dayCombos);
+      renderTodaySpecialCombo();
+    }
+
+    function addComboToCart(name, price, btnElement) {
+      addToCart(`${name} (Combo)`, Number(price), btnElement);
+    }
+
+    function renderCircleCategories() {
+      document.getElementById('circleCatsView').innerHTML = circleCategories.map(c => `
+        <div class="circle-cat-item" onclick="filterCategory('${c.cat}')">
+          <img class="circle-cat-img" src="${c.img}">
+          <span class="circle-cat-name">${c.name}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminCircleCategories() {
+      document.getElementById('adminCircleCatsList').innerHTML = circleCategories.map((c, i) => `
+        <div style="background:#F7FAFC; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #CBD5E0;">
+          <div style="display:flex; gap:8px; margin-bottom:6px;">
+            <input type="text" value="${c.name}" id="ccName-${i}" placeholder="नाम" style="flex:1;">
+            <input type="text" value="${c.cat}" id="ccCat-${i}" placeholder="कैटेगरी" style="flex:1;">
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" value="${c.img}" id="ccImg-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;">
+            <input type="file" id="ccFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleImageUpload(event, 'ccImg-${i}')">
+            <button type="button" onclick="clearImageInput('ccImg-${i}', 'ccFile-${i}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function saveCircleCategoriesToDb() {
+      circleCategories.forEach((c, i) => {
+        c.name = document.getElementById(`ccName-${i}`).value;
+        c.cat = document.getElementById(`ccCat-${i}`).value;
+        c.img = document.getElementById(`ccImg-${i}`).value;
+      });
+      await saveSettingToDb('circle_cats_config', circleCategories);
       renderCircleCategories();
-      renderPromoBanners();
-      renderCombo();
-      renderProducts();
-      renderAdminBanners();
-      renderAdminCircleCats();
-      renderAdminDayCombos();
-      renderAdminProductsManager();
-      loadAnalytics();
-      updateBroadcastPreview();
     }
 
     function renderBanners() {
@@ -533,69 +882,72 @@
       });
     }
 
-    function renderCircleCategories() {
-      const container = document.getElementById('circleCatsView');
-      container.innerHTML = circleCategories.map(c => `
-        <div class="circle-cat-item" onclick="filterCategory('${c.cat}')">
-          <img class="circle-cat-img" src="${c.img}">
-          <span class="circle-cat-name">${c.name}</span>
+    function renderAdminBanners() {
+      document.getElementById('adminBannerList').innerHTML = banners.map((b, i) => `
+        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
+          <div style="display:flex; gap:8px; margin-bottom:6px;">
+            <input type="text" value="${b.title}" id="bTitle-${i}" placeholder="बैनर शीर्षक" style="flex:2;" oninput="banners[${i}].title=this.value">
+            <input type="number" value="${b.price}" id="bPrice-${i}" placeholder="दाम (₹)" style="flex:1;" oninput="banners[${i}].price=Number(this.value)">
+            <input type="text" value="${b.btnText || 'Shop Now'}" id="bBtn-${i}" placeholder="बटन टेक्स्ट" style="flex:1;" oninput="banners[${i}].btnText=this.value">
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" value="${b.img}" id="bImgInput-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;" oninput="banners[${i}].img=this.value">
+            <input type="file" id="bFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleBannerImageUpload(event, ${i})">
+            <button type="button" onclick="clearBannerImage(${i})" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
         </div>
       `).join('');
     }
 
-    function renderPromoBanners() {
-      document.getElementById('promoImg1').src = promoBanners[0];
-      document.getElementById('promoImg2').src = promoBanners[1];
-      document.getElementById('promoImg3').src = promoBanners[2];
-      document.getElementById('adminPromo1').value = promoBanners[0];
-      document.getElementById('adminPromo2').value = promoBanners[1];
-      document.getElementById('adminPromo3').value = promoBanners[2];
+    function handleBannerImageUpload(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(uploadEvent) {
+        banners[index].img = uploadEvent.target.result;
+        document.getElementById(`bImgInput-${index}`).value = uploadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    function updatePromoBanners() {
-      promoBanners[0] = document.getElementById('adminPromo1').value;
-      promoBanners[1] = document.getElementById('adminPromo2').value;
-      promoBanners[2] = document.getElementById('adminPromo3').value;
-      renderPromoBanners();
+    function clearBannerImage(index) {
+      banners[index].img = '';
+      document.getElementById(`bImgInput-${index}`).value = '';
+      if(document.getElementById(`bFile-${index}`)) {
+        document.getElementById(`bFile-${index}`).value = '';
+      }
     }
 
-    function changeSlide(dir) {
+    function startAutoSlide() {
+      if(slideInterval) clearInterval(slideInterval);
+      slideInterval = setInterval(() => {
+        slideIndex = (slideIndex + 1) % banners.length;
+        showSlide(slideIndex);
+      }, 3500);
+    }
+
+    function showSlide(index) {
       const slides = document.querySelectorAll('.banner-slide');
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + dir + slides.length) % slides.length;
-      slides[currentSlide].classList.add('active');
+      const dots = document.querySelectorAll('.dot');
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      if(slides[index]) slides[index].classList.add('active');
+      if(dots[index]) dots[index].classList.add('active');
     }
 
-    function currentSlideIndex(idx) {
-      const slides = document.querySelectorAll('.banner-slide');
-      slides[currentSlide].classList.remove('active');
-      currentSlide = idx;
-      slides[currentSlide].classList.add('active');
+    function currentSlideIndex(index) {
+      slideIndex = index;
+      showSlide(slideIndex);
+      startAutoSlide();
     }
 
     function addBannerToCart(i) {
-      const b = banners[i];
-      cart.push({ name: b.title, price: Number(b.price) });
-      updateCartDrawer();
-      alert(`"${b.title}" कार्ट में जुड़ गया!`);
+      let b = banners[i];
+      addToCart(`${b.title} (1 pc)`, Number(b.price), event.target);
     }
 
-    function renderCombo() {
-      const combo = dayCombos[currentDayKey] || dayCombos["Thursday"];
-      document.getElementById('todayComboHeading').innerText = `${currentDayKey} Special: ${combo.title}`;
-      document.getElementById('dayComboContainer').innerHTML = `
-        <div class="card" style="grid-column: 1 / -1; display:flex; flex-direction:row; gap:14px; align-items:center;">
-          <img src="${combo.img}" style="width:120px; height:100px; border-radius:8px; object-fit:cover;">
-          <div style="flex:1;">
-            <span class="badge" style="position:static; display:inline-block; margin-bottom:4px;">Special Combo</span>
-            <div class="card-title" style="font-size:1rem;">${combo.title}</div>
-            <p style="font-size:0.8rem; color:#718096; margin:2px 0 6px 0;">${combo.desc}</p>
-            <div class="card-price">₹${combo.price}</div>
-            <button class="add-btn" style="width:auto; padding:6px 16px;" onclick="addToCart('${combo.title}', ${Number(combo.price)})">+ Add Combo</button>
-          </div>
-        </div>
-      `;
-    }
+    let quantities = {};
+    let selectedUnits = {};
 
     function filterCategory(cat, btn) {
       activeCategory = cat;
@@ -608,345 +960,368 @@
 
     function renderProducts() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-      let filtered = products.filter(p => {
-        let matchesCat = (activeCategory === 'All' || p.category === activeCategory);
-        let matchesSearch = p.name.toLowerCase().includes(query);
-        return matchesCat && matchesSearch;
-      });
+      let filtered = products.filter(p => (activeCategory === 'All' || p.category === activeCategory) && p.name.toLowerCase().includes(query));
 
-      const container = document.getElementById('productGrid');
-      container.innerHTML = filtered.map(p => {
-        let mult = 1;
-        if (p.selectedUnit === "500g" || p.selectedUnit === "500 ml") mult = 0.5;
-        if (p.selectedUnit === "250g" || p.selectedUnit === "250 ml") mult = 0.25;
-        if (p.selectedUnit === "100g" || p.selectedUnit === "100 ml") mult = 0.1;
-        let finalPrice = Math.round(p.basePrice * mult * p.qty);
+      const unitOptions = ['100g', '250g', '500g', '1 kg', '1 Piece', '2 Pieces', '5 Pieces', '1/2 Dozen', '1 Dozen', '1 Liter', '500 ml'];
 
-        let unitBtns = '';
-        if (p.unitType === 'litre') {
-          unitBtns = `<button class="weight-btn ${p.selectedUnit==='250 ml'?'selected':''}" onclick="setUnit(${p.id},'250 ml')">250 ml</button>
-                      <button class="weight-btn ${p.selectedUnit==='500 ml'?'selected':''}" onclick="setUnit(${p.id},'500 ml')">500 ml</button>
-                      <button class="weight-btn ${p.selectedUnit==='1 L'?'selected':''}" onclick="setUnit(${p.id},'1 L')">1 L</button>`;
-        } else if (p.unitType === 'pcs') {
-          unitBtns = `<button class="weight-btn selected">1 Pc</button>`;
-        } else {
-          unitBtns = `<button class="weight-btn ${p.selectedUnit==='100g'?'selected':''}" onclick="setUnit(${p.id},'100g')">100g</button>
-                      <button class="weight-btn ${p.selectedUnit==='250g'?'selected':''}" onclick="setUnit(${p.id},'250g')">250g</button>
-                      <button class="weight-btn ${p.selectedUnit==='500g'?'selected':''}" onclick="setUnit(${p.id},'500g')">500g</button>
-                      <button class="weight-btn ${p.selectedUnit==='1 kg'?'selected':''}" onclick="setUnit(${p.id},'1 kg')">1 kg</button>`;
-        }
-
-        let isFav = favorites.includes(p.id);
-        let favIcon = isFav ? "❤️" : "🤍";
-
-        let actionContent = '';
-        if(p.inStock) {
-          actionContent = `
-            <div class="card-actions-row">
-              <div class="qty-controls">
-                <button class="qty-btn" onclick="changeQty(${p.id}, -1)">-</button>
-                <span style="font-weight:700;">${p.qty}</span>
-                <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
-              </div>
-            </div>
-            <button class="add-btn" id="addBtn-${p.id}" onclick="addSelectedProduct(${p.id})">${langDict[currentLang].add}</button>
-          `;
-        } else {
-          actionContent = `<div class="out-of-stock-badge">Out of Stock</div>`;
-        }
+      document.getElementById('productGrid').innerHTML = filtered.map(p => {
+        if(!quantities[p.id]) quantities[p.id] = 1;
+        if(!selectedUnits[p.id]) selectedUnits[p.id] = p.unit || '1 kg';
+        
+        let currentQty = quantities[p.id];
+        let currentUnit = selectedUnits[p.id];
+        let calculatedPrice = calculateDynamicPrice(p.salePrice, currentUnit, currentQty);
 
         return `
           <div class="card">
-            <span class="badge" style="background:${document.getElementById('adminBadgeBg')?.value || '#FF6B6B'}">${badgeTextContent}</span>
-            <button class="fav-btn" onclick="toggleFavorite(${p.id})">${favIcon}</button>
             <img src="${p.img}">
             <div class="card-title">${p.name}</div>
-            <div class="card-price">₹${finalPrice} <span style="font-size:0.75rem; color:#718096;">(${p.selectedUnit})</span></div>
-            <div class="weight-options">${unitBtns}</div>
-            ${actionContent}
+            
+            <select class="card-unit-select" id="unit-sel-${p.id}" onchange="onUnitChange(${p.id}, this.value)">
+              ${unitOptions.map(u => `<option value="${u}" ${u === currentUnit ? 'selected' : ''}>${u}</option>`).join('')}
+            </select>
+
+            <div class="price-box">
+              <span class="card-price" id="price-display-${p.id}">₹${calculatedPrice}</span>
+              <span class="old-price">₹${Math.round(p.basePrice * (calculatedPrice/p.salePrice) || p.basePrice)}</span>
+            </div>
+
+            ${p.inStock ? `
+              <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty(${p.id}, -1, ${p.salePrice})">-</button>
+                <span id="qty-${p.id}" style="font-weight:700;">${currentQty}</span>
+                <button class="qty-btn" onclick="changeQty(${p.id}, 1, ${p.salePrice})">+</button>
+              </div>
+              <button class="add-btn" id="add-btn-${p.id}" onclick="addProdToCart(${p.id})">+ ADD</button>
+            ` : `<div style="background:#CBD5E0; color:#4A5568; font-size:0.75rem; padding:6px; border-radius:6px; font-weight:700; text-align:center;">Out of Stock</div>`}
           </div>
         `;
       }).join('');
     }
 
-    function toggleFavorite(id) {
-      if(favorites.includes(id)) {
-        favorites = favorites.filter(i => i !== id);
-      } else {
-        favorites.push(id);
+    function calculateDynamicPrice(baseSalePrice, unit, qty) {
+      let multiplier = 1;
+      
+      if (unit.includes('Piece')) {
+        let pieceCount = 1;
+        if (unit.startsWith('2')) pieceCount = 2;
+        else if (unit.startsWith('5')) pieceCount = 5;
+        else if (unit.startsWith('10')) pieceCount = 10;
+        return Math.round(baseSalePrice * pieceCount * qty);
       }
-      document.getElementById('favCount').innerText = favorites.length;
-      renderProducts();
+
+      if(unit === '100g') multiplier = 0.1;
+      else if(unit === '250g') multiplier = 0.25;
+      else if(unit === '500g') multiplier = 0.5;
+      else if(unit === '1 kg') multiplier = 1;
+      else if(unit === '1/2 Dozen') multiplier = 0.5;
+      else if(unit === '1 Dozen') multiplier = 1;
+      else if(unit === '1 Liter') multiplier = 1;
+      else if(unit === '500 ml') multiplier = 0.5;
+      
+      return Math.round(baseSalePrice * multiplier * qty);
     }
 
-    function setUnit(id, unit) { const p = products.find(prod => prod.id === id); if(p) { p.selectedUnit = unit; renderProducts(); } }
-    function changeQty(id, delta) { const p = products.find(prod => prod.id === id); if(p) { p.qty += delta; if(p.qty < 1) p.qty = 1; renderProducts(); } }
+    function onUnitChange(id, newUnit) {
+      selectedUnits[id] = newUnit;
+      let p = products.find(item => item.id === id);
+      let qty = quantities[id] || 1;
+      let newPrice = calculateDynamicPrice(p.salePrice, newUnit, qty);
+      document.getElementById(`price-display-${id}`).innerText = `₹${newPrice}`;
+    }
 
-    function addSelectedProduct(id) {
-      const p = products.find(prod => prod.id === id);
-      if(p && p.inStock) {
-        let mult = 1;
-        if (p.selectedUnit === "500g" || p.selectedUnit === "500 ml") mult = 0.5;
-        if (p.selectedUnit === "250g" || p.selectedUnit === "250 ml") mult = 0.25;
-        if (p.selectedUnit === "100g" || p.selectedUnit === "100 ml") mult = 0.1;
-        let price = Math.round(p.basePrice * mult * p.qty);
-        cart.push({ name: `${p.name} (${p.selectedUnit} x ${p.qty})`, price });
-        updateCartDrawer();
+    function changeQty(id, delta, baseSalePrice) {
+      if(!quantities[id]) quantities[id] = 1;
+      quantities[id] += delta;
+      if(quantities[id] < 1) quantities[id] = 1;
+      
+      document.getElementById(`qty-${id}`).innerText = quantities[id];
+      let unit = selectedUnits[id] || '1 kg';
+      let newPrice = calculateDynamicPrice(baseSalePrice, unit, quantities[id]);
+      document.getElementById(`price-display-${id}`).innerText = `₹${newPrice}`;
+    }
 
-        const btn = document.getElementById(`addBtn-${id}`);
-        if(btn) {
-          btn.innerText = langDict[currentLang].added;
-          btn.classList.add('added-state');
-          setTimeout(() => {
-            btn.innerText = langDict[currentLang].add;
-            btn.classList.remove('added-state');
-          }, 1000);
-        }
+    function addProdToCart(id) {
+      let p = products.find(item => item.id === id);
+      let qty = quantities[id] || 1;
+      let unit = selectedUnits[id] || p.unit;
+      let finalPrice = calculateDynamicPrice(p.salePrice, unit, qty);
+      
+      addToCart(`${p.name} (${qty} ${unit})`, finalPrice, document.getElementById(`add-btn-${id}`));
+    }
+
+    function addToCart(name, price, btnElement) {
+      cart.push({ name, price });
+      localStorage.setItem('fk_cart', JSON.stringify(cart));
+      updateCartDrawer();
+
+      if(btnElement) {
+        let originalText = btnElement.innerText;
+        btnElement.innerText = "✓ Added";
+        btnElement.classList.add("added");
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.classList.remove("added");
+        }, 1200);
       }
     }
 
-    function addToCart(name, price) { cart.push({ name, price }); updateCartDrawer(); alert(`"${name}" कार्ट में जुड़ गया!`); }
+    function renderAdminProductsManager() {
+      const unitOptionsHtml = `
+        <option value="100g">100g</option><option value="250g">250g</option><option value="500g">500g</option>
+        <option value="1 kg">1 kg</option><option value="1 Piece">1 Piece</option><option value="2 Pieces">2 Pieces</option>
+        <option value="5 Pieces">5 Pieces</option><option value="1/2 Dozen">1/2 Dozen</option><option value="1 Dozen">1 Dozen</option>
+        <option value="1 Liter">1 Liter</option><option value="500 ml">500 ml</option>
+      `;
+
+      document.getElementById('adminProductManagerList').innerHTML = products.map((p, index) => `
+        <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #CBD5E0;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+            <input type="text" id="name-${p.id}" value="${p.name}" style="flex:2; min-width:110px;" placeholder="नाम">
+            <select id="unit-${p.id}" style="flex:1; min-width:90px;">
+              ${unitOptionsHtml.replace(`value="${p.unit}"`, `value="${p.unit}" selected`)}
+            </select>
+            <input type="number" id="salePrice-${p.id}" value="${p.salePrice}" style="flex:1; min-width:70px;" placeholder="दाम">
+            <select id="stock-${p.id}" style="flex:1; min-width:90px;">
+              <option value="true" ${p.inStock?'selected':''}>In Stock</option>
+              <option value="false" ${!p.inStock?'selected':''}>Out of Stock</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="img-${p.id}" value="${p.img}" style="flex:2;" placeholder="इमेज URL या फाइल चुनें">
+            <input type="file" id="file-${p.id}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleImageUpload(event, 'img-${p.id}')">
+            <button type="button" onclick="clearImageInput('img-${p.id}', 'file-${p.id}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+            <div style="display:flex; gap:4px; flex:1; justify-content:flex-end;">
+              ${index > 0 ? `<button onclick="moveProductOrder(${index}, -1)" style="background:#718096; color:white; border:none; padding:6px 8px; border-radius:4px; cursor:pointer;" title="पर ऊपर ले जाएं">⬆️</button>` : ''}
+              ${index < products.length - 1 ? `<button onclick="moveProductOrder(${index}, 1)" style="background:#718096; color:white; border:none; padding:6px 8px; border-radius:4px; cursor:pointer;" title="पर नीचे लाएं">⬇️</button>` : ''}
+              <button onclick="saveProductUpdate(${p.id}, '${p.dbId}')" style="background:#00B074; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">💾 सेव</button>
+              <button onclick="deleteProduct('${p.dbId}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">डिलिट</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function moveProductOrder(index, direction) {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= products.length) return;
+      let temp = products[index];
+      products[index] = products[targetIndex];
+      products[targetIndex] = temp;
+
+      for (let i = 0; i < products.length; i++) {
+        products[i].sortOrder = i + 1;
+        await fetch(`/api/products/${products[i].dbId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sortOrder: products[i].sortOrder })
+        });
+      }
+      loadAllDataFromDatabase();
+    }
+
+    async function saveProductUpdate(id, dbId) {
+      const name = document.getElementById(`name-${id}`).value;
+      const unit = document.getElementById(`unit-${id}`).value;
+      const salePrice = Number(document.getElementById(`salePrice-${id}`).value);
+      const inStock = document.getElementById(`stock-${id}`).value === 'true';
+      const img = document.getElementById(`img-${id}`).value;
+
+      const res = await fetch(`/api/products/${dbId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, unit, salePrice, inStock, img })
+      });
+      if(res.ok) { alert('सफलतापूर्वक सेव हो गया!'); loadAllDataFromDatabase(); }
+    }
+
+    async function addNewProduct() {
+      const name = document.getElementById('newProdName').value;
+      const category = document.getElementById('newProdCategory').value;
+      const unit = document.getElementById('newProdUnit').value;
+      const basePrice = Number(document.getElementById('newProdBasePrice').value) || 50;
+      const salePrice = Number(document.getElementById('newProdSalePrice').value);
+      const img = document.getElementById('newProdImg').value || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
+      
+      if(!name || !salePrice) return alert('नाम और सेल प्राइस भरें!');
+
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, category, basePrice, salePrice, unit, img, inStock: true, sortOrder: products.length + 1 })
+      });
+      if(res.ok) { alert('नया आइटम जुड़ गया!'); loadAllDataFromDatabase(); }
+    }
+
+    async function deleteProduct(dbId) {
+      if(!confirm('डिलिट करना चाहते हैं?')) return;
+      const res = await fetch(`/api/products/${dbId}`, { method: 'DELETE' });
+      if(res.ok) { alert('डिलिट हो गया!'); loadAllDataFromDatabase(); }
+    }
+
     function toggleCartDrawer() { document.getElementById('cartDrawer').classList.toggle('open'); }
-    function removeCartItem(idx) { cart.splice(idx, 1); updateCartDrawer(); }
-
+    
     function updateCartDrawer() {
       document.getElementById('cartBadgeCount').innerText = cart.length;
       let total = cart.reduce((sum, item) => sum + item.price, 0);
       document.getElementById('drawerCartTotal').innerText = `₹${total}`;
-      const body = document.getElementById('cartDrawerBody');
-      body.innerHTML = cart.length === 0 ? `<p style="text-align:center; color:#A0AEC0;">${langDict[currentLang].emptyCart}</p>` :
-        cart.map((i, idx) => `<div class="cart-item"><div><b>${i.name}</b><br>₹${i.price}</div><button onclick="removeCartItem(${idx})" style="background:#FED7D7; color:#E53E3E; border:none; padding:4px; border-radius:4px;">❌</button></div>`).join('');
-    }
-
-    function renderAdminProductsManager() {
-      const container = document.getElementById('adminProductManagerList');
-      container.innerHTML = products.map((p) => `
-        <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px;">
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <div style="flex:2;"><label>नाम:</label><input type="text" value="${p.name}" onchange="updateProdField(${p.id}, 'name', this.value)"></div>
-            <div style="flex:1;"><label>दाम (₹):</label><input type="number" value="${p.basePrice}" onchange="updateProdField(${p.id}, 'basePrice', Number(this.value))"></div>
-            <div style="flex:2;"><label>फोटो URL:</label><input type="text" value="${p.img}" onchange="updateProdField(${p.id}, 'img', this.value)"></div>
-            <div style="flex:1;"><label>स्टॉक:</label>
-              <select onchange="updateProdField(${p.id}, 'inStock', this.value === 'true')">
-                <option value="true" ${p.inStock?'selected':''}>In Stock</option>
-                <option value="false" ${!p.inStock?'selected':''}>Out of Stock</option>
-              </select>
-            </div>
-            <div style="display:flex; align-items:flex-end;"><button onclick="deleteProduct(${p.id})" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">डिलिट</button></div>
-          </div>
-        </div>
-      `).join('');
-      updateBroadcastPreview();
-    }
-
-    function updateProdField(id, field, val) {
-      const p = products.find(prod => prod.id === id);
-      if(p) { p[field] = val; renderProducts(); updateBroadcastPreview(); }
-    }
-
-    function addNewProduct() {
-      const name = document.getElementById('newProdName').value.trim();
-      const cat = document.getElementById('newProdCat').value;
-      const unitType = document.getElementById('newProdUnitType').value;
-      const price = Number(document.getElementById('newProdPrice').value);
-      const img = document.getElementById('newProdImg').value.trim() || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
-      if(!name || !price) return alert('नाम और दाम भरें!');
-      let defaultUnit = unitType === 'litre' ? '1 L' : (unitType === 'pcs' ? '1 Pc' : '1 kg');
-      products.push({ id: products.length + 1, name, category: cat, unitType, basePrice: price, selectedUnit: defaultUnit, qty: 1, inStock: true, img });
-      document.getElementById('newProdName').value = ""; document.getElementById('newProdPrice').value = ""; document.getElementById('newProdImg').value = "";
-      renderProducts(); renderAdminProductsManager(); alert('आइटम जुड़ गया!');
-    }
-
-    function deleteProduct(id) { products = products.filter(p => p.id !== id); renderProducts(); renderAdminProductsManager(); }
-
-    function renderAdminBanners() {
-      const container = document.getElementById('adminBannerList');
-      container.innerHTML = banners.map((b, i) => `
-        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px;">
-          <label>बैनर ${i+1} नाम:</label><input type="text" value="${b.title}" oninput="banners[${i}].title=this.value; renderBanners();">
-          <label>दाम (₹):</label><input type="number" value="${b.price}" oninput="banners[${i}].price=Number(this.value); renderBanners();">
-          <label>इमेज URL:</label><input type="text" value="${b.img}" oninput="banners[${i}].img=this.value; renderBanners();">
-        </div>
-      `).join('');
-    }
-
-    function renderAdminCircleCats() {
-      const container = document.getElementById('adminCircleCatsList');
-      container.innerHTML = circleCategories.map((c, i) => `
-        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; gap:10px;">
-          <div style="flex:1;"><label>नाम:</label><input type="text" value="${c.name}" oninput="circleCategories[${i}].name=this.value; renderCircleCategories();"></div>
-          <div style="flex:2;"><label>इमेज URL:</label><input type="text" value="${c.img}" oninput="circleCategories[${i}].img=this.value; renderCircleCategories();"></div>
-        </div>
-      `).join('');
-    }
-
-    function updateCircleRingColor() {
-      let col = document.getElementById('adminCircleRingColor').value;
-      document.documentElement.style.setProperty('--circle-ring-color', col);
-    }
-
-    function renderAdminDayCombos() {
-      const container = document.getElementById('adminDayCombosList');
-      container.innerHTML = Object.keys(dayCombos).map(day => `
-        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px;">
-          <b>${day} Combo:</b>
-          <div style="display:flex; gap:10px; margin-top:5px;">
-            <input type="text" value="${dayCombos[day].title}" oninput="dayCombos['${day}'].title=this.value; renderCombo();" style="flex:2;">
-            <input type="number" value="${dayCombos[day].price}" oninput="dayCombos['${day}'].price=Number(this.value); renderCombo();" style="flex:1;">
-            <input type="text" value="${dayCombos[day].img}" oninput="dayCombos['${day}'].img=this.value; renderCombo();" style="flex:2;">
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function loadAnalytics() {
-      document.getElementById('adminTotalVisitsDisplay').innerText = totalVisits;
-      document.getElementById('adminTodayVisitsDisplay').innerText = todayVisits;
-    }
-
-    function updateHeaderBrand() {
-      document.getElementById('headerLogoImg').src = document.getElementById('adminLogoImgUrl').value;
-      let f = document.getElementById('adminFreshText').value;
-      let k = document.getElementById('adminKartText').value;
-      let fc = document.getElementById('adminFreshColor').value;
-      let kc = document.getElementById('adminKartColor').value;
-      document.getElementById('headerTextFresh').innerText = f;
-      document.getElementById('headerTextFresh').style.color = fc;
-      document.getElementById('headerTextKart').innerText = k;
-      document.getElementById('headerTextKart').style.color = kc;
-    }
-
-    function updateBadgeStyle() {
-      badgeTextContent = document.getElementById('adminBadgeText').value;
-      renderProducts();
-    }
-
-    function updateFooterData() {
-      document.getElementById('footerDisplayEmail').innerText = document.getElementById('adminContactEmail').value;
-      document.getElementById('footerDisplayPhone').innerText = document.getElementById('adminContactPhone').value;
-      document.getElementById('footerDisplayAddress').innerText = document.getElementById('adminContactAddress').value;
-    }
-
-    function updateMov(val) { minimumOrderValue = Number(val); }
-
-    function updateAdminCredentials() {
-      adminAuth.email = document.getElementById('adminEmailSetting').value;
-      adminAuth.pass = document.getElementById('adminPasswordSetting').value;
-      alert('क्रेडेंशियल्स अपडेट हो गए!');
-    }
-
-    function forgotPasswordAdmin() {
-      let em = prompt("रजिस्टर्ड एडमिन ईमेल दर्ज करें:");
-      if(em === adminAuth.email) {
-        let np = prompt("नया पासवर्ड दर्ज करें:");
-        if(np) { adminAuth.pass = np; alert("पासवर्ड बदल गया है!"); }
-      } else if(em) { alert("गलत ईमेल!"); }
-    }
-
-    function updateBroadcastPreview() {
-      let text = `🌿 *FreshKart - मंडी भाव* 🌿\n`;
-      products.forEach(p => { text += `▪️ ${p.name}: ₹${p.basePrice}\n`; });
-      document.getElementById('broadcastTextPreview').innerText = text;
-    }
-
-    function copyBroadcastRates() {
-      navigator.clipboard.writeText(document.getElementById('broadcastTextPreview').innerText);
-      alert('रेट लिस्ट कॉपी हो गई!');
-    }
-
-    function changeLanguage(lang) {
-      currentLang = lang;
-      const t = langDict[lang];
-
-      document.getElementById('pageTitle').innerText = t.title;
-      document.getElementById('cartBtnLabel').innerText = t.cart;
-      document.getElementById('searchInput').placeholder = t.search;
-      document.getElementById('pillAll').innerText = t.all;
-      document.getElementById('pillVeg').innerText = t.veggies;
-      document.getElementById('pillFruit').innerText = t.fruits;
-      document.getElementById('pillDairy').innerText = t.dairy;
-      document.getElementById('pillGro').innerText = t.grocery;
       
-      document.getElementById('tabStore').innerText = t.tabStore;
-      document.getElementById('tabTrack').innerText = t.tabTrack;
-      document.getElementById('accountBtnText').innerText = t.account;
-      
-      document.getElementById('authModalTitle').innerText = t.authTitle;
-      document.getElementById('labelName').innerText = t.nameLbl;
-      document.getElementById('labelMobile').innerText = t.mobLbl;
-      document.getElementById('cancelBtnText').innerText = t.cancel;
-      document.getElementById('loginBtnText').innerText = t.login;
-      
-      document.getElementById('adminModalTitle').innerText = t.adminTitle;
-      document.getElementById('labelEmail').innerText = t.emailLbl;
-      document.getElementById('labelPass').innerText = t.passLbl;
-      document.getElementById('forgotPassText').innerText = t.forgot;
-      document.getElementById('adminCancelText').innerText = t.cancel;
-      document.getElementById('adminLoginText').innerText = t.login;
-
-      document.getElementById('cartDrawerTitle').innerText = t.drawerTitle;
-      document.getElementById('totalBillText').innerText = t.totalBill;
-      document.getElementById('whatsappOrderBtnText').innerText = t.waBtn;
-      document.getElementById('mandiProductsTitle').innerText = t.mandiTitle;
-
-      document.getElementById('footerSupportTitle').innerText = t.footerSupport;
-      document.getElementById('footerLegalTitle').innerText = t.footerLegal;
-      document.getElementById('footerContactTitle').innerText = t.footerContact;
-      document.getElementById('footerCopyText').innerText = t.footerCopy;
-
-      renderProducts();
-    }
-
-    function openAdminLoginModal() {
-      if(localStorage.getItem("fk_admin_logged") === "true") {
-        switchTab('admin');
+      const bodyEl = document.getElementById('cartDrawerBody');
+      if(cart.length === 0) {
+        bodyEl.innerHTML = `<p style="text-align:center; color:#A0AEC0;">कार्ट खाली है!</p>`;
       } else {
-        document.getElementById('adminLoginModal').style.display = 'flex';
+        bodyEl.innerHTML = cart.map((item, idx) => `
+          <div class="cart-item">
+            <span>${item.name}</span>
+            <span>₹${item.price} <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button></span>
+          </div>
+        `).join('');
       }
     }
-    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
+
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      localStorage.setItem('fk_cart', JSON.stringify(cart));
+      updateCartDrawer();
+    }
+
+    async function sendWhatsAppOrder() {
+      let total = cart.reduce((sum, item) => sum + item.price, 0);
+      if(total < minOrderValue) {
+        return alert(`न्यूनतम ऑर्डर मूल्य (MOV) ₹${minOrderValue} है! कृपया कुछ और आइटम जोड़ें।`);
+      }
+      
+      let customer = JSON.parse(localStorage.getItem('fk_logged_customer') || '{"name":"Guest", "phone":"N/A"}');
+      
+      let msg = `*FreshKart New Order*%0A`;
+      msg += `👤 नाम: ${customer.name}%0A`;
+      msg += `📞 फोन: ${customer.phone}%0A%0A`;
+      msg += `*आइटम्स:*%0A`;
+      cart.forEach((item, i) => {
+        msg += `${i+1}. ${item.name} - ₹${item.price}%0A`;
+      });
+      msg += `%0A*कुल बिल (Grand Total):* ₹${total}`;
+
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerName: customer.name, customerPhone: customer.phone, items: cart, totalAmount: total })
+      });
+
+      window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
+    }
+
+    function copyWhatsAppBroadcastList() {
+      let listText = `*🌱 FreshKart Special Broadcast Rate List 🌱*%0A%0A`;
+      products.forEach(p => {
+        listText += `▪️ ${p.name} (${p.unit}): ₹${p.salePrice}%0A`;
+      });
+      listText += `%0AOrder now on FreshKart!`;
+      navigator.clipboard.writeText(listText);
+      alert('WhatsApp ब्रॉडकास्ट रेट लिस्ट कॉपी हो गई है!');
+    }
+
+    function openCustomerAuthModal() { 
+      document.getElementById('customerAuthModal').style.display = 'flex';
+      let logged = localStorage.getItem('fk_logged_customer');
+      if(logged) {
+        let c = JSON.parse(logged);
+        document.getElementById('custRegName').value = c.name;
+        document.getElementById('custRegPhone').value = c.phone;
+        document.getElementById('logoutSection').style.display = 'block';
+      } else {
+        document.getElementById('logoutSection').style.display = 'none';
+      }
+    }
     
+    function closeCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'none'; }
+    
+    async function loginCustomer() {
+      let name = document.getElementById('custRegName').value;
+      let phone = document.getElementById('custRegPhone').value;
+      if(!name || !phone) return alert('नाम और फोन नंबर भरें!');
+      
+      localStorage.setItem('fk_logged_customer', JSON.stringify({ name, phone }));
+      
+      await fetch('/api/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'LOGIN', name, phone })
+      });
+
+      alert('कस्टमर लॉगिन सफल!');
+      closeCustomerAuthModal();
+      loadUserLogs();
+    }
+
+    async function logoutCustomer() {
+      let logged = localStorage.getItem('fk_logged_customer');
+      if(logged) {
+        let c = JSON.parse(logged);
+        await fetch('/api/logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'LOGOUT', name: c.name, phone: c.phone })
+        });
+      }
+      localStorage.removeItem('fk_logged_customer');
+      alert('लॉगआउट हो गए।');
+      closeCustomerAuthModal();
+      loadUserLogs();
+    }
+
+    async function loadUserLogs() {
+      try {
+        const res = await fetch('/api/logs');
+        const logs = await res.json();
+        const box = document.getElementById('adminUserLogsDisplay');
+        if(logs.length === 0) box.innerHTML = "कोई लॉग नहीं है।";
+        else {
+          box.innerHTML = logs.map(l => `[<b>${l.action}</b>] ${l.name} (${l.phone}) - <span style="color:#718096; font-size:0.75rem;">${l.timestamp}</span>`).join('<br>');
+        }
+      } catch(err) { console.error(err); }
+    }
+
+    async function loadCustomerOrderHistory() {
+      try {
+        const res = await fetch('/api/orders');
+        const orders = await res.json();
+        const box = document.getElementById('adminCustomerOrderHistoryBox');
+        if(orders.length === 0) {
+          box.innerHTML = `<p style="color:#718096; margin:0;">कोई पुराना आर्डर नहीं मिला।</p>`;
+        } else {
+          box.innerHTML = orders.map(o => `
+            <div style="border-bottom:1px solid #CBD5E0; padding:6px 0; font-size:0.85rem; display:flex; justify-content:space-between;">
+              <span><b>${o.customerName}</b> (${o.customerPhone})</span>
+              <span>₹<b>${o.totalAmount}</b> <small style="color:#718096;">(${new Date(o.date).toLocaleDateString()})</small></span>
+            </div>
+          `).join('');
+        }
+      } catch(err) { console.error(err); }
+    }
+
+    function openAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
+    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
     function verifyAdminLogin() {
       if(document.getElementById('loginEmailInput').value === adminAuth.email && document.getElementById('loginPasswordInput').value === adminAuth.pass) {
-        localStorage.setItem("fk_admin_logged", "true");
-        closeAdminLoginModal(); switchTab('admin');
+        closeAdminLoginModal(); 
+        switchTab('admin');
       } else { alert('गलत डिटेल्स!'); }
     }
+    function adminLogout() { switchTab('store'); alert('एडमिन लॉगआउट!'); }
     
-    function adminLogout() {
-      localStorage.removeItem("fk_admin_logged");
-      switchTab('store');
-      alert('लॉगआउट हो गए।');
-    }
-
-    function openCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'flex'; }
-    function closeCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'none'; }
-    function registerOrLoginCustomer() {
-      const name = document.getElementById('custRegName').value.trim();
-      if(!name) return alert('नाम दर्ज करें!');
-      document.getElementById('accountBtnText').innerText = `👤 ${name}`;
-      closeCustomerAuthModal(); alert(`स्वागत है, ${name}!`);
-    }
-    function customerLogout() { document.getElementById('accountBtnText').innerText = "👤 अकाउंट"; closeCustomerAuthModal(); }
-
     function switchTab(tab) {
       document.getElementById('storeTab').style.display = tab === 'store' ? 'block' : 'none';
       document.getElementById('trackingTab').style.display = tab === 'tracking' ? 'block' : 'none';
-      document.getElementById('adminTab').style.display = tab === 'admin' ? 'block' : 'none';
-    }
-
-    function setTheme(color) { document.documentElement.style.setProperty('--primary-color', color); }
-
-    function sendWhatsAppOrder() {
-      if(cart.length === 0) return alert('कार्ट खाली है!');
-      let total = cart.reduce((s, i) => s + i.price, 0);
-      if(total < minimumOrderValue) return alert(`न्यूनतम ऑर्डर ₹${minimumOrderValue} है!`);
-      let items = cart.map(i => `${i.name} (₹${i.price})`).join('%0A');
-      let num = document.getElementById('adminWhatsAppNum').value;
-      window.open(`https://wa.me/${num}?text=Order:%0A${items}%0ATotal: ₹${total}`, '_blank');
+      const adminTab = document.getElementById('adminTab');
+      if(adminTab) adminTab.style.display = tab === 'admin' ? 'block' : 'none';
     }
 
     window.onload = init;
+    function init() { loadAllDataFromDatabase(); }
   </script>
 </body>
 </html>
+
+
+
