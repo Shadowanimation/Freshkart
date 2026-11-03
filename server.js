@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const https = require('https');
+const http = require('http');
 
 const app = express();
 app.use(express.json({ limit: '10mb' })); // डायरेक्ट इमेज (Base64) अपलोड के लिए लिमिट
@@ -14,6 +16,19 @@ mongoose.connect('mongodb+srv://shadowanimation13_db_user:Fresh0324kart@cluster0
     seedInitialData();
 })
 .catch(err => console.log(err));
+
+// Render स्लीप मोड (20 मिनट) से बचाने के लिए ऑटो-पिंग (Keep-Alive) मैकेनिज्म
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+if (RENDER_URL) {
+    setInterval(() => {
+        const client = RENDER_URL.startsWith('https') ? https : http;
+        client.get(RENDER_URL, (res) => {
+            console.log(`Keep-alive ping sent, status: ${res.statusCode}`);
+        }).on('error', (err) => {
+            console.error('Keep-alive ping error:', err.message);
+        });
+    }, 14 * 60 * 1000); // हर 14 मिनट में खुद को पिंग करेगा
+}
 
 const ProductSchema = new mongoose.Schema({
     name: String,
@@ -93,22 +108,17 @@ app.post('/api/logs', async (req, res) => {
     try { await new ActivityLog(req.body).save(); res.json({ success: true }); } catch (err) { res.status(500).json({ success: false }); }
 });
 
-// [अपडेटेड सर्च और कैटेगरी API]: अब यह MongoDB से सीधा सर्च और कैटेगरी के आधार पर डेटा फ़िल्टर करेगा
 app.get('/api/products', async (req, res) => {
     try {
         const { search, category } = req.query;
         let query = {};
-
         if (category && category !== 'All') {
             query.category = category;
         }
-
         if (search) {
             query.name = { $regex: search, $options: 'i' };
         }
-
-        const products = await Product.find(query).sort({ sortOrder: 1 });
-        res.json(products);
+        res.json(await Product.find(query).sort({ sortOrder: 1 }));
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
