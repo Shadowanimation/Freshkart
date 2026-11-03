@@ -106,7 +106,6 @@
       </div>
     </a>
    
-    <!-- [अपडेटेड सर्च बार]: अब टाइप करने पर यह सीधे डेटाबेस से कनेक्ट होकर प्रोडक्ट्स लाएगा -->
     <div class="search-bar">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="सब्जियाँ खोजें..." oninput="loadProductsFromDb()">
@@ -205,11 +204,11 @@
       <div class="section-title" id="specialComboTitleHeading">🌟 आज का स्पेशल डे कॉम्बो (Day-Wise Combo)</div>
       <div id="todaySpecialComboContainer" style="margin-bottom: 25px;"></div>
 
-      <!-- 3 Small Promo Banners -->
+      <!-- 3 Small Promo Banners (Dynamic) -->
       <div class="promo-grid">
-        <div class="promo-card"><img id="promoImg1" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400"></div>
-        <div class="promo-card"><img id="promoImg2" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"></div>
-        <div class="promo-card"><img id="promoImg3" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"></div>
+        <div class="promo-card"><img id="promoImg0" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400"></div>
+        <div class="promo-card"><img id="promoImg1" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"></div>
+        <div class="promo-card"><img id="promoImg2" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"></div>
       </div>
 
       <div class="category-filters">
@@ -277,7 +276,14 @@
         <button class="add-btn" onclick="saveFooterConfigToDb()">💾 फुटर सेटिंग्स MongoDB में सेव करें</button>
       </div>
 
-      <!-- Day-Wise Special Combo Manager (Admin with Choose File & Trash) -->
+      <!-- 3 Promotional Banners Manager (New Added) -->
+      <h3>🎯 3 छोटे प्रमोशनल बैनर्स कस्टमाइज़ेशन (डायरेक्ट फाइल अपलोड और ट्रैश के साथ)</h3>
+      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
+        <div id="adminPromoBannersList"></div>
+        <button class="add-btn" onclick="savePromoBannersToDb()">💾 सभी 3 प्रमोशनल बैनर्स MongoDB में सेव करें</button>
+      </div>
+
+      <!-- Day-Wise Special Combo Manager -->
       <h3>📅 दिन-वार स्पेशल कॉम्बो मैनेजर (Choose File & Trash के साथ)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div id="adminDayCombosList"></div>
@@ -314,7 +320,7 @@
         <div id="adminUserLogsDisplay" style="font-size:0.85rem; color:#4A5568; max-height:120px; overflow-y:auto; background:white; padding:8px; border-radius:4px;">लॉगिन रिकॉर्ड लोड हो रहा है...</div>
       </div>
 
-      <!-- Circular Categories with Direct File Upload & Trash Button -->
+      <!-- Circular Categories -->
       <h3>⭕ सर्कुलर कैटेगरीज़ (कस्टमाइज़ेशन & डायरेक्ट फाइल अपलोड)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div id="adminCircleCatsList"></div>
@@ -343,12 +349,12 @@
         <button class="add-btn" onclick="saveSettingToDb('partner_config', getPartnerObj())">💾 डिलीवरी पार्टनर MongoDB में सेव करें</button>
       </div>
 
-      <!-- Banners with Direct File Upload & Trash Button -->
+      <!-- 5 Main Banners -->
       <h3>🖼️ 5 ऑटो-स्वाइपेबल बैनर्स कस्टमाइज़ेशन (डायरेक्ट फाइल अपलोड के साथ)</h3>
       <div id="adminBannerList"></div>
       <button class="add-btn" onclick="saveSettingToDb('banners_config', banners)">💾 सभी बैनर्स MongoDB में सेव करें</button>
 
-      <!-- Products Manager with Direct File Upload & Trash Delete Button -->
+      <!-- Products Manager -->
       <h3>🛒 नया आइटम जोड़ें (यूआरएल या डायरेक्ट कंप्यूटर से JPG/PNG फाइल अपलोड)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group"><label>नाम:</label><input type="text" id="newProdName"></div>
@@ -487,6 +493,13 @@
       { title: "Mega Kitchen Pack", price: 149, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200", btnText: "Offer Deal" }
     ];
 
+    // 3 छोटे प्रमोशनल बैनर्स (डिफ़ॉल्ट इमेजेस)
+    let promoBanners = [
+      "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400",
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"
+    ];
+
     let products = [];
     let cart = JSON.parse(localStorage.getItem('fk_cart') || '[]');
     let favorites = [];
@@ -494,7 +507,6 @@
     let slideIndex = 0;
     let slideInterval;
 
-    // डायरेक्ट फाइल अपलोड (JPG/PNG से Base64 कन्वर्टर) फंक्शन
     function handleImageUpload(event, inputId) {
       const file = event.target.files[0];
       if (!file) return;
@@ -505,7 +517,6 @@
       reader.readAsDataURL(file);
     }
 
-    // सिर्फ फोटो/इमेज क्लियर करने के लिए छोटा डस्टबिन बटन फंक्शन
     function clearImageInput(inputId, fileInputId) {
       document.getElementById(inputId).value = '';
       if(fileInputId && document.getElementById(fileInputId)) {
@@ -537,20 +548,24 @@
         const footerData = await footerRes.json();
         if(footerData) {
           document.getElementById('footerLogoImg').src = footerData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100";
-         
           let fFreshColor = footerData.freshColor || "#008F5D";
           let fKartColor = footerData.kartColor || "#FF7A00";
           let fBgColor = footerData.bgColor || "#0F172A";
-
           document.getElementById('footerTextFresh').style.setProperty('color', fFreshColor, 'important');
           document.getElementById('footerTextKart').style.setProperty('color', fKartColor, 'important');
           document.getElementById('mainFooterElement').style.backgroundColor = fBgColor;
-         
           document.getElementById('adminFooterLogoUrl').value = footerData.logoUrl || "";
           document.getElementById('adminFooterFreshColor').value = fFreshColor;
           document.getElementById('adminFooterKartColor').value = fKartColor;
           document.getElementById('adminFooterBgColor').value = fBgColor;
         }
+
+        // 3 प्रमोशनल बैनर्स लोड करना
+        const promoRes = await fetch('/api/settings/promo_banners_config');
+        const promoData = await promoRes.json();
+        if(promoData && Array.isArray(promoData)) promoBanners = promoData;
+        renderPromoBanners();
+        renderAdminPromoBanners();
 
         const legalRes = await fetch('/api/settings/legal_pages_config');
         const legalData = await legalRes.json();
@@ -622,7 +637,56 @@
       } catch (err) { console.error('Error loading data:', err); }
     }
 
-    // [अपडेटेड सर्च और कैटेगरी लोडर फंक्शन]: यह सीधे MongoDB से सर्च और कैटेगरी के आधार पर डेटा मंगवाता है
+    // 3 प्रमोशनल बैनर्स रेंडर करना (फ्रंटएंड)
+    function renderPromoBanners() {
+      for(let i=0; i<3; i++) {
+        let el = document.getElementById(`promoImg${i}`);
+        if(el) el.src = promoBanners[i] || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
+      }
+    }
+
+    // 3 प्रमोशनल बैनर्स एडमिन मैनेजर रेंडर करना (फाइल अपलोड और ट्रैश बटन के साथ)
+    function renderAdminPromoBanners() {
+      document.getElementById('adminPromoBannersList').innerHTML = promoBanners.map((url, i) => `
+        <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
+          <strong>प्रमोशनल बैनर #${i+1} (साइज: 400x130 px)</strong>
+          <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
+            <input type="text" value="${url}" id="promoInput-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;" oninput="promoBanners[${i}]=this.value">
+            <input type="file" id="promoFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handlePromoImageUpload(event, ${i})">
+            <button type="button" onclick="clearPromoBannerImage(${i})" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handlePromoImageUpload(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(uploadEvent) {
+        promoBanners[index] = uploadEvent.target.result;
+        document.getElementById(`promoInput-${index}`).value = uploadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearPromoBannerImage(index) {
+      promoBanners[index] = '';
+      document.getElementById(`promoInput-${index}`).value = '';
+      if(document.getElementById(`promoFile-${index}`)) {
+        document.getElementById(`promoFile-${index}`).value = '';
+      }
+    }
+
+    async function savePromoBannersToDb() {
+      for(let i=0; i<3; i++) {
+        let val = document.getElementById(`promoInput-${i}`).value;
+        promoBanners[i] = val;
+      }
+      await saveSettingToDb('promo_banners_config', promoBanners);
+      renderPromoBanners();
+    }
+
     async function loadProductsFromDb() {
       const searchQuery = document.getElementById('searchInput').value.trim();
       let url = `/api/products?`;
@@ -657,9 +721,7 @@
       const logoUrl = document.getElementById('adminLogoUrlInput').value;
       const freshColor = document.getElementById('adminFreshColorInput').value;
       const kartColor = document.getElementById('adminKartColorInput').value;
-
       await saveSettingToDb('logo_config', { logoUrl, freshColor, kartColor });
-     
       document.getElementById('headerLogoImg').src = logoUrl;
       document.getElementById('headerTextFresh').style.color = freshColor;
       document.getElementById('headerTextKart').style.color = kartColor;
@@ -670,9 +732,7 @@
       const freshColor = document.getElementById('adminFooterFreshColor').value;
       const kartColor = document.getElementById('adminFooterKartColor').value;
       const bgColor = document.getElementById('adminFooterBgColor').value;
-
       await saveSettingToDb('footer_config', { logoUrl, freshColor, kartColor, bgColor });
-
       document.getElementById('footerLogoImg').src = logoUrl;
       document.getElementById('footerTextFresh').style.setProperty('color', freshColor, 'important');
       document.getElementById('footerTextKart').style.setProperty('color', kartColor, 'important');
@@ -802,7 +862,7 @@
               <input type="number" value="${c.price}" id="dcPrice-${d}" placeholder="रेट (₹)" style="flex:1;">
             </div>
             <div style="display:flex; gap:8px; margin-bottom:6px;">
-              <input type="text" value="${c.desc}" id="dcDesc-${d}" placeholder="विवरण (उदा. पुईसाक, कुमड़ा...)" style="width:100%;">
+              <input type="text" value="${c.desc}" id="dcDesc-${d}" placeholder="विवरण" style="width:100%;">
             </div>
             <div style="display:flex; gap:8px; align-items:center;">
               <input type="text" value="${c.img}" id="dcImg-${d}" placeholder="फोटो URL या फाइल चुनें" style="flex:2;" oninput="dayCombos['${d}'].img=this.value">
@@ -1011,7 +1071,6 @@
 
     function calculateDynamicPrice(baseSalePrice, unit, qty) {
       let multiplier = 1;
-     
       if (unit.includes('Piece')) {
         let pieceCount = 1;
         if (unit.startsWith('2')) pieceCount = 2;
@@ -1019,7 +1078,6 @@
         else if (unit.startsWith('10')) pieceCount = 10;
         return Math.round(baseSalePrice * pieceCount * qty);
       }
-
       if(unit === '100g') multiplier = 0.1;
       else if(unit === '250g') multiplier = 0.25;
       else if(unit === '500g') multiplier = 0.5;
@@ -1028,7 +1086,6 @@
       else if(unit === '1 Dozen') multiplier = 1;
       else if(unit === '1 Liter') multiplier = 1;
       else if(unit === '500 ml') multiplier = 0.5;
-     
       return Math.round(baseSalePrice * multiplier * qty);
     }
 
@@ -1044,7 +1101,6 @@
       if(!quantities[id]) quantities[id] = 1;
       quantities[id] += delta;
       if(quantities[id] < 1) quantities[id] = 1;
-     
       document.getElementById(`qty-${id}`).innerText = quantities[id];
       let unit = selectedUnits[id] || '1 kg';
       let newPrice = calculateDynamicPrice(baseSalePrice, unit, quantities[id]);
@@ -1056,7 +1112,6 @@
       let qty = quantities[id] || 1;
       let unit = selectedUnits[id] || p.unit;
       let finalPrice = calculateDynamicPrice(p.salePrice, unit, qty);
-     
       addToCart(`${p.name} (${qty} ${unit})`, finalPrice, document.getElementById(`add-btn-${id}`));
     }
 
@@ -1252,7 +1307,6 @@
       if(!name || !phone) return alert('नाम और फोन नंबर भरें!');
      
       localStorage.setItem('fk_logged_customer', JSON.stringify({ name, phone }));
-     
       await fetch('/api/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
