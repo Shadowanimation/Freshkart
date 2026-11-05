@@ -5,11 +5,11 @@ const https = require('https');
 const http = require('http');
 
 const app = express();
-app.use(express.json({ limit: '10mb' })); // डायरेक्ट इमेज (Base64) अपलोड के लिए लिमिट
+app.use(express.json({ limit: '10mb' })); 
 app.use(cors());
 app.use(express.static(__dirname));
 
-// MongoDB क्लाउड कनेक्शन
+// MongoDB Cloud Connection
 mongoose.connect('mongodb+srv://shadowanimation13_db_user:Fresh0324kart@cluster0.z3pd69x.mongodb.net/freshkart')
 .then(() => {
     console.log('MongoDB Connected Successfully!');
@@ -17,7 +17,7 @@ mongoose.connect('mongodb+srv://shadowanimation13_db_user:Fresh0324kart@cluster0
 })
 .catch(err => console.log(err));
 
-// Render स्लीप मोड (20 मिनट) से बचाने के लिए ऑटो-पिंग (Keep-Alive) मैकेनिज्म
+// Render Keep-Alive (14 min ping)
 const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
 if (RENDER_URL) {
     setInterval(() => {
@@ -27,12 +27,14 @@ if (RENDER_URL) {
         }).on('error', (err) => {
             console.error('Keep-alive ping error:', err.message);
         });
-    }, 14 * 60 * 1000); // हर 14 मिनट में खुद को पिंग करेगा
+    }, 14 * 60 * 1000);
 }
 
+// Product Schema with unitType support
 const ProductSchema = new mongoose.Schema({
     name: String,
     category: { type: String, default: 'Vegetables' },
+    unitType: { type: String, default: 'Weight' }, // Weight, Piece, Dozen, Volume
     basePrice: Number,
     salePrice: Number,
     unit: { type: String, default: '1 kg' },
@@ -54,15 +56,6 @@ const VisitorSchema = new mongoose.Schema({
 });
 const Visitor = mongoose.model('Visitor', VisitorSchema);
 
-const ActivityLogSchema = new mongoose.Schema({
-    action: String,
-    name: String,
-    phone: String,
-    timestamp: { type: String, default: () => new Date().toLocaleString() },
-    date: { type: Date, default: Date.now }
-});
-const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
-
 const CustomerOrderSchema = new mongoose.Schema({
     customerName: String,
     customerPhone: String,
@@ -77,9 +70,9 @@ async function seedInitialData() {
         const count = await Product.countDocuments();
         if (count === 0) {
             await Product.insertMany([
-                { name: 'Fresh Tomato (टमाटर)', category: 'Vegetables', basePrice: 50, salePrice: 40, unit: '1 kg', inStock: true, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: 1 },
-                { name: 'Onion (प्याज)', category: 'Vegetables', basePrice: 45, salePrice: 35, unit: '1 kg', inStock: true, img: 'https://images.unsplash.com/photo-1618512495648-f074b9319e9c?w=400', sortOrder: 2 },
-                { name: 'Lemon (नींबू)', category: 'Vegetables', basePrice: 5, salePrice: 5, unit: '1 Piece', inStock: true, img: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?w=400', sortOrder: 3 }
+                { name: 'Fresh Tomato (टमाटर)', category: 'Vegetables', unitType: 'Weight', basePrice: 50, salePrice: 40, unit: '1 kg', inStock: true, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: 1 },
+                { name: 'Onion (प्याज)', category: 'Vegetables', unitType: 'Weight', basePrice: 45, salePrice: 35, unit: '1 kg', inStock: true, img: 'https://images.unsplash.com/photo-1618512495648-f074b9319e9c?w=400', sortOrder: 2 },
+                { name: 'Lemon (नींबू)', category: 'Vegetables', unitType: 'Piece', basePrice: 5, salePrice: 5, unit: '1 Piece', inStock: true, img: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?w=400', sortOrder: 3 }
             ]);
         }
     } catch (err) { console.log('Seeding error:', err); }
@@ -100,24 +93,12 @@ app.post('/api/visitor/hit', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-app.get('/api/logs', async (req, res) => {
-    try { res.json(await ActivityLog.find().sort({ date: -1 }).limit(50)); } catch (err) { res.status(500).json({ error: err.message }); }
-});
-
-app.post('/api/logs', async (req, res) => {
-    try { await new ActivityLog(req.body).save(); res.json({ success: true }); } catch (err) { res.status(500).json({ success: false }); }
-});
-
 app.get('/api/products', async (req, res) => {
     try {
         const { search, category } = req.query;
         let query = {};
-        if (category && category !== 'All') {
-            query.category = category;
-        }
-        if (search) {
-            query.name = { $regex: search, $options: 'i' };
-        }
+        if (category && category !== 'All') query.category = category;
+        if (search) query.name = { $regex: search, $options: 'i' };
         res.json(await Product.find(query).sort({ sortOrder: 1 }));
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
