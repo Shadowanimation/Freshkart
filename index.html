@@ -146,7 +146,7 @@
     </div>
   </div>
 
-  <!-- Admin Secret Login Modal -->
+  <!-- Admin Secret Login Modal (Autofill Blocked) -->
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-box">
       <h3 style="margin-top:0;">🔐 एडमिन पोर्टल लॉगिन (सुरक्षित)</h3>
@@ -246,24 +246,36 @@
         </div>
       </div>
 
-      <!-- Theme Color Wheel (Permanent Saving) -->
-      <h3 style="color:var(--primary-color);">🎨 थीम कलर व्हील (परमानेंट सेविंग)</h3>
+      <!-- Point 3 & Point 6: Theme Color Wheel & Brand Logo Customization -->
+      <h3 style="color:var(--primary-color);">🎨 थीम कलर व्हील और ब्रांड लोगो कस्टमाइज़ेशन</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group">
-          <label>कलर चुनें (Color Wheel):</label>
-          <input type="color" id="adminThemeColorPicker" value="#00B074" style="height:45px; width:100%; cursor:pointer;" oninput="previewThemeColor(this.value)">
+          <label>वेबसाइट थीम कलर (Color Wheel):</label>
+          <input type="color" id="adminThemeColorPicker" value="#00B074" style="height:40px; width:100%; cursor:pointer;" oninput="previewThemeColor(this.value)">
         </div>
-        <button class="add-btn" onclick="saveThemeColorToDb()">💾 थीम कलर MongoDB में सेव करें</button>
+        <div class="form-group">
+          <label>हेडर लोगो (URL या डिवाइस से JPG/PNG फाइल चुनें):</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="adminLogoUrlInput" placeholder="https://..." style="flex:2;">
+            <input type="file" accept="image/*" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminLogoUrlInput')">
+            <button type="button" onclick="clearLogoInput()" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="हटाएं">🗑️</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>'Fresh' टेक्स्ट कलर:</label><input type="color" id="adminFreshColor" value="#008F5D" style="height:40px; width:100%;"></div>
+          <div class="form-group" style="flex:1;"><label>'Kart' टेक्स्ट कलर:</label><input type="color" id="adminKartColor" value="#FF7A00" style="height:40px; width:100%;"></div>
+        </div>
+        <button class="add-btn" onclick="saveThemeAndLogoToDb()">💾 लोगो और थीम कलर MongoDB में सेव करें</button>
       </div>
 
-      <!-- MOV Manager -->
+      <!-- Point 15: MOV Manager -->
       <h3>💰 न्यूनतम ऑर्डर वैल्यू (MOV) मैनेजर</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px; display:flex; gap:10px; align-items:center;">
         <input type="number" id="adminMovInput" value="100" style="flex:1;">
         <button class="add-btn" style="width:auto; padding:8px 16px;" onclick="saveMovSetting()">💾 MOV सेव करें</button>
       </div>
 
-      <!-- Products Manager -->
+      <!-- Point 1: Add New Product -->
       <h3>🛒 नया आइटम जोड़ें</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group"><label>नाम:</label><input type="text" id="newProdName"></div>
@@ -294,17 +306,12 @@
         </div>
         <button class="add-btn" onclick="addNewProduct()">+ नया आइटम जोड़ें</button>
       </div>
-      <div id="adminProductManagerList"></div>
 
-      <!-- Footer & Logo -->
-      <h3>🔻 फुटर और लोगो कस्टमाइज़ेशन</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>लोगो URL:</label><input type="text" id="adminLogoUrlInput" placeholder="https://..."></div>
-        <div class="form-group"><label>फुटर बैकग्राउंड:</label><input type="color" id="adminFooterBgColor" value="#0F172A" style="height:40px; width:100%;"></div>
-        <button class="add-btn" onclick="saveFooterConfigToDb()">💾 फुटर सेटिंग्स सेव करें</button>
-      </div>
+      <!-- Point 2: Products Edit, Rate Save & Image Manager -->
+      <h3>✏️ प्रोडक्ट्स एडिट, रेट सेव और इमेज मैनेजर</h3>
+      <div id="adminProductManagerList" style="margin-bottom:25px;"></div>
 
-      <!-- Live Delivery Simulator -->
+      <!-- Point 17: Live Tracking Toggle & Partner Control -->
       <h3>🛵 कंट्रोल्ड लाइव ट्रैकिंग और डमी डिलीवरी पार्टनर</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group"><label>पार्टनर नाम:</label><input type="text" id="adminPartnerName" value="Rahul Kumar"></div>
@@ -319,9 +326,9 @@
         <button class="add-btn" onclick="saveSimulatorConfig()">💾 ट्रैकिंग सेव करें</button>
       </div>
 
-      <!-- Order History & Analytics -->
-      <h3>👥 कस्टमर ऑर्डर हिस्ट्री</h3>
-      <div id="adminCustomerOrderHistoryBox" style="background:#F7FAFC; padding:12px; border-radius:8px; max-height:220px; overflow-y:auto; margin-bottom:20px;">লোড हो रहा है...</div>
+      <!-- Point 18: Customer Order History -->
+      <h3>👥 कस्टमर ऑर्डर हिस्ट्री (Alphabetical)</h3>
+      <div id="adminCustomerOrderHistoryBox" style="background:#F7FAFC; padding:12px; border-radius:8px; max-height:220px; overflow-y:auto; margin-bottom:20px;">लोड हो रहा है...</div>
     </div>
   </div>
 
@@ -348,6 +355,7 @@
     let adminAuth = { email: "admin@freshkart.com", pass: "1234" };
     let isAdminLoggedIn = localStorage.getItem('fk_admin_logged') === 'true';
     let minimumOrderValue = 100;
+    let currentLang = 'hi';
 
     const unitCategoryMap = {
       'Weight': ['50g', '100g', '250g', '500g', '1 kg', '2 kg'],
@@ -380,13 +388,16 @@
       reader.readAsDataURL(file);
     }
 
+    function clearLogoInput() {
+      document.getElementById('adminLogoUrlInput').value = '';
+    }
+
     function updateNewProductUnitOptions(unitType) {
       const opts = unitCategoryMap[unitType] || unitCategoryMap['Weight'];
       const sel = document.getElementById('newProdUnit');
       if (sel) sel.innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
     }
 
-    // Auto Calculation Multiplier based on Unit selection
     function getMultiplier(unitStr) {
       if (!unitStr) return 1;
       if (unitStr.includes('50g')) return 0.05;
@@ -402,7 +413,6 @@
       if (unitStr.includes('500 ml')) return 0.5;
       if (unitStr.includes('1 Liter')) return 1;
       if (unitStr.includes('2 Liter')) return 2;
-      // For pieces or counts
       let match = unitStr.match(/^(\d+)/);
       if (match) return parseInt(match[1]);
       return 1;
@@ -412,10 +422,23 @@
       try {
         await loadProductsFromDb();
         
-        // Load Theme Color
-        const themeRes = await fetch('/api/settings/theme_color');
-        const themeColor = await themeRes.json();
-        if(themeColor) applyThemeColor(themeColor);
+        const configRes = await fetch('/api/settings/theme_logo_config');
+        const configData = await configRes.json();
+        if(configData) {
+          if(configData.themeColor) applyThemeColor(configData.themeColor);
+          if(configData.logoUrl) {
+            document.getElementById('headerLogoImg').src = configData.logoUrl;
+            document.getElementById('adminLogoUrlInput').value = configData.logoUrl;
+          }
+          if(configData.freshColor) {
+            document.getElementById('headerTextFresh').style.color = configData.freshColor;
+            document.getElementById('adminFreshColor').value = configData.freshColor;
+          }
+          if(configData.kartColor) {
+            document.getElementById('headerTextKart').style.color = configData.kartColor;
+            document.getElementById('adminKartColor').value = configData.kartColor;
+          }
+        }
 
         const movRes = await fetch('/api/settings/mov_setting');
         const movData = await movRes.json();
@@ -440,10 +463,18 @@
       document.documentElement.style.setProperty('--primary-color', color);
     }
 
-    async function saveThemeColorToDb() {
-      const color = document.getElementById('adminThemeColorPicker').value;
-      await saveSettingToDb('theme_color', color);
-      applyThemeColor(color);
+    async function saveThemeAndLogoToDb() {
+      const themeColor = document.getElementById('adminThemeColorPicker').value;
+      const logoUrl = document.getElementById('adminLogoUrlInput').value;
+      const freshColor = document.getElementById('adminFreshColor').value;
+      const kartColor = document.getElementById('adminKartColor').value;
+
+      await saveSettingToDb('theme_logo_config', { themeColor, logoUrl, freshColor, kartColor });
+      applyThemeColor(themeColor);
+      if(logoUrl) document.getElementById('headerLogoImg').src = logoUrl;
+      document.getElementById('headerTextFresh').style.color = freshColor;
+      document.getElementById('headerTextKart').style.color = kartColor;
+      alert('लोगो और थीम सेटिंग्स सफलतापूर्वक सेव हो गईं!');
     }
 
     async function loadProductsFromDb() {
@@ -474,7 +505,6 @@
         let unitOpts = unitCategoryMap[p.unitType] || unitCategoryMap['Weight'];
         let curUnit = selectedUnits[qKey] || p.unit || unitOpts[0];
 
-        // Auto calculation based on unit multiplier & quantity
         let multiplier = getMultiplier(curUnit);
         let calculatedPrice = Math.round(p.salePrice * multiplier * quantities[qKey]);
         let calculatedBasePrice = Math.round(p.basePrice * multiplier * quantities[qKey]);
@@ -560,13 +590,6 @@
       } catch (err) { alert('सेव करने में विफल!'); }
     }
 
-    async function saveFooterConfigToDb() {
-      const logoUrl = document.getElementById('adminLogoUrlInput').value;
-      const bgColor = document.getElementById('adminFooterBgColor').value;
-      await saveSettingToDb('footer_config', { logoUrl, bgColor });
-      document.getElementById('mainFooterElement').style.backgroundColor = bgColor;
-    }
-
     async function saveMovSetting() {
       minimumOrderValue = Number(document.getElementById('adminMovInput').value) || 100;
       await saveSettingToDb('mov_setting', minimumOrderValue);
@@ -602,18 +625,63 @@
     function renderAdminProductsManager() {
       const container = document.getElementById('adminProductManagerList');
       if(!container) return;
-      container.innerHTML = products.map((p) => `
-        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #CBD5E0; display:flex; justify-content:space-between; align-items:center;">
-          <span><b>${p.name}</b> - ₹${p.salePrice} (${p.unit})</span>
-          <button onclick="deleteProduct('${p.dbId}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">डिलिट</button>
-        </div>
-      `).join('');
+      container.innerHTML = products.map((p) => {
+        let currentType = p.unitType || 'Weight';
+        let opts = unitCategoryMap[currentType] || unitCategoryMap['Weight'];
+        return `
+          <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #CBD5E0;">
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+              <input type="text" id="name-${p.id}" value="${p.name}" style="flex:2; min-width:110px;" placeholder="नाम">
+              
+              <select id="unitType-${p.id}" style="flex:1; min-width:90px;" onchange="onAdminUnitTypeChange(${p.id}, this.value)">
+                <option value="Weight" ${currentType === 'Weight' ? 'selected' : ''}>Weight</option>
+                <option value="Piece" ${currentType === 'Piece' ? 'selected' : ''}>Piece</option>
+                <option value="Dozen" ${currentType === 'Dozen' ? 'selected' : ''}>Dozen</option>
+                <option value="Volume" ${currentType === 'Volume' ? 'selected' : ''}>Volume</option>
+              </select>
+
+              <select id="unit-${p.id}" style="flex:1; min-width:80px;">
+                ${opts.map(u => `<option value="${u}" ${u === p.unit ? 'selected' : ''}>${u}</option>`).join('')}
+              </select>
+
+              <input type="number" id="salePrice-${p.id}" value="${p.salePrice}" style="flex:1; min-width:60px;" placeholder="रेट (₹)">
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="text" id="img-${p.id}" value="${p.img}" style="flex:2;" placeholder="इमेज URL या फाइल चुनें">
+              <input type="file" accept="image/*" style="flex:1.5; font-size:0.75rem;" onchange="handleImageUpload(event, 'img-${p.id}')">
+              <button onclick="saveProductUpdate(${p.id}, '${p.dbId}')" style="background:#00B074; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">💾 सेव</button>
+              <button onclick="deleteProduct('${p.dbId}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">डिलिट</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onAdminUnitTypeChange(id, unitType) {
+      const opts = unitCategoryMap[unitType] || unitCategoryMap['Weight'];
+      const sel = document.getElementById(`unit-${id}`);
+      if(sel) sel.innerHTML = opts.map(u => `<option value="${u}">${u}</option>`).join('');
+    }
+
+    async function saveProductUpdate(id, dbId) {
+      const name = document.getElementById(`name-${id}`).value;
+      const unitType = document.getElementById(`unitType-${id}`).value;
+      const unit = document.getElementById(`unit-${id}`).value;
+      const salePrice = Number(document.getElementById(`salePrice-${id}`).value);
+      const img = document.getElementById(`img-${id}`).value;
+
+      const res = await fetch(`/api/products/${dbId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, unitType, unit, salePrice, img })
+      });
+      if(res.ok) { alert('प्रोडक्ट सफलतापूर्वक अपडेट और सेव हो गया!'); loadAllDataFromDatabase(); }
     }
 
     async function deleteProduct(dbId) {
-      if(!confirm('डिलिट करना चाहते हैं?')) return;
+      if(!confirm('क्या आप वाकई इस आइटम को डिलीट करना चाहते हैं?')) return;
       const res = await fetch(`/api/products/${dbId}`, { method: 'DELETE' });
-      if(res.ok) { loadAllDataFromDatabase(); }
+      if(res.ok) { alert('आइटम डिलीट हो गया!'); loadAllDataFromDatabase(); }
     }
 
     function openAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
