@@ -365,7 +365,7 @@
             <option value="Groceries">🍞 Groceries</option>
           </select>
         </div>
-        
+       
         <!-- Unit Category Selector -->
         <div class="form-group"><label>यूनिट कैटेगरी (Unit Category):</label>
           <select id="newProdUnitType" onchange="onAdminUnitTypeChange('new', this.value)">
@@ -462,7 +462,7 @@
     let waNumber = "919876543210";
     let minOrderValue = 100;
 
-    // स्मार्ट यूनिट ऑप्शंस मैप
+    // स्मार्ट यूनिट ऑप्शंस मैप (50g और 100ml शामिल हैं)
     const unitTypeMap = {
       'weight': ['50g', '100g', '250g', '500g', '1 kg', '2 kg', '5 kg'],
       'piece': ['1 Piece', '2 Pieces', '5 Pieces', '10 Pieces'],
@@ -648,7 +648,6 @@
         renderBanners(); renderAdminBanners();
         startAutoSlide();
 
-        // सेट अप न्यू प्रोडक्ट डिफ़ॉल्ट यूनिट्स
         onAdminUnitTypeChange('new', 'weight');
 
         loadCustomerOrderHistory();
@@ -1058,7 +1057,6 @@
         let currentUnit = selectedUnits[p.id];
         let calculatedPrice = calculateDynamicPrice(p.salePrice, currentUnit, currentQty);
 
-        // प्रोडक्ट के unitType के अनुसार डायनेमिक यूनिट ऑप्शंस निकालना
         let activeUnitType = p.unitType || 'weight';
         let availableUnits = unitTypeMap[activeUnitType] || unitTypeMap['weight'];
 
@@ -1089,6 +1087,7 @@
       }).join('');
     }
 
+    // यहाँ 50g और 100ml का सटीक कैलकुलेशन मल्टीप्लायर जोड़ा गया है
     function calculateDynamicPrice(baseSalePrice, unit, qty) {
       let multiplier = 1;
       if (unit.includes('Piece')) {
@@ -1106,12 +1105,14 @@
         else if (unit.startsWith('5')) dozenCount = 5;
         return Math.round(baseSalePrice * dozenCount * qty);
       }
-      if(unit === '100g') multiplier = 0.1;
+      if(unit === '50g') multiplier = 0.05;
+      else if(unit === '100g') multiplier = 0.1;
       else if(unit === '250g') multiplier = 0.25;
       else if(unit === '500g') multiplier = 0.5;
       else if(unit === '1 kg' || unit === '1 Liter') multiplier = 1;
       else if(unit === '2 kg' || unit === '2 Liter') multiplier = 2;
       else if(unit === '5 kg') multiplier = 5;
+      else if(unit === '100 ml') multiplier = 0.1;
       else if(unit === '200 ml') multiplier = 0.2;
       else if(unit === '500 ml') multiplier = 0.5;
       return Math.round(baseSalePrice * multiplier * qty);
@@ -1160,8 +1161,6 @@
     }
 
     function renderAdminProductsManager() {
-      const unitTypeKeys = ['weight', 'piece', 'dozen', 'volume'];
-
       document.getElementById('adminProductManagerList').innerHTML = products.map((p, index) => {
         let currentType = p.unitType || 'weight';
         let currentUnits = unitTypeMap[currentType] || unitTypeMap['weight'];
@@ -1171,7 +1170,6 @@
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
               <input type="text" id="name-${p.id}" value="${p.name}" style="flex:2; min-width:110px;" placeholder="नाम">
              
-              <!-- यूनिट टाइप सेलेक्टर -->
               <select id="unitType-${p.id}" style="flex:1; min-width:90px;" onchange="onAdminUnitTypeChange(${p.id}, this.value)">
                 <option value="weight" ${currentType==='weight'?'selected':''}>Weight</option>
                 <option value="piece" ${currentType==='piece'?'selected':''}>Piece</option>
