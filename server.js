@@ -30,7 +30,7 @@ if (RENDER_URL) {
     }, 14 * 60 * 1000);
 }
 
-// Product Schema with unitType support
+// Schemas
 const ProductSchema = new mongoose.Schema({
     name: String,
     category: { type: String, default: 'Vegetables' },
@@ -86,7 +86,7 @@ async function seedInitialData() {
     } catch (err) { console.log('Seeding error:', err); }
 }
 
-// APIs
+// API Routes
 app.post('/api/visitor/hit', async (req, res) => {
     try {
         const todayStr = new Date().toISOString().slice(0, 10);
