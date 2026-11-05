@@ -34,7 +34,7 @@ if (RENDER_URL) {
 const ProductSchema = new mongoose.Schema({
     name: String,
     category: { type: String, default: 'Vegetables' },
-    unitType: { type: String, default: 'Weight' }, // Weight, Piece, Dozen, Volume
+    unitType: { type: String, default: 'Weight' },
     basePrice: Number,
     salePrice: Number,
     unit: { type: String, default: '1 kg' },
