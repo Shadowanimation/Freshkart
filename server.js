@@ -5,7 +5,7 @@ const https = require('https');
 const http = require('http');
 
 const app = express();
-app.use(express.json({ limit: '10mb' })); 
+app.use(express.json({ limit: '15mb' })); 
 app.use(cors());
 app.use(express.static(__dirname));
 
@@ -96,8 +96,10 @@ app.post('/api/visitor/hit', async (req, res) => {
         await visitorDoc.save();
        
         const allVisitors = await Visitor.find();
+        let allDaysMap = {};
+        allVisitors.forEach(v => { allDaysMap[v.dateKey] = v.count; });
         const total = allVisitors.reduce((sum, v) => sum + v.count, 0);
-        res.json({ success: true, todayCount: visitorDoc.count, totalCount: total });
+        res.json({ success: true, todayCount: visitorDoc.count, totalCount: total, allDays: allDaysMap });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
