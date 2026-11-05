@@ -38,10 +38,10 @@
     .banner-carousel { position: relative; width: 100%; max-width: 1100px; margin: 15px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); background: #000; }
     .banner-slide { display: none; width: 100%; position: relative; }
     .banner-slide.active { display: block; }
-    .banner-slide img { width: 100%; height: 360px; object-fit: cover; display: block; }
+    .banner-slide img { width: 100%; height: 360px; object-fit: cover; display: block; cursor: pointer; }
     @media (max-width: 768px) { .banner-slide img { height: 200px; } }
-    .banner-overlay-btn { position: absolute; bottom: 30px; left: 25px; background: var(--primary-color); color: white; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .carousel-dots { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 6px; }
+    .banner-overlay-btn { position: absolute; bottom: 15px; right: 15px; background: var(--primary-color); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10; }
+    .carousel-dots { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 6px; z-index: 10; }
     .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
     .dot.active { background: white; width: 22px; border-radius: 5px; }
 
@@ -122,7 +122,6 @@
       <button class="top-cart-btn" onclick="toggleCartDrawer()">
         🛒 <span class="cart-badge" id="cartBadgeCount">0</span>
       </button>
-      <button class="nav-btn" onclick="openAdminLoginModal()" style="background:#2D3748; color:white;" id="adminNavOpenBtn">⚙️ एडमिन</button>
     </div>
   </header>
 
@@ -142,12 +141,12 @@
     </div>
   </div>
 
-  <!-- Admin Login Modal -->
+  <!-- Admin Secret Login Modal -->
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-box">
-      <h3 style="margin-top:0;">🔐 एडमिन पोर्टल लॉगिन</h3>
-      <div class="form-group"><label>ईमेल:</label><input type="email" id="loginEmailInput" value="admin@freshkart.com"></div>
-      <div class="form-group"><label>पासवर्ड:</label><input type="password" id="loginPasswordInput" value="1234"></div>
+      <h3 style="margin-top:0;">🔐 एडमिन पोर्टल लॉगिन (सुरक्षित)</h3>
+      <div class="form-group"><label>ईमेल:</label><input type="email" id="loginEmailInput" autocomplete="off"></div>
+      <div class="form-group"><label>पासवर्ड:</label><input type="password" id="loginPasswordInput" autocomplete="new-password"></div>
       <div style="display:flex; gap:10px;">
         <button class="add-btn" style="background:#718096;" onclick="closeAdminLoginModal()">रद्द</button>
         <button class="add-btn" onclick="verifyAdminLogin()">लॉगिन 🚀</button>
@@ -155,12 +154,10 @@
     </div>
   </div>
 
-  <!-- Generic Info / Legal Page Modal -->
-  <div class="modal-overlay" id="legalPageModal">
-    <div class="modal-box">
-      <h3 id="modalPageTitle" style="margin-top:0; color:#1A202C;"></h3>
-      <div id="modalPageBody" style="font-size:0.9rem; color:#4A5568; line-height:1.6; white-space:pre-line; max-height:50vh; overflow-y:auto; margin-bottom:15px;"></div>
-      <button class="add-btn" onclick="closeLegalModal()">बंद करें ✖</button>
+  <!-- Modal for Image Preview (Banner Zoom Feature) -->
+  <div class="modal-overlay" id="imageZoomModal" onclick="closeZoomModal()">
+    <div style="max-width:90%; max-height:90vh;">
+      <img id="zoomedBannerImg" src="" style="width:100%; height:auto; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.5);">
     </div>
   </div>
 
@@ -181,13 +178,28 @@
 
   <div class="container">
     <div id="storeTab">
-      <!-- 5 Auto-Swiping Banners -->
+      <!-- 5 Auto-Swiping Banners with Non-Blocking Corner Add-to-Cart Button -->
       <div class="banner-carousel" id="carouselBox">
-        <div class="banner-slide active"><img id="bImg-0" src=""><button class="banner-overlay-btn" id="bBtnText-0" onclick="addBannerToCart(0)">Shop Now</button></div>
-        <div class="banner-slide"><img id="bImg-1" src=""><button class="banner-overlay-btn" id="bBtnText-1" onclick="addBannerToCart(1)">Order Now</button></div>
-        <div class="banner-slide"><img id="bImg-2" src=""><button class="banner-overlay-btn" id="bBtnText-2" onclick="addBannerToCart(2)">Buy Salad</button></div>
-        <div class="banner-slide"><img id="bImg-3" src=""><button class="banner-overlay-btn" id="bBtnText-3" onclick="addBannerToCart(3)">Grab Pack</button></div>
-        <div class="banner-slide"><img id="bImg-4" src=""><button class="banner-overlay-btn" id="bBtnText-4" onclick="addBannerToCart(4)">Get Combo</button></div>
+        <div class="banner-slide active">
+          <img id="bImg-0" src="" onclick="openZoomModal(this.src)">
+          <button class="banner-overlay-btn" id="bBtnText-0" onclick="addBannerToCart(0)">Shop Now</button>
+        </div>
+        <div class="banner-slide">
+          <img id="bImg-1" src="" onclick="openZoomModal(this.src)">
+          <button class="banner-overlay-btn" id="bBtnText-1" onclick="addBannerToCart(1)">Order Now</button>
+        </div>
+        <div class="banner-slide">
+          <img id="bImg-2" src="" onclick="openZoomModal(this.src)">
+          <button class="banner-overlay-btn" id="bBtnText-2" onclick="addBannerToCart(2)">Buy Salad</button>
+        </div>
+        <div class="banner-slide">
+          <img id="bImg-3" src="" onclick="openZoomModal(this.src)">
+          <button class="banner-overlay-btn" id="bBtnText-3" onclick="addBannerToCart(3)">Grab Pack</button>
+        </div>
+        <div class="banner-slide">
+          <img id="bImg-4" src="" onclick="openZoomModal(this.src)">
+          <button class="banner-overlay-btn" id="bBtnText-4" onclick="addBannerToCart(4)">Get Combo</button>
+        </div>
         <div class="carousel-dots" id="carouselDots">
           <span class="dot active" onclick="currentSlideIndex(0)"></span>
           <span class="dot" onclick="currentSlideIndex(1)"></span>
@@ -200,11 +212,11 @@
       <!-- Circular Categories -->
       <div class="circle-cats-container" id="circleCatsView"></div>
 
-      <!-- Day-Wise Special Combo Section (Front-End) -->
+      <!-- Day-Wise Special Combo Section -->
       <div class="section-title" id="specialComboTitleHeading">🌟 आज का स्पेशल डे कॉम्बो (Day-Wise Combo)</div>
       <div id="todaySpecialComboContainer" style="margin-bottom: 25px;"></div>
 
-      <!-- 3 Small Promo Banners (Dynamic) -->
+      <!-- 3 Small Promo Banners -->
       <div class="promo-grid">
         <div class="promo-card"><img id="promoImg0" src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400"></div>
         <div class="promo-card"><img id="promoImg1" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"></div>
@@ -239,123 +251,8 @@
         <button onclick="adminLogout()" style="background:#E53E3E; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">🔒 लॉगआउट</button>
       </div>
 
-      <!-- Brand Logo & Name Customizer (Admin) -->
-      <h3>🖼️ ब्रांड लोगो और नाम कस्टमाइज़ेशन मैनेजर</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group">
-          <label>लोगो इमेज (URL या डिवाइस से चुनें):</label>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="adminLogoUrlInput" placeholder="https://..." style="flex:2;">
-            <input type="file" id="adminLogoFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminLogoUrlInput')">
-            <button type="button" onclick="clearImageInput('adminLogoUrlInput', 'adminLogoFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-          </div>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>'Fresh' रंग:</label><input type="color" id="adminFreshColorInput" value="#008F5D" style="height:40px; width:100%;"></div>
-          <div class="form-group" style="flex:1;"><label>'kart' रंग:</label><input type="color" id="adminKartColorInput" value="#FF7A00" style="height:40px; width:100%;"></div>
-        </div>
-        <button class="add-btn" onclick="saveLogoConfigToDb()">💾 लोगो और नाम कलर्स MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Footer Customization Manager -->
-      <h3>🔻 फुटर कस्टमाइज़ेशन (पौधा लोगो URL/फाइल, फ्रेश/कार्ट रंग और बैकग्राउंड कलर व्हील)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group">
-          <label>फुटर पौधा लोगो (URL या डिवाइस से चुनें):</label>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="adminFooterLogoUrl" placeholder="https://..." style="flex:2;">
-            <input type="file" id="adminFooterLogoFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminFooterLogoUrl')">
-            <button type="button" onclick="clearImageInput('adminFooterLogoUrl', 'adminFooterLogoFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-          </div>
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर 'Fresh' रंग:</label><input type="color" id="adminFooterFreshColor" value="#008F5D" style="height:40px; width:100%;"></div>
-          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर 'Kart' रंग:</label><input type="color" id="adminFooterKartColor" value="#FF7A00" style="height:40px; width:100%;"></div>
-          <div class="form-group" style="flex:1; min-width:120px;"><label>फुटर बैकग्राउंड कलर:</label><input type="color" id="adminFooterBgColor" value="#0F172A" style="height:40px; width:100%;"></div>
-        </div>
-        <button class="add-btn" onclick="saveFooterConfigToDb()">💾 फुटर सेटिंग्स MongoDB में सेव करें</button>
-      </div>
-
-      <!-- 3 Promotional Banners Manager (New Added) -->
-      <h3>🎯 3 छोटे प्रमोशनल बैनर्स कस्टमाइज़ेशन (डायरेक्ट फाइल अपलोड और ट्रैश के साथ)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div id="adminPromoBannersList"></div>
-        <button class="add-btn" onclick="savePromoBannersToDb()">💾 सभी 3 प्रमोशनल बैनर्स MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Day-Wise Special Combo Manager -->
-      <h3>📅 दिन-वार स्पेशल कॉम्बो मैनेजर (Choose File & Trash के साथ)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div id="adminDayCombosList"></div>
-        <button class="add-btn" onclick="saveDayCombosToDb()">💾 सभी दिन-वार कॉम्बो MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Website Legal & Info Pages Content Manager -->
-      <h3>📄 वेबसाइट लीगल और इंफॉर्मेटिव पेजेस मैनेजर (About, Terms, Privacy आदि)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div id="adminLegalPagesList"></div>
-        <button class="add-btn" onclick="saveLegalPagesToDb()">💾 सभी लीगल पेजेस MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Language Settings -->
-      <h3>🌐 भाषा सेटिंग्स (Language Settings)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>वेबसाइट की डिफ़ॉल्ट भाषा:</label>
-          <select id="adminLanguageSelect" style="width:100%; padding:8px; border-radius:6px;">
-            <option value="hi">हिंदी (Hindi)</option>
-            <option value="en">English (अंग्रेजी)</option>
-            <option value="bn">বাংলা (Bengali)</option>
-          </select>
-        </div>
-        <button class="add-btn" onclick="saveLanguageSetting()">💾 भाषा MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Visitor Analytics & Logs -->
-      <h3>📊 लाइव वेबसाइट विजिटर एनालिटिक्स & यूजर लॉग</h3>
-      <div style="background:#EDF2F7; padding:15px; border-radius:8px; margin-bottom:20px;">
-        <div style="display:flex; gap:20px; margin-bottom:10px;">
-          <div><p style="margin:0; font-size:0.8rem; color:#718096;">कुल विजिट:</p><h2 id="adminTotalVisitsDisplay" style="margin:4px 0 0 0; color:#00B074;">0</h2></div>
-          <div><p style="margin:0; font-size:0.8rem; color:#718096;">आज के विजिट:</p><h2 id="adminTodayVisitsDisplay" style="margin:4px 0 0 0; color:#319795;">0</h2></div>
-        </div>
-        <div id="adminUserLogsDisplay" style="font-size:0.85rem; color:#4A5568; max-height:120px; overflow-y:auto; background:white; padding:8px; border-radius:4px;">लॉगिन रिकॉर्ड लोड हो रहा है...</div>
-      </div>
-
-      <!-- Circular Categories -->
-      <h3>⭕ सर्कुलर कैटेगरीज़ (कस्टमाइज़ेशन & डायरेक्ट फाइल अपलोड)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div id="adminCircleCatsList"></div>
-        <button class="add-btn" onclick="saveCircleCategoriesToDb()">💾 सर्कुलर कैटेगरीज़ MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Theme Color Wheel -->
-      <h3>🎨 थीम कलर व्हील परमानेंट सेविंग</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <label>कलर चुनें (Color Wheel):</label>
-        <input type="color" id="adminColorWheelPicker" value="#00B074" style="height:40px; width:100px; display:block; margin:8px 0;" onchange="previewTheme(this.value)">
-        <button class="add-btn" onclick="saveSettingToDb('theme_config', {color: document.getElementById('adminColorWheelPicker').value})">💾 थीम कलर MongoDB में सेव करें</button>
-      </div>
-
-      <!-- Delivery Partner & Tracking -->
-      <h3>🛵 कंट्रोल्ड लाइव ट्रैकिंग और डमी डिलीवरी पार्टनर</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>पार्टनर नाम:</label><input type="text" id="adminPartnerName" value="राहुल कुमार"></div>
-        <div class="form-group"><label>फोन नंबर:</label><input type="text" id="adminPartnerPhone" value="9876543210"></div>
-        <div class="form-group"><label>डिलीवरी शुरू करें (टॉगल):</label>
-          <select id="adminDeliveryToggle">
-            <option value="false">बंद (Off)</option>
-            <option value="true">चालू करें (Start Delivery)</option>
-          </select>
-        </div>
-        <button class="add-btn" onclick="saveSettingToDb('partner_config', getPartnerObj())">💾 डिलीवरी पार्टनर MongoDB में सेव करें</button>
-      </div>
-
-      <!-- 5 Main Banners -->
-      <h3>🖼️ 5 ऑटो-स्वाइपेबल बैनर्स कस्टमाइज़ेशन (डायरेक्ट फाइल अपलोड के साथ)</h3>
-      <div id="adminBannerList"></div>
-      <button class="add-btn" onclick="saveSettingToDb('banners_config', banners)">💾 सभी बैनर्स MongoDB में सेव करें</button>
-
-      <!-- Products Manager -->
-      <h3>🛒 नया आइटम जोड़ें (यूआरएल या डायरेक्ट कंप्यूटर से JPG/PNG फाइल अपलोड)</h3>
+      <!-- Products Manager with Unit Categories -->
+      <h3>🛒 नया आइटम जोड़ें (Unit Category कस्टमाइज़ेशन के साथ)</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
         <div class="form-group"><label>नाम:</label><input type="text" id="newProdName"></div>
         <div class="form-group"><label>कैटेगरी:</label>
@@ -365,15 +262,20 @@
             <option value="Groceries">🍞 Groceries</option>
           </select>
         </div>
-        <div class="form-group"><label>डिफ़ॉल्ट यूनिट:</label>
-          <select id="newProdUnit">
-            <option value="100g">100g</option><option value="250g">250g</option><option value="500g">500g</option>
-            <option value="1 kg" selected>1 kg</option><option value="1 Piece">1 Piece</option>
-            <option value="2 Pieces">2 Pieces</option><option value="5 Pieces">5 Pieces</option>
-            <option value="1/2 Dozen">1/2 Dozen</option><option value="1 Dozen">1 Dozen</option>
-            <option value="1 Liter">1 Liter</option><option value="500 ml">500 ml</option>
+        
+        <div class="form-group"><label>यूनिट प्रकार (Unit Category):</label>
+          <select id="newProdUnitType" onchange="updateNewProductUnitOptions(this.value)">
+            <option value="Weight">Weight (ग्राम / किलो)</option>
+            <option value="Piece">Piece (गिनती / पीस)</option>
+            <option value="Dozen">Dozen (दर्जन)</option>
+            <option value="Volume">Volume (लीटर / ml)</option>
           </select>
         </div>
+
+        <div class="form-group"><label>डिफ़ॉल्ट यूनिट:</label>
+          <select id="newProdUnit"></select>
+        </div>
+
         <div class="form-group"><label>बेस प्राइस (₹):</label><input type="number" id="newProdBasePrice"></div>
         <div class="form-group"><label>सेल प्राइस (₹):</label><input type="number" id="newProdSalePrice"></div>
        
@@ -382,39 +284,39 @@
           <div style="display:flex; gap:8px; align-items:center;">
             <input type="text" id="newProdImg" placeholder="https://..." style="flex:2;">
             <input type="file" id="newProdFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'newProdImg')">
-            <button type="button" onclick="clearImageInput('newProdImg', 'newProdFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
+            <button type="button" onclick="clearImageInput('newProdImg', 'newProdFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">🗑️</button>
           </div>
         </div>
         <button class="add-btn" onclick="addNewProduct()">+ नया आइटम MongoDB में जोड़ें</button>
       </div>
       <div id="adminProductManagerList"></div>
 
-      <!-- WhatsApp & MOV -->
-      <h3>📱 WhatsApp आर्डर, ब्रॉडकास्ट कॉपी और न्यूनतम ऑर्डर वैल्यू (MOV)</h3>
+      <!-- Brand Logo Manager -->
+      <h3>🖼️ ब्रांड लोगो और नाम कस्टमाइज़ेशन मैनेजर</h3>
       <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>WhatsApp आर्डर नंबर:</label><input type="text" id="adminWaNumber" value="919876543210"></div>
-        <div class="form-group"><label>न्यूनतम आर्डर वैल्यू (MOV ₹):</label><input type="number" id="adminMovValue" value="100"></div>
-        <button class="add-btn" onclick="saveSettingToDb('whatsapp_mov_config', getWaMovObj())" style="margin-bottom:10px;">💾 WhatsApp & MOV MongoDB में सेव करें</button>
-        <button class="add-btn" style="background:#25D366;" onclick="copyWhatsAppBroadcastList()">📋 WhatsApp ब्रॉडकास्ट रेट लिस्ट कॉपी करें</button>
+        <div class="form-group">
+          <label>लोगो इमेज (URL या डिवाइस से चुनें):</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="adminLogoUrlInput" placeholder="https://..." style="flex:2;">
+            <input type="file" id="adminLogoFile" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.8rem;" onchange="handleImageUpload(event, 'adminLogoUrlInput')">
+            <button type="button" onclick="clearImageInput('adminLogoUrlInput', 'adminLogoFile')" style="background:#FED7D7; color:#E53E3E; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">🗑️</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>'Fresh' रंग:</label><input type="color" id="adminFreshColorInput" value="#008F5D" style="height:40px; width:100%;"></div>
+          <div class="form-group" style="flex:1;"><label>'kart' रंग:</label><input type="color" id="adminKartColorInput" value="#FF7A00" style="height:40px; width:100%;"></div>
+        </div>
+        <button class="add-btn" onclick="saveLogoConfigToDb()">💾 लोगो और नाम कलर्स MongoDB में सेव करें</button>
       </div>
 
-      <!-- Customer Order History -->
-      <h3>👥 A-Z अल्फाबेटिकल रिपीट कस्टमर ऑर्डर हिस्ट्री (MongoDB)</h3>
-      <div id="adminCustomerOrderHistoryBox" style="background:#F7FAFC; padding:12px; border-radius:8px; max-height:220px; overflow-y:auto;">
-        कस्टमर ऑर्डर हिस्ट्री लोड हो रही है...
-      </div>
-
-      <!-- Admin Credentials -->
-      <h3>🔑 एडमिन क्रेडेंशियल्स (ईमेल और पासवर्ड बदलें)</h3>
-      <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:20px;">
-        <div class="form-group"><label>एडमिन ईमेल:</label><input type="email" id="adminEmailSetting" value="admin@freshkart.com"></div>
-        <div class="form-group"><label>नया पासवर्ड:</label><input type="text" id="adminPasswordSetting" value="1234"></div>
-        <button class="add-btn" style="background:#D97706;" onclick="saveAdminCredentials()">💾 एडमिन क्रेडेंशियल्स MongoDB में सेव करें</button>
-      </div>
+      <!-- 5 Banners Manager -->
+      <h3>🖼️ 5 ऑटो-स्वाइपेबल बैनर्स कस्टमाइज़ेशन</h3>
+      <div id="adminBannerList"></div>
+      <button class="add-btn" onclick="saveSettingToDb('banners_config', banners)">💾 सभी बैनर्स MongoDB में सेव करें</button>
     </div>
   </div>
 
-  <!-- Professional Footer with Permanent Glitch Fix (Explicit Inline Styles) -->
+  <!-- Footer -->
   <footer class="main-footer" id="mainFooterElement" style="background-color: #0F172A;">
     <div class="footer-container">
       <div>
@@ -426,28 +328,6 @@
         </h4>
         <p>ताज़ा सब्ज़ियाँ, फल और ग्रोसरी सीधे आपके दरवाजे पर। गुणवत्ता और भरोसे का प्रतीक।</p>
       </div>
-      <div>
-        <h4>कंपनी</h4>
-        <ul>
-          <li onclick="openLegalModal('about')">हमारे बारे में (About Us)</li>
-          <li onclick="openLegalModal('contact')">संपर्क करें (Contact Us)</li>
-        </ul>
-      </div>
-      <div>
-        <h4>नीति एवं शर्तें</h4>
-        <ul>
-          <li onclick="openLegalModal('terms')">नियम और शर्तें (Terms & Conditions)</li>
-          <li onclick="openLegalModal('privacy')">गोपनीयता नीति (Privacy Policy)</li>
-          <li onclick="openLegalModal('shipping')">शिपिंग नीति (Shipping Policy)</li>
-          <li onclick="openLegalModal('refund')">रिटर्न और रिफंड नीति (Refund Policy)</li>
-        </ul>
-      </div>
-      <div>
-        <h4>सहायता</h4>
-        <ul>
-          <li onclick="openLegalModal('faq')">अक्सर पूछे जाने वाले सवाल (FAQs)</li>
-        </ul>
-      </div>
     </div>
     <div style="text-align:center; border-top:1px solid rgba(255,255,255,0.1); margin-top:20px; padding-top:15px; color:#94A3B8;">
       2026 © FreshKart | All Rights Reserved
@@ -456,34 +336,14 @@
 
   <script>
     let adminAuth = { email: "admin@freshkart.com", pass: "1234" };
-    let waNumber = "919876543210";
-    let minOrderValue = 100;
+    let isAdminLoggedIn = false;
 
-    let legalPages = {
-      about: { title: "हमारे बारे में (About Us)", content: "FreshKart आपका अपना लोकल ऑनलाइन स्टोर है, जो जमशेदपुर और आसपास के इलाकों में बिल्कुल ताज़ा सब्ज़ियाँ, फल और दैनिक उपयोग की ग्रोसरी सीधे किसानों और मंडियों से लाकर आपके दरवाजे तक पहुँचाता है। हमारी प्राथमिकता शुद्धता, बेहतरीन गुणवत्ता और समय पर डिलीवरी है।" },
-      contact: { title: "संपर्क करें (Contact Us)", content: "पता: जोन नं. 1बी, झंडा चौक के पास, बिरसानगर, जमशेदपुर, झारखंड - 831019\nWhatsApp / हेल्पलाइन: +91 98765 43210\nईमेल: support@freshkart.com" },
-      terms: { title: "नियम और शर्तें (Terms & Conditions)", content: "1. वेबसाइट पर दिए गए सभी रेट्स आर्डर के समय के अनुसार मान्य हैं।\n2. आर्डर कन्फर्म होने के बाद यदि आप रद्द करना चाहें तो डिलीवरी से पहले WhatsApp पर सूचित करें।\n3. FreshKart बिना किसी पूर्व सूचना के नियमों में बदलाव करने का अधिकार सुरक्षित रखता है।" },
-      privacy: { title: "गोपनीयता नीति (Privacy Policy)", content: "हम आपके नाम, फोन नंबर और डिलीवरी पते को पूरी तरह सुरक्षित रखते हैं। आपकी किसी भी व्यक्तिगत जानकारी का उपयोग कभी भी किसी तीसरे पक्ष (Third Party) के साथ शेयर या बेचा नहीं जाता है।" },
-      shipping: { title: "शिपिंग और डिलीवरी नीति (Shipping Policy)", content: "हम आपके द्वारा दिए गए पते पर तय समय सीमा के भीतर सुरक्षित डिलीवरी प्रदान करते हैं। न्यूनतम आर्डर वैल्यू पूरी होने पर डिलीवरी सेवा उपलब्ध कराई जाती है।" },
-      refund: { title: "रिफंड और रिटर्न नीति (Refund & Return Policy)", content: "यदि डिलीवरी के समय कोई सब्जी या फल खराब या कम गुणवत्ता का निकलता है, तो आप उसी समय डिलीवरी पार्टनर को लौटा सकते हैं या फोटो भेजकर रिफंड/रिप्लेसमेंट प्राप्त कर सकते हैं।" },
-      faq: { title: "अक्सर पूछे जाने वाले सवाल (FAQs)", content: "Q1: न्यूनतम आर्डर वैल्यू (MOV) क्या है?\nAns: न्यूनतम आर्डर मूल्य ₹100 है।\n\nQ2: पेमेंट कैसे कर सकते हैं?\nAns: आप WhatsApp आर्डर के जरिए या डिलीवरी के समय भुगतान कर सकते हैं।" }
+    const unitCategoryMap = {
+      'Weight': ['50g', '100g', '250g', '500g', '1 kg', '2 kg'],
+      'Piece': ['1 Piece', '2 Pieces', '4 Pieces', '5 Pieces', '10 Pieces'],
+      'Dozen': ['1/2 Dozen', '1 Dozen', '2 Dozen'],
+      'Volume': ['200 ml', '500 ml', '1 Liter', '2 Liter']
     };
-
-    let dayCombos = {
-      "Sunday": { name: "रविवार स्पेशल मिक्स वेज कॉम्बो", price: 99, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600", desc: "ताज़ा आलू, टमाटर, गोभी और हरी मटर का पैक" },
-      "Monday": { name: "सोमवार ग्रीन डाइट कॉम्बो", price: 89, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600", desc: "पत्तागोभी, शिमला मिर्च और खीरा" },
-      "Tuesday": { name: "मंगलवार रूट वेजीज़ कॉम्बो", price: 79, img: "https://images.unsplash.com/photo-1618512495648-f074b9319e9c?w=600", desc: "गाजर, मूली और चुकंदर" },
-      "Wednesday": { name: "बुधवार ताज़ा सलाद कॉम्बो", price: 90, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600", desc: "सलाद स्पेशल फ्रेश सब्जियां" },
-      "Thursday": { name: "गुरुवार हेल्दी किचन पैक", price: 110, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=600", desc: "दैनिक उपयोग की सभी सब्जियां" },
-      "Friday": { name: "शुक्रवार फ्रेश फ्रूट्स कॉम्बो", price: 149, img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600", desc: "केला, सेब और पपीता कॉम्बो" },
-      "Saturday": { name: "शनिवार खिचड़ी स्पेशल कॉम्बो (पुईसाक, कुमड़ा, पटल)", price: 120, img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600", desc: "पुईसाक, कुमड़ा, पटल, आलू और गाजर स्पेशल पैक" }
-    };
-
-    let circleCategories = [
-      { name: "Fresh Veggies", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200", cat: "Vegetables" },
-      { name: "Fresh Fruits", img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200", cat: "Fruits" },
-      { name: "Sprouts/Grocery", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200", cat: "Groceries" }
-    ];
 
     let banners = [
       { title: "Fresh Tomato Special", price: 40, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200", btnText: "Shop Now" },
@@ -493,19 +353,26 @@
       { title: "Mega Kitchen Pack", price: 149, img: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200", btnText: "Offer Deal" }
     ];
 
-    // 3 छोटे प्रमोशनल बैनर्स (डिफ़ॉल्ट इमेजेस)
-    let promoBanners = [
-      "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?w=400",
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"
-    ];
-
     let products = [];
     let cart = JSON.parse(localStorage.getItem('fk_cart') || '[]');
     let favorites = [];
     let activeCategory = "All";
     let slideIndex = 0;
     let slideInterval;
+    let quantities = {};
+    let selectedUnits = {};
+
+    window.addEventListener('hashchange', checkSecretAdminRoute);
+
+    function checkSecretAdminRoute() {
+      if (window.location.hash === '#admin') {
+        if (!isAdminLoggedIn) {
+          openAdminLoginModal();
+        } else {
+          switchTab('admin');
+        }
+      }
+    }
 
     function handleImageUpload(event, inputId) {
       const file = event.target.files[0];
@@ -524,167 +391,41 @@
       }
     }
 
+    function updateNewProductUnitOptions(unitType) {
+      const opts = unitCategoryMap[unitType] || unitCategoryMap['Weight'];
+      const sel = document.getElementById('newProdUnit');
+      if (sel) {
+        sel.innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+      }
+    }
+
     async function loadAllDataFromDatabase() {
       try {
-        const hitRes = await fetch('/api/visitor/hit', { method: 'POST' });
-        const hitData = await hitRes.json();
-        document.getElementById('adminTotalVisitsDisplay').innerText = hitData.totalCount;
-        document.getElementById('adminTodayVisitsDisplay').innerText = hitData.todayCount;
-
-        loadUserLogs();
-
         const logoRes = await fetch('/api/settings/logo_config');
         const logoData = await logoRes.json();
         if(logoData) {
           document.getElementById('headerLogoImg').src = logoData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300";
           document.getElementById('headerTextFresh').style.color = logoData.freshColor || "#008F5D";
           document.getElementById('headerTextKart').style.color = logoData.kartColor || "#FF7A00";
-          document.getElementById('adminLogoUrlInput').value = logoData.logoUrl || "";
-          document.getElementById('adminFreshColorInput').value = logoData.freshColor || "#008F5D";
-          document.getElementById('adminKartColorInput').value = logoData.kartColor || "#FF7A00";
         }
-
-        const footerRes = await fetch('/api/settings/footer_config');
-        const footerData = await footerRes.json();
-        if(footerData) {
-          document.getElementById('footerLogoImg').src = footerData.logoUrl || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100";
-          let fFreshColor = footerData.freshColor || "#008F5D";
-          let fKartColor = footerData.kartColor || "#FF7A00";
-          let fBgColor = footerData.bgColor || "#0F172A";
-          document.getElementById('footerTextFresh').style.setProperty('color', fFreshColor, 'important');
-          document.getElementById('footerTextKart').style.setProperty('color', fKartColor, 'important');
-          document.getElementById('mainFooterElement').style.backgroundColor = fBgColor;
-          document.getElementById('adminFooterLogoUrl').value = footerData.logoUrl || "";
-          document.getElementById('adminFooterFreshColor').value = fFreshColor;
-          document.getElementById('adminFooterKartColor').value = fKartColor;
-          document.getElementById('adminFooterBgColor').value = fBgColor;
-        }
-
-        // 3 प्रमोशनल बैनर्स लोड करना
-        const promoRes = await fetch('/api/settings/promo_banners_config');
-        const promoData = await promoRes.json();
-        if(promoData && Array.isArray(promoData)) promoBanners = promoData;
-        renderPromoBanners();
-        renderAdminPromoBanners();
-
-        const legalRes = await fetch('/api/settings/legal_pages_config');
-        const legalData = await legalRes.json();
-        if(legalData) legalPages = legalData;
-        renderAdminLegalPages();
-
-        const comboRes = await fetch('/api/settings/day_combos_config');
-        const comboData = await comboRes.json();
-        if(comboData) dayCombos = comboData;
-        renderTodaySpecialCombo();
-        renderAdminDayCombos();
-
-        const catRes = await fetch('/api/settings/circle_cats_config');
-        const catData = await catRes.json();
-        if(catData) circleCategories = catData;
-        renderCircleCategories();
-        renderAdminCircleCategories();
 
         await loadProductsFromDb();
-
-        const langRes = await fetch('/api/settings/language_config');
-        const langData = await langRes.json();
-        if(langData && langData.lang) {
-          document.getElementById('adminLanguageSelect').value = langData.lang;
-          document.getElementById('htmlRoot').lang = langData.lang;
-        }
-
-        const themeRes = await fetch('/api/settings/theme_config');
-        const themeData = await themeRes.json();
-        if(themeData && themeData.color) {
-          previewTheme(themeData.color);
-          document.getElementById('adminColorWheelPicker').value = themeData.color;
-        }
-
-        const credRes = await fetch('/api/settings/admin_credentials');
-        const credData = await credRes.json();
-        if(credData) {
-          adminAuth = credData;
-          document.getElementById('adminEmailSetting').value = adminAuth.email;
-          document.getElementById('adminPasswordSetting').value = adminAuth.pass;
-        }
-
-        const partnerRes = await fetch('/api/settings/partner_config');
-        const partnerData = await partnerRes.json();
-        if(partnerData) {
-          document.getElementById('adminPartnerName').value = partnerData.name || '';
-          document.getElementById('adminPartnerPhone').value = partnerData.phone || '';
-          document.getElementById('adminDeliveryToggle').value = partnerData.active ? 'true' : 'false';
-          applyPartnerConfig(partnerData);
-        }
-
-        const waMovRes = await fetch('/api/settings/whatsapp_mov_config');
-        const waMovData = await waMovRes.json();
-        if(waMovData) {
-          waNumber = waMovData.waNumber || "919876543210";
-          minOrderValue = waMovData.mov || 100;
-          document.getElementById('adminWaNumber').value = waNumber;
-          document.getElementById('adminMovValue').value = minOrderValue;
-        }
 
         const bannerRes = await fetch('/api/settings/banners_config');
         const bannerData = await bannerRes.json();
         if(bannerData) banners = bannerData;
-        renderBanners(); renderAdminBanners();
+        renderBanners();
+        renderAdminBanners();
         startAutoSlide();
 
-        loadCustomerOrderHistory();
+        const credRes = await fetch('/api/settings/admin_credentials');
+        const credData = await credRes.json();
+        if(credData) adminAuth = credData;
+
         updateCartDrawer();
+        updateNewProductUnitOptions('Weight');
+        checkSecretAdminRoute();
       } catch (err) { console.error('Error loading data:', err); }
-    }
-
-    // 3 प्रमोशनल बैनर्स रेंडर करना (फ्रंटएंड)
-    function renderPromoBanners() {
-      for(let i=0; i<3; i++) {
-        let el = document.getElementById(`promoImg${i}`);
-        if(el) el.src = promoBanners[i] || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400";
-      }
-    }
-
-    // 3 प्रमोशनल बैनर्स एडमिन मैनेजर रेंडर करना (फाइल अपलोड और ट्रैश बटन के साथ)
-    function renderAdminPromoBanners() {
-      document.getElementById('adminPromoBannersList').innerHTML = promoBanners.map((url, i) => `
-        <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
-          <strong>प्रमोशनल बैनर #${i+1} (साइज: 400x130 px)</strong>
-          <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
-            <input type="text" value="${url}" id="promoInput-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;" oninput="promoBanners[${i}]=this.value">
-            <input type="file" id="promoFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handlePromoImageUpload(event, ${i})">
-            <button type="button" onclick="clearPromoBannerImage(${i})" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function handlePromoImageUpload(event, index) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(uploadEvent) {
-        promoBanners[index] = uploadEvent.target.result;
-        document.getElementById(`promoInput-${index}`).value = uploadEvent.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearPromoBannerImage(index) {
-      promoBanners[index] = '';
-      document.getElementById(`promoInput-${index}`).value = '';
-      if(document.getElementById(`promoFile-${index}`)) {
-        document.getElementById(`promoFile-${index}`).value = '';
-      }
-    }
-
-    async function savePromoBannersToDb() {
-      for(let i=0; i<3; i++) {
-        let val = document.getElementById(`promoInput-${i}`).value;
-        promoBanners[i] = val;
-      }
-      await saveSettingToDb('promo_banners_config', promoBanners);
-      renderPromoBanners();
     }
 
     async function loadProductsFromDb() {
@@ -698,345 +439,21 @@
         const dbProducts = await prodRes.json();
         products = dbProducts.map((p, index) => ({
           id: index + 1, dbId: p._id, name: p.name, category: p.category || 'Vegetables',
-          basePrice: p.basePrice || p.salePrice + 10, salePrice: p.salePrice,
+          unitType: p.unitType || 'Weight', basePrice: p.basePrice || p.salePrice + 10, salePrice: p.salePrice,
           unit: p.unit || '1 kg', inStock: p.inStock, img: p.img || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400', sortOrder: p.sortOrder !== undefined ? p.sortOrder : (index + 1)
         }));
         renderProducts();
-        renderAdminProductsManager();
+        if(isAdminLoggedIn) renderAdminProductsManager();
       } catch(err) { console.error("Error loading products:", err); }
     }
 
-    async function saveSettingToDb(key, value) {
-      try {
-        const res = await fetch('/api/settings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key, value })
-        });
-        if(res.ok) alert('सफलतापूर्वक MongoDB में सेव हो गया!');
-      } catch (err) { alert('सेव करने में विफल!'); }
-    }
-
-    async function saveLogoConfigToDb() {
-      const logoUrl = document.getElementById('adminLogoUrlInput').value;
-      const freshColor = document.getElementById('adminFreshColorInput').value;
-      const kartColor = document.getElementById('adminKartColorInput').value;
-      await saveSettingToDb('logo_config', { logoUrl, freshColor, kartColor });
-      document.getElementById('headerLogoImg').src = logoUrl;
-      document.getElementById('headerTextFresh').style.color = freshColor;
-      document.getElementById('headerTextKart').style.color = kartColor;
-    }
-
-    async function saveFooterConfigToDb() {
-      const logoUrl = document.getElementById('adminFooterLogoUrl').value;
-      const freshColor = document.getElementById('adminFooterFreshColor').value;
-      const kartColor = document.getElementById('adminFooterKartColor').value;
-      const bgColor = document.getElementById('adminFooterBgColor').value;
-      await saveSettingToDb('footer_config', { logoUrl, freshColor, kartColor, bgColor });
-      document.getElementById('footerLogoImg').src = logoUrl;
-      document.getElementById('footerTextFresh').style.setProperty('color', freshColor, 'important');
-      document.getElementById('footerTextKart').style.setProperty('color', kartColor, 'important');
-      document.getElementById('mainFooterElement').style.backgroundColor = bgColor;
-      alert('फुटर सेटिंग्स सफलतापूर्वक MongoDB में सेव हो गई!');
-    }
-
-    async function saveAdminCredentials() {
-      adminAuth.email = document.getElementById('adminEmailSetting').value;
-      adminAuth.pass = document.getElementById('adminPasswordSetting').value;
-      await saveSettingToDb('admin_credentials', adminAuth);
-    }
-
-    async function saveLanguageSetting() {
-      let lang = document.getElementById('adminLanguageSelect').value;
-      await saveSettingToDb('language_config', { lang });
-      document.getElementById('htmlRoot').lang = lang;
-    }
-
-    function previewTheme(color) {
-      document.documentElement.style.setProperty('--primary-color', color);
-    }
-
-    function getPartnerObj() {
-      return {
-        name: document.getElementById('adminPartnerName').value,
-        phone: document.getElementById('adminPartnerPhone').value,
-        active: document.getElementById('adminDeliveryToggle').value === 'true'
-      };
-    }
-
-    function applyPartnerConfig(p) {
-      document.getElementById('trackPartnerNameDisplay').innerText = p.name;
-      document.getElementById('trackPartnerPhoneDisplay').innerText = p.phone;
-      if(p.active) {
-        document.getElementById('trackStatusMsg').innerText = "डिलीवरी पार्टनर रास्ते में है!";
-        document.getElementById('deliveryAnimationBox').style.display = 'block';
-      } else {
-        document.getElementById('trackStatusMsg').innerText = "डिलीवरी की स्थिति: एडमिन द्वारा शुरू होने का इंतज़ार...";
-        document.getElementById('deliveryAnimationBox').style.display = 'none';
-      }
-    }
-
-    function getWaMovObj() {
-      return {
-        waNumber: document.getElementById('adminWaNumber').value,
-        mov: Number(document.getElementById('adminMovValue').value)
-      };
-    }
-
-    function openLegalModal(key) {
-      let page = legalPages[key];
-      if(!page) return;
-      document.getElementById('modalPageTitle').innerText = page.title;
-      document.getElementById('modalPageBody').innerText = page.content;
-      document.getElementById('legalPageModal').style.display = 'flex';
-    }
-
-    function closeLegalModal() {
-      document.getElementById('legalPageModal').style.display = 'none';
-    }
-
-    function renderAdminLegalPages() {
-      const keys = Object.keys(legalPages);
-      document.getElementById('adminLegalPagesList').innerHTML = keys.map(k => `
-        <div style="background:white; padding:12px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
-          <div class="form-group"><label>शीर्षक (${k}):</label><input type="text" id="lpTitle-${k}" value="${legalPages[k].title}"></div>
-          <div class="form-group"><label>कंटेंट (विवरण):</label><textarea id="lpContent-${k}" rows="3">${legalPages[k].content}</textarea></div>
-          <button onclick="deleteLegalPage('${k}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.75rem;">🗑️ यह पेज डिलीट करें</button>
-        </div>
-      `).join('');
-    }
-
-    async function saveLegalPagesToDb() {
-      const keys = Object.keys(legalPages);
-      keys.forEach(k => {
-        let tEl = document.getElementById(`lpTitle-${k}`);
-        let cEl = document.getElementById(`lpContent-${k}`);
-        if(tEl && cEl) {
-          legalPages[k].title = tEl.value;
-          legalPages[k].content = cEl.value;
-        }
-      });
-      await saveSettingToDb('legal_pages_config', legalPages);
-      renderAdminLegalPages();
-    }
-
-    function deleteLegalPage(k) {
-      if(!confirm('क्या आप वाकई इस पेज को हटाना चाहते हैं?')) return;
-      delete legalPages[k];
-      renderAdminLegalPages();
-      saveSettingToDb('legal_pages_config', legalPages);
-    }
-
-    function renderTodaySpecialCombo() {
-      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      const todayName = days[new Date().getDay()];
-      const combo = dayCombos[todayName] || dayCombos["Saturday"];
-
-      document.getElementById('specialComboTitleHeading').innerText = `🌟 आज (${todayName}) का स्पेशल कॉम्बो`;
-      document.getElementById('todaySpecialComboContainer').innerHTML = `
-        <div class="card" style="flex-direction:row; gap:15px; align-items:center; max-width:100%; padding:15px;">
-          <img src="${combo.img}" style="width:140px; height:100px; border-radius:8px; object-fit:cover;">
-          <div style="flex:1;">
-            <h3 style="margin:0 0 4px 0; font-size:1.1rem;">${combo.name}</h3>
-            <p style="margin:0 0 8px 0; font-size:0.85rem; color:#718096;">${combo.desc}</p>
-            <div class="price-box">
-              <span class="card-price">₹${combo.price}</span>
-            </div>
-          </div>
-          <div style="width:140px;">
-            <button class="add-btn" onclick="addComboToCart('${combo.name}', ${combo.price}, event.target)">+ ADD COMBO</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderAdminDayCombos() {
-      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      document.getElementById('adminDayCombosList').innerHTML = days.map(d => {
-        let c = dayCombos[d] || { name: '', price: 0, img: '', desc: '' };
-        return `
-          <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
-            <strong style="color:var(--primary-color);">${d}</strong>
-            <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; margin-bottom:6px;">
-              <input type="text" value="${c.name}" id="dcName-${d}" placeholder="कॉम्बो नाम" style="flex:2;">
-              <input type="number" value="${c.price}" id="dcPrice-${d}" placeholder="रेट (₹)" style="flex:1;">
-            </div>
-            <div style="display:flex; gap:8px; margin-bottom:6px;">
-              <input type="text" value="${c.desc}" id="dcDesc-${d}" placeholder="विवरण" style="width:100%;">
-            </div>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <input type="text" value="${c.img}" id="dcImg-${d}" placeholder="फोटो URL या फाइल चुनें" style="flex:2;" oninput="dayCombos['${d}'].img=this.value">
-              <input type="file" id="dcFile-${d}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleDayComboImageUpload(event, '${d}')">
-              <button type="button" onclick="clearDayComboImage('${d}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function handleDayComboImageUpload(event, day) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(uploadEvent) {
-        dayCombos[day].img = uploadEvent.target.result;
-        document.getElementById(`dcImg-${day}`).value = uploadEvent.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearDayComboImage(day) {
-      dayCombos[day].img = '';
-      document.getElementById(`dcImg-${day}`).value = '';
-      if(document.getElementById(`dcFile-${day}`)) {
-        document.getElementById(`dcFile-${day}`).value = '';
-      }
-    }
-
-    async function saveDayCombosToDb() {
-      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      days.forEach(d => {
-        dayCombos[d] = {
-          name: document.getElementById(`dcName-${d}`).value,
-          price: Number(document.getElementById(`dcPrice-${d}`).value),
-          img: document.getElementById(`dcImg-${d}`).value,
-          desc: document.getElementById(`dcDesc-${d}`).value
-        };
-      });
-      await saveSettingToDb('day_combos_config', dayCombos);
-      renderTodaySpecialCombo();
-    }
-
-    function addComboToCart(name, price, btnElement) {
-      addToCart(`${name} (Combo)`, Number(price), btnElement);
-    }
-
-    function renderCircleCategories() {
-      document.getElementById('circleCatsView').innerHTML = circleCategories.map(c => `
-        <div class="circle-cat-item" onclick="filterCategory('${c.cat}')">
-          <img class="circle-cat-img" src="${c.img}">
-          <span class="circle-cat-name">${c.name}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderAdminCircleCategories() {
-      document.getElementById('adminCircleCatsList').innerHTML = circleCategories.map((c, i) => `
-        <div style="background:#F7FAFC; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #CBD5E0;">
-          <div style="display:flex; gap:8px; margin-bottom:6px;">
-            <input type="text" value="${c.name}" id="ccName-${i}" placeholder="नाम" style="flex:1;">
-            <input type="text" value="${c.cat}" id="ccCat-${i}" placeholder="कैटेगरी" style="flex:1;">
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" value="${c.img}" id="ccImg-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;">
-            <input type="file" id="ccFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleImageUpload(event, 'ccImg-${i}')">
-            <button type="button" onclick="clearImageInput('ccImg-${i}', 'ccFile-${i}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function saveCircleCategoriesToDb() {
-      circleCategories.forEach((c, i) => {
-        c.name = document.getElementById(`ccName-${i}`).value;
-        c.cat = document.getElementById(`ccCat-${i}`).value;
-        c.img = document.getElementById(`ccImg-${i}`).value;
-      });
-      await saveSettingToDb('circle_cats_config', circleCategories);
-      renderCircleCategories();
-    }
-
-    function renderBanners() {
-      banners.forEach((b, i) => {
-        const imgEl = document.getElementById(`bImg-${i}`);
-        const btnEl = document.getElementById(`bBtnText-${i}`);
-        if(imgEl) imgEl.src = b.img;
-        if(btnEl) btnEl.innerText = `${b.btnText || 'Shop Now'} (₹${b.price})`;
-      });
-    }
-
-    function renderAdminBanners() {
-      document.getElementById('adminBannerList').innerHTML = banners.map((b, i) => `
-        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
-          <div style="display:flex; gap:8px; margin-bottom:6px;">
-            <input type="text" value="${b.title}" id="bTitle-${i}" placeholder="बैनर शीर्षक" style="flex:2;" oninput="banners[${i}].title=this.value">
-            <input type="number" value="${b.price}" id="bPrice-${i}" placeholder="दाम (₹)" style="flex:1;" oninput="banners[${i}].price=Number(this.value)">
-            <input type="text" value="${b.btnText || 'Shop Now'}" id="bBtn-${i}" placeholder="बटन टेक्स्ट" style="flex:1;" oninput="banners[${i}].btnText=this.value">
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" value="${b.img}" id="bImgInput-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;" oninput="banners[${i}].img=this.value">
-            <input type="file" id="bFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleBannerImageUpload(event, ${i})">
-            <button type="button" onclick="clearBannerImage(${i})" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function handleBannerImageUpload(event, index) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(uploadEvent) {
-        banners[index].img = uploadEvent.target.result;
-        document.getElementById(`bImgInput-${index}`).value = uploadEvent.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearBannerImage(index) {
-      banners[index].img = '';
-      document.getElementById(`bImgInput-${index}`).value = '';
-      if(document.getElementById(`bFile-${index}`)) {
-        document.getElementById(`bFile-${index}`).value = '';
-      }
-    }
-
-    function startAutoSlide() {
-      if(slideInterval) clearInterval(slideInterval);
-      slideInterval = setInterval(() => {
-        slideIndex = (slideIndex + 1) % banners.length;
-        showSlide(slideIndex);
-      }, 3500);
-    }
-
-    function showSlide(index) {
-      const slides = document.querySelectorAll('.banner-slide');
-      const dots = document.querySelectorAll('.dot');
-      slides.forEach(s => s.classList.remove('active'));
-      dots.forEach(d => d.classList.remove('active'));
-      if(slides[index]) slides[index].classList.add('active');
-      if(dots[index]) dots[index].classList.add('active');
-    }
-
-    function currentSlideIndex(index) {
-      slideIndex = index;
-      showSlide(slideIndex);
-      startAutoSlide();
-    }
-
-    function addBannerToCart(i) {
-      let b = banners[i];
-      addToCart(`${b.title} (1 pc)`, Number(b.price), event.target);
-    }
-
-    let quantities = {};
-    let selectedUnits = {};
-
-    function filterCategory(cat, btn) {
-      activeCategory = cat;
-      if(btn) {
-        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-      }
-      loadProductsFromDb();
-    }
-
     function renderProducts() {
-      const unitOptions = ['100g', '250g', '500g', '1 kg', '1 Piece', '2 Pieces', '5 Pieces', '1/2 Dozen', '1 Dozen', '1 Liter', '500 ml'];
-
       document.getElementById('productGrid').innerHTML = products.map(p => {
+        let availableUnits = unitCategoryMap[p.unitType] || unitCategoryMap['Weight'];
         if(!quantities[p.id]) quantities[p.id] = 1;
-        if(!selectedUnits[p.id]) selectedUnits[p.id] = p.unit || '1 kg';
+        if(!selectedUnits[p.id] || !availableUnits.includes(selectedUnits[p.id])) {
+          selectedUnits[p.id] = p.unit && availableUnits.includes(p.unit) ? p.unit : availableUnits[0];
+        }
        
         let currentQty = quantities[p.id];
         let currentUnit = selectedUnits[p.id];
@@ -1048,7 +465,7 @@
             <div class="card-title">${p.name}</div>
            
             <select class="card-unit-select" id="unit-sel-${p.id}" onchange="onUnitChange(${p.id}, this.value)">
-              ${unitOptions.map(u => `<option value="${u}" ${u === currentUnit ? 'selected' : ''}>${u}</option>`).join('')}
+              ${availableUnits.map(u => `<option value="${u}" ${u === currentUnit ? 'selected' : ''}>${u}</option>`).join('')}
             </select>
 
             <div class="price-box">
@@ -1074,18 +491,24 @@
       if (unit.includes('Piece')) {
         let pieceCount = 1;
         if (unit.startsWith('2')) pieceCount = 2;
+        else if (unit.startsWith('4')) pieceCount = 4;
         else if (unit.startsWith('5')) pieceCount = 5;
         else if (unit.startsWith('10')) pieceCount = 10;
         return Math.round(baseSalePrice * pieceCount * qty);
       }
-      if(unit === '100g') multiplier = 0.1;
+      if(unit === '50g') multiplier = 0.05;
+      else if(unit === '100g') multiplier = 0.1;
       else if(unit === '250g') multiplier = 0.25;
       else if(unit === '500g') multiplier = 0.5;
       else if(unit === '1 kg') multiplier = 1;
+      else if(unit === '2 kg') multiplier = 2;
       else if(unit === '1/2 Dozen') multiplier = 0.5;
       else if(unit === '1 Dozen') multiplier = 1;
-      else if(unit === '1 Liter') multiplier = 1;
+      else if(unit === '2 Dozen') multiplier = 2;
+      else if(unit === '200 ml') multiplier = 0.2;
       else if(unit === '500 ml') multiplier = 0.5;
+      else if(unit === '1 Liter') multiplier = 1;
+      else if(unit === '2 Liter') multiplier = 2;
       return Math.round(baseSalePrice * multiplier * qty);
     }
 
@@ -1115,94 +538,85 @@
       addToCart(`${p.name} (${qty} ${unit})`, finalPrice, document.getElementById(`add-btn-${id}`));
     }
 
-    function addToCart(name, price, btnElement) {
-      cart.push({ name, price });
-      localStorage.setItem('fk_cart', JSON.stringify(cart));
-      updateCartDrawer();
-
-      if(btnElement) {
-        let originalText = btnElement.innerText;
-        btnElement.innerText = "✓ Added";
-        btnElement.classList.add("added");
-        setTimeout(() => {
-          btnElement.innerText = originalText;
-          btnElement.classList.remove("added");
-        }, 1200);
-      }
+    function renderBanners() {
+      banners.forEach((b, i) => {
+        const imgEl = document.getElementById(`bImg-${i}`);
+        const btnEl = document.getElementById(`bBtnText-${i}`);
+        if(imgEl) imgEl.src = b.img;
+        if(btnEl) btnEl.innerText = `${b.btnText || 'Shop Now'} (₹${b.price})`;
+      });
     }
 
-    function renderAdminProductsManager() {
-      const unitOptionsHtml = `
-        <option value="100g">100g</option><option value="250g">250g</option><option value="500g">500g</option>
-        <option value="1 kg">1 kg</option><option value="1 Piece">1 Piece</option><option value="2 Pieces">2 Pieces</option>
-        <option value="5 Pieces">5 Pieces</option><option value="1/2 Dozen">1/2 Dozen</option><option value="1 Dozen">1 Dozen</option>
-        <option value="1 Liter">1 Liter</option><option value="500 ml">500 ml</option>
-      `;
-
-      document.getElementById('adminProductManagerList').innerHTML = products.map((p, index) => `
-        <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #CBD5E0;">
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
-            <input type="text" id="name-${p.id}" value="${p.name}" style="flex:2; min-width:110px;" placeholder="नाम">
-            <select id="unit-${p.id}" style="flex:1; min-width:90px;">
-              ${unitOptionsHtml.replace(`value="${p.unit}"`, `value="${p.unit}" selected`)}
-            </select>
-            <input type="number" id="salePrice-${p.id}" value="${p.salePrice}" style="flex:1; min-width:70px;" placeholder="दाम">
-            <select id="stock-${p.id}" style="flex:1; min-width:90px;">
-              <option value="true" ${p.inStock?'selected':''}>In Stock</option>
-              <option value="false" ${!p.inStock?'selected':''}>Out of Stock</option>
-            </select>
+    function renderAdminBanners() {
+      const container = document.getElementById('adminBannerList');
+      if(!container) return;
+      container.innerHTML = banners.map((b, i) => `
+        <div style="background:#F7FAFC; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #CBD5E0;">
+          <div style="display:flex; gap:8px; margin-bottom:6px;">
+            <input type="text" value="${b.title}" id="bTitle-${i}" placeholder="शीर्षक" style="flex:2;" oninput="banners[${i}].title=this.value">
+            <input type="number" value="${b.price}" id="bPrice-${i}" placeholder="दाम (₹)" style="flex:1;" oninput="banners[${i}].price=Number(this.value)">
+            <input type="text" value="${b.btnText || 'Shop Now'}" id="bBtn-${i}" placeholder="बटन टेक्स्ट" style="flex:1;" oninput="banners[${i}].btnText=this.value">
           </div>
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <input type="text" id="img-${p.id}" value="${p.img}" style="flex:2;" placeholder="इमेज URL या फाइल चुनें">
-            <input type="file" id="file-${p.id}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleImageUpload(event, 'img-${p.id}')">
-            <button type="button" onclick="clearImageInput('img-${p.id}', 'file-${p.id}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="सिर्फ फोटो हटाएं">🗑️</button>
-            <div style="display:flex; gap:4px; flex:1; justify-content:flex-end;">
-              ${index > 0 ? `<button onclick="moveProductOrder(${index}, -1)" style="background:#718096; color:white; border:none; padding:6px 8px; border-radius:4px; cursor:pointer;" title="पर ऊपर ले जाएं">⬆️</button>` : ''}
-              ${index < products.length - 1 ? `<button onclick="moveProductOrder(${index}, 1)" style="background:#718096; color:white; border:none; padding:6px 8px; border-radius:4px; cursor:pointer;" title="पर नीचे लाएं">⬇️</button>` : ''}
-              <button onclick="saveProductUpdate(${p.id}, '${p.dbId}')" style="background:#00B074; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">💾 सेव</button>
-              <button onclick="deleteProduct('${p.dbId}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">डिलिट</button>
-            </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" value="${b.img}" id="bImgInput-${i}" placeholder="इमेज URL या फाइल चुनें" style="flex:2;" oninput="banners[${i}].img=this.value">
+            <input type="file" id="bFile-${i}" accept="image/png, image/jpeg, image/jpg" style="flex:2; font-size:0.75rem;" onchange="handleBannerImageUpload(event, ${i})">
+            <button type="button" onclick="clearBannerImage(${i})" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" title="तस्वीर हटाएं">🗑️</button>
           </div>
         </div>
       `).join('');
     }
 
-    async function moveProductOrder(index, direction) {
-      const targetIndex = index + direction;
-      if (targetIndex < 0 || targetIndex >= products.length) return;
-      let temp = products[index];
-      products[index] = products[targetIndex];
-      products[targetIndex] = temp;
-
-      for (let i = 0; i < products.length; i++) {
-        products[i].sortOrder = i + 1;
-        await fetch(`/api/products/${products[i].dbId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sortOrder: products[i].sortOrder })
-        });
-      }
-      loadAllDataFromDatabase();
+    function handleBannerImageUpload(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(uploadEvent) {
+        banners[index].img = uploadEvent.target.result;
+        document.getElementById(`bImgInput-${index}`).value = uploadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    async function saveProductUpdate(id, dbId) {
-      const name = document.getElementById(`name-${id}`).value;
-      const unit = document.getElementById(`unit-${id}`).value;
-      const salePrice = Number(document.getElementById(`salePrice-${id}`).value);
-      const inStock = document.getElementById(`stock-${id}`).value === 'true';
-      const img = document.getElementById(`img-${id}`).value;
-
-      const res = await fetch(`/api/products/${dbId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, unit, salePrice, inStock, img })
-      });
-      if(res.ok) { alert('सफलतापूर्वक सेव हो गया!'); loadAllDataFromDatabase(); }
+    function clearBannerImage(index) {
+      banners[index].img = '';
+      document.getElementById(`bImgInput-${index}`).value = '';
+      if(document.getElementById(`bFile-${index}`)) document.getElementById(`bFile-${index}`).value = '';
     }
+
+    function addBannerToCart(i) {
+      let b = banners[i];
+      addToCart(`${b.title} (1 pc)`, Number(b.price), event.target);
+    }
+
+    function startAutoSlide() {
+      if(slideInterval) clearInterval(slideInterval);
+      slideInterval = setInterval(() => {
+        slideIndex = (slideIndex + 1) % banners.length;
+        showSlide(slideIndex);
+      }, 3500);
+    }
+
+    function showSlide(index) {
+      const slides = document.querySelectorAll('.banner-slide');
+      const dots = document.querySelectorAll('.dot');
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      if(slides[index]) slides[index].classList.add('active');
+      if(dots[index]) dots[index].classList.add('active');
+    }
+
+    function currentSlideIndex(index) { slideIndex = index; showSlide(slideIndex); startAutoSlide(); }
+
+    function openZoomModal(src) {
+      document.getElementById('zoomedBannerImg').src = src;
+      document.getElementById('imageZoomModal').style.display = 'flex';
+    }
+    function closeZoomModal() { document.getElementById('imageZoomModal').style.display = 'none'; }
 
     async function addNewProduct() {
       const name = document.getElementById('newProdName').value;
       const category = document.getElementById('newProdCategory').value;
+      const unitType = document.getElementById('newProdUnitType').value;
       const unit = document.getElementById('newProdUnit').value;
       const basePrice = Number(document.getElementById('newProdBasePrice').value) || 50;
       const salePrice = Number(document.getElementById('newProdSalePrice').value);
@@ -1213,9 +627,71 @@
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, category, basePrice, salePrice, unit, img, inStock: true, sortOrder: products.length + 1 })
+        body: JSON.stringify({ name, category, unitType, basePrice, salePrice, unit, img, inStock: true, sortOrder: products.length + 1 })
       });
       if(res.ok) { alert('नया आइटम जुड़ गया!'); loadAllDataFromDatabase(); }
+    }
+
+    function renderAdminProductsManager() {
+      const container = document.getElementById('adminProductManagerList');
+      if(!container) return;
+      container.innerHTML = products.map((p) => {
+        let currentType = p.unitType || 'Weight';
+        let opts = unitCategoryMap[currentType] || unitCategoryMap['Weight'];
+        return `
+          <div style="background:#F7FAFC; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #CBD5E0;">
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+              <input type="text" id="name-${p.id}" value="${p.name}" style="flex:2; min-width:110px;">
+              
+              <select id="unitType-${p.id}" style="flex:1; min-width:100px;" onchange="onAdminUnitTypeChange(${p.id}, this.value)">
+                <option value="Weight" ${currentType === 'Weight' ? 'selected' : ''}>Weight</option>
+                <option value="Piece" ${currentType === 'Piece' ? 'selected' : ''}>Piece</option>
+                <option value="Dozen" ${currentType === 'Dozen' ? 'selected' : ''}>Dozen</option>
+                <option value="Volume" ${currentType === 'Volume' ? 'selected' : ''}>Volume</option>
+              </select>
+
+              <select id="unit-${p.id}" style="flex:1; min-width:90px;">
+                ${opts.map(u => `<option value="${u}" ${u === p.unit ? 'selected' : ''}>${u}</option>`).join('')}
+              </select>
+
+              <input type="number" id="salePrice-${p.id}" value="${p.salePrice}" style="flex:1; min-width:70px;">
+              <select id="stock-${p.id}" style="flex:1; min-width:90px;">
+                <option value="true" ${p.inStock?'selected':''}>In Stock</option>
+                <option value="false" ${!p.inStock?'selected':''}>Out of Stock</option>
+              </select>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="text" id="img-${p.id}" value="${p.img}" style="flex:2;">
+              <button onclick="saveProductUpdate(${p.id}, '${p.dbId}')" style="background:#00B074; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">💾 सेव</button>
+              <button onclick="deleteProduct('${p.dbId}')" style="background:#FED7D7; color:#E53E3E; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">डिलिट</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onAdminUnitTypeChange(id, unitType) {
+      const opts = unitCategoryMap[unitType] || unitCategoryMap['Weight'];
+      const sel = document.getElementById(`unit-${id}`);
+      if(sel) {
+        sel.innerHTML = opts.map(u => `<option value="${u}">${u}</option>`).join('');
+      }
+    }
+
+    async function saveProductUpdate(id, dbId) {
+      const name = document.getElementById(`name-${id}`).value;
+      const unitType = document.getElementById(`unitType-${id}`).value;
+      const unit = document.getElementById(`unit-${id}`).value;
+      const salePrice = Number(document.getElementById(`salePrice-${id}`).value);
+      const inStock = document.getElementById(`stock-${id}`).value === 'true';
+      const img = document.getElementById(`img-${id}`).value;
+
+      const res = await fetch(`/api/products/${dbId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, unitType, unit, salePrice, inStock, img })
+      });
+      if(res.ok) { alert('सफलतापूर्वक सेव हो गया!'); loadAllDataFromDatabase(); }
     }
 
     async function deleteProduct(dbId) {
@@ -1224,13 +700,42 @@
       if(res.ok) { alert('डिलिट हो गया!'); loadAllDataFromDatabase(); }
     }
 
+    function openAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
+    function closeAdminLoginModal() { 
+      document.getElementById('adminLoginModal').style.display = 'none';
+      if(!isAdminLoggedIn && window.location.hash === '#admin') history.pushState("", document.title, window.location.pathname);
+    }
+
+    function verifyAdminLogin() {
+      const email = document.getElementById('loginEmailInput').value;
+      const pass = document.getElementById('loginPasswordInput').value;
+      if(email === adminAuth.email && pass === adminAuth.pass) {
+        isAdminLoggedIn = true;
+        closeAdminLoginModal();
+        switchTab('admin');
+        renderAdminProductsManager();
+      } else { alert('गलत क्रेडेंशियल्स!'); }
+    }
+
+    function adminLogout() {
+      isAdminLoggedIn = false;
+      history.pushState("", document.title, window.location.pathname);
+      switchTab('store');
+      alert('एडमिन लॉगआउट!');
+    }
+
+    function switchTab(tab) {
+      document.getElementById('storeTab').style.display = tab === 'store' ? 'block' : 'none';
+      document.getElementById('trackingTab').style.display = tab === 'tracking' ? 'block' : 'none';
+      const adminTab = document.getElementById('adminTab');
+      if(adminTab) adminTab.style.display = (tab === 'admin' && isAdminLoggedIn) ? 'block' : 'none';
+    }
+
     function toggleCartDrawer() { document.getElementById('cartDrawer').classList.toggle('open'); }
-   
     function updateCartDrawer() {
       document.getElementById('cartBadgeCount').innerText = cart.length;
       let total = cart.reduce((sum, item) => sum + item.price, 0);
       document.getElementById('drawerCartTotal').innerText = `₹${total}`;
-     
       const bodyEl = document.getElementById('cartDrawerBody');
       if(cart.length === 0) {
         bodyEl.innerHTML = `<p style="text-align:center; color:#A0AEC0;">कार्ट खाली है!</p>`;
@@ -1243,146 +748,20 @@
         `).join('');
       }
     }
-
-    function removeFromCart(idx) {
-      cart.splice(idx, 1);
+    function addToCart(name, price, btnElement) {
+      cart.push({ name, price });
       localStorage.setItem('fk_cart', JSON.stringify(cart));
       updateCartDrawer();
-    }
-
-    async function sendWhatsAppOrder() {
-      let total = cart.reduce((sum, item) => sum + item.price, 0);
-      if(total < minOrderValue) {
-        return alert(`न्यूनतम ऑर्डर मूल्य (MOV) ₹${minOrderValue} है! कृपया कुछ और आइटम जोड़ें।`);
-      }
-     
-      let customer = JSON.parse(localStorage.getItem('fk_logged_customer') || '{"name":"Guest", "phone":"N/A"}');
-     
-      let msg = `*FreshKart New Order*%0A`;
-      msg += `👤 नाम: ${customer.name}%0A`;
-      msg += `📞 फोन: ${customer.phone}%0A%0A`;
-      msg += `*आइटम्स:*%0A`;
-      cart.forEach((item, i) => {
-        msg += `${i+1}. ${item.name} - ₹${item.price}%0A`;
-      });
-      msg += `%0A*कुल बिल (Grand Total):* ₹${total}`;
-
-      await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerName: customer.name, customerPhone: customer.phone, items: cart, totalAmount: total })
-      });
-
-      window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-    }
-
-    function copyWhatsAppBroadcastList() {
-      let listText = `*🌱 FreshKart Special Broadcast Rate List 🌱*%0A%0A`;
-      products.forEach(p => {
-        listText += `▪️ ${p.name} (${p.unit}): ₹${p.salePrice}%0A`;
-      });
-      listText += `%0AOrder now on FreshKart!`;
-      navigator.clipboard.writeText(listText);
-      alert('WhatsApp ब्रॉडकास्ट रेट लिस्ट कॉपी हो गई है!');
-    }
-
-    function openCustomerAuthModal() {
-      document.getElementById('customerAuthModal').style.display = 'flex';
-      let logged = localStorage.getItem('fk_logged_customer');
-      if(logged) {
-        let c = JSON.parse(logged);
-        document.getElementById('custRegName').value = c.name;
-        document.getElementById('custRegPhone').value = c.phone;
-        document.getElementById('logoutSection').style.display = 'block';
-      } else {
-        document.getElementById('logoutSection').style.display = 'none';
+      if(btnElement) {
+        let originalText = btnElement.innerText;
+        btnElement.innerText = "✓ Added";
+        btnElement.classList.add("added");
+        setTimeout(() => { btnElement.innerText = originalText; btnElement.classList.remove("added"); }, 1200);
       }
     }
-   
-    function closeCustomerAuthModal() { document.getElementById('customerAuthModal').style.display = 'none'; }
-   
-    async function loginCustomer() {
-      let name = document.getElementById('custRegName').value;
-      let phone = document.getElementById('custRegPhone').value;
-      if(!name || !phone) return alert('नाम और फोन नंबर भरें!');
-     
-      localStorage.setItem('fk_logged_customer', JSON.stringify({ name, phone }));
-      await fetch('/api/logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'LOGIN', name, phone })
-      });
+    function removeFromCart(idx) { cart.splice(idx, 1); localStorage.setItem('fk_cart', JSON.stringify(cart)); updateCartDrawer(); }
 
-      alert('कस्टमर लॉगिन सफल!');
-      closeCustomerAuthModal();
-      loadUserLogs();
-    }
-
-    async function logoutCustomer() {
-      let logged = localStorage.getItem('fk_logged_customer');
-      if(logged) {
-        let c = JSON.parse(logged);
-        await fetch('/api/logs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'LOGOUT', name: c.name, phone: c.phone })
-        });
-      }
-      localStorage.removeItem('fk_logged_customer');
-      alert('लॉगआउट हो गए।');
-      closeCustomerAuthModal();
-      loadUserLogs();
-    }
-
-    async function loadUserLogs() {
-      try {
-        const res = await fetch('/api/logs');
-        const logs = await res.json();
-        const box = document.getElementById('adminUserLogsDisplay');
-        if(logs.length === 0) box.innerHTML = "कोई लॉग नहीं है।";
-        else {
-          box.innerHTML = logs.map(l => `[<b>${l.action}</b>] ${l.name} (${l.phone}) - <span style="color:#718096; font-size:0.75rem;">${l.timestamp}</span>`).join('<br>');
-        }
-      } catch(err) { console.error(err); }
-    }
-
-    async function loadCustomerOrderHistory() {
-      try {
-        const res = await fetch('/api/orders');
-        const orders = await res.json();
-        const box = document.getElementById('adminCustomerOrderHistoryBox');
-        if(orders.length === 0) {
-          box.innerHTML = `<p style="color:#718096; margin:0;">कोई पुराना आर्डर नहीं मिला।</p>`;
-        } else {
-          box.innerHTML = orders.map(o => `
-            <div style="border-bottom:1px solid #CBD5E0; padding:6px 0; font-size:0.85rem; display:flex; justify-content:space-between;">
-              <span><b>${o.customerName}</b> (${o.customerPhone})</span>
-              <span>₹<b>${o.totalAmount}</b> <small style="color:#718096;">(${new Date(o.date).toLocaleDateString()})</small></span>
-            </div>
-          `).join('');
-        }
-      } catch(err) { console.error(err); }
-    }
-
-    function openAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
-    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
-    function verifyAdminLogin() {
-      if(document.getElementById('loginEmailInput').value === adminAuth.email && document.getElementById('loginPasswordInput').value === adminAuth.pass) {
-        closeAdminLoginModal();
-        switchTab('admin');
-      } else { alert('गलत डिटेल्स!'); }
-    }
-    function adminLogout() { switchTab('store'); alert('एडमिन लॉगआउट!'); }
-   
-    function switchTab(tab) {
-      document.getElementById('storeTab').style.display = tab === 'store' ? 'block' : 'none';
-      document.getElementById('trackingTab').style.display = tab === 'tracking' ? 'block' : 'none';
-      const adminTab = document.getElementById('adminTab');
-      if(adminTab) adminTab.style.display = tab === 'admin' ? 'block' : 'none';
-    }
-
-    window.onload = init;
-    function init() { loadAllDataFromDatabase(); }
+    window.onload = loadAllDataFromDatabase;
   </script>
 </body>
 </html>
