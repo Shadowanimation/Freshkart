@@ -65,6 +65,14 @@ const CustomerOrderSchema = new mongoose.Schema({
 });
 const CustomerOrder = mongoose.model('CustomerOrder', CustomerOrderSchema);
 
+const UserLogSchema = new mongoose.Schema({
+    action: String,
+    name: String,
+    phone: String,
+    timestamp: { type: String, default: () => new Date().toLocaleString() }
+});
+const UserLog = mongoose.model('UserLog', UserLogSchema);
+
 async function seedInitialData() {
     try {
         const count = await Product.countDocuments();
@@ -132,7 +140,19 @@ app.get('/api/orders', async (req, res) => {
 });
 
 app.post('/api/orders', async (req, res) => {
-    try { res.json({ success: true, newOrder: await new CustomerOrder(req.body).save() }); } catch (err) { res.status(500).json({ success: false }); }
+    try { 
+        const newOrd = await new CustomerOrder(req.body).save();
+        await new UserLog({ action: 'Order Placed', name: req.body.customerName, phone: req.body.customerPhone }).save();
+        res.json({ success: true, newOrder: newOrd }); 
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
+app.get('/api/logs', async (req, res) => {
+    try { res.json(await UserLog.find().sort({ _id: -1 }).limit(20)); } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/logs', async (req, res) => {
+    try { await new UserLog(req.body).save(); res.json({ success: true }); } catch (err) { res.status(500).json({ success: false }); }
 });
 
 app.listen(5000, () => { console.log('Server is running on port 5000'); });
